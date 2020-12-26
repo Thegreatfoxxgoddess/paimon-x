@@ -54,9 +54,9 @@ SAVED_SETTINGS = get_collection("CONFIGS")
 REPO_X = InlineQueryResultArticle(
     title="Repo",
     input_message_content=InputTextMessageContent("**Here's how to setup USERGE-X** "),
-    url="https://github.com/code-rgb/USERGE-X",
+    url="https://github.com/lostb053/USERGE-X",
     description="Setup Your Own",
-    thumb_url="https://i.imgur.com/1xsOo9o.png",
+    thumb_url="https://i.imgur.com/NfIsDQ5.png",
     reply_markup=InlineKeyboardMarkup(
         [
             [
@@ -76,13 +76,12 @@ REPO_X = InlineQueryResultArticle(
 )
 # Thanks boi @FLAMEPOSEIDON
 ALIVE_IMGS = [
-    "https://telegra.ph/file/11123ef7dff2f1e19e79d.jpg",
-    "https://i.imgur.com/uzKdTXG.jpg",
-    "https://telegra.ph/file/6ecab390e4974c74c3764.png",
-    "https://telegra.ph/file/995c75983a6c0e4499b55.png",
-    "https://telegra.ph/file/86cc25c78ad667ca5e691.png",
+    "https://telegra.ph/file/ed4b802f0cbd90065b81c.jpg",
+    "https://telegra.ph/file/9bca889b1fbe1352f690f.jpg",
+    "https://telegra.ph/file/c20620f87f52c08b9983c.jpg",
+    "https://telegra.ph/file/dc701d4b903fb476c6e06.jpg",
+    "https://telegra.ph/file/5224e8c058ee36b80a8c7.jpg",
 ]
-
 
 def _get_mode() -> str:
     if RawClient.DUAL_MODE:
@@ -1151,9 +1150,9 @@ if userge.has_bot:
             MAIN_MENU = InlineQueryResultArticle(
                 title="Main Menu",
                 input_message_content=InputTextMessageContent(" 𝐔𝐒𝐄𝐑𝐆𝐄-𝐗  𝗠𝗔𝗜𝗡 𝗠𝗘𝗡𝗨 "),
-                url="https://github.com/code-rgb/USERGE-X",
+                url="https://github.com/lostb053/USERGE-X",
                 description="Userge-X Main Menu",
-                thumb_url="https://i.imgur.com/1xsOo9o.png",
+                thumb_url="https://i.imgur.com/NfIsDQ5.png",
                 reply_markup=InlineKeyboardMarkup(main_menu_buttons()),
             )
             results.append(MAIN_MENU)
