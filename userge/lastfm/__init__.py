@@ -1,3 +1,9 @@
+import aiohttp
+from userge import Config, get_collection, userge
+
+du = "https://last.fm/user/"
+SAVED_SETTINGS = get_collection("CONFIGS")
+
 def tglst():
     tglst_ = [
         "rock",
