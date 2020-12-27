@@ -2,7 +2,7 @@ import aiohttp
 from userge import Config, get_collection, userge
 
 du = "https://last.fm/user/"
-SAVED_SETTINGS = get_collection("CONFIGS")
+API = "http://ws.audioscrobbler.com/2.0"
 
 def tglst():
     tglst_ = [
@@ -754,10 +754,9 @@ async def get_response(params: dict):
 
 
 async def user():
-    data = await SAVED_SETTINGS.find_one({"_id": "SHOW_LASTFM"})
+    data = await get_collection("CONFIGS").find_one({"_id": "SHOW_LASTFM"})
     user_ = await userge.get_me()
     if data and data["on"] == "Show":
         return f"[{user_.first_name}]({du}{Config.LASTFM_USERNAME})"
     else:
         return f"{user_.first_name}"
-    
