@@ -736,4 +736,22 @@ def pcurl():
         "https://i.imgur.com/iXzXaDp.png",
     ]
     return PIC_URL
+
+
+async def get_response(params: dict):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(API, params=params) as resp:
+            status_code = resp.status
+            json_ = await resp.json()
+        await session.close()
+    return status_code, json_
+
+
+async def user():
+    data = await SAVED_SETTINGS.find_one({"_id": "SHOW_LASTFM"})
+    user_ = await userge.get_me()
+    if data and data["on"] == "Show":
+        return f"[{user_.first_name}]({du}{Config.LASTFM_USERNAME})"
+    else:
+        return f"{user_.first_name}"
     
