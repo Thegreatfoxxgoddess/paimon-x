@@ -10,7 +10,7 @@ import shutil
 from pyrogram.types import InputMediaPhoto
 
 from userge import Message, userge
-from userge.imgs import googleimagesdownload
+from userge.img import googleimagesdownload
 
 
 @userge.on_cmd(
