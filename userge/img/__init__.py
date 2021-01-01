@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # In[ ]:
 #  coding: utf-8
-
+# taken from https://github.com/sandy1709/catuserbot/blob/master/userbot/helpers/google_image_download.py
+# basically catuserbot by sandy1709
 ###### Searching and Downloading Google Images to the local disk ######
 
 import argparse
