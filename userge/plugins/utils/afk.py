@@ -1,13 +1,5 @@
 """ setup AFK mode """
 
-# Copyright (C) 2020 by UsergeTeam@Github, < https://github.com/UsergeTeam >.
-#
-# This file is part of < https://github.com/UsergeTeam/Userge > project,
-# and is released under the "GNU v3.0 License Agreement".
-# Please see < https://github.com/uaudith/Userge/blob/master/LICENSE >
-#
-# All rights reserved.
-
 import asyncio
 import time
 from random import choice, randint
@@ -69,6 +61,7 @@ async def active_afk(message: Message) -> None:
     IS_AFK_FILTER
     & ~filters.me
     & ~filters.bot
+    & ~filters.user(Config.TG_IDS)
     & ~filters.edited
     & (
         filters.mentioned
@@ -79,7 +72,7 @@ async def active_afk(message: Message) -> None:
                 filters.create(lambda _, __, ___: Config.ALLOW_ALL_PMS)
                 | Config.ALLOWED_CHATS
             )
-        ),
+        )
     ),
     allow_via_bot=False,
 )
