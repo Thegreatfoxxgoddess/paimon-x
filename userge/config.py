@@ -108,7 +108,7 @@ def get_version() -> str:
     """ get userge version """
     ver = f"{versions.__major__}.{versions.__minor__}.{versions.__micro__}"
     try:
-        if "/lostb053/userge-x" in Config.UPSTREAM_REPO.lower():
+        if "/code-rgb/userge-x" in Config.UPSTREAM_REPO.lower():
             diff = list(_REPO.iter_commits(f'v{ver}..HEAD'))
             if diff:
                 return f"{ver}-ROGUE.{len(diff)}"
