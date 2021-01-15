@@ -13,7 +13,7 @@ async def progresss(message):
     percent = math.trunc(day / total_days * 100)
     await message.edit(make_bar(percent) + f" {percent}%")
 
-
+# the following function has been taken from @saitamarobot to be found on tg
 def make_bar(per):
     done = round(per / 5)
     return "▓" * done + "░" * (20 - done)
