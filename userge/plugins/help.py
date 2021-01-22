@@ -90,6 +90,7 @@ ALIVE_IMGS = [
     "https://telegra.ph/file/5224e8c058ee36b80a8c7.jpg",
 ]
 
+
 def _get_mode() -> str:
     if RawClient.DUAL_MODE:
         return "↕️  **DUAL**"
