@@ -1,4 +1,6 @@
+from http.client import CONFLICT
 import aiohttp
+import pylast
 from userge import Config, get_collection, userge
 
 du = "https://last.fm/user/"
@@ -760,3 +762,12 @@ async def user():
         return f"[{user_.first_name}]({du}{Config.LASTFM_USERNAME})"
     else:
         return f"{user_.first_name}"
+
+def auth_():
+    netwrk = pylast.LastFMNetwork(
+        api_key=Config.LASTFM_API_KEY,
+        api_secret=Config.LASTFM_SECRET,
+        username=Config.LASTFM_USERNAME,
+        password_hash=pylast.md5(Config.LASTFM_PASSWORD)
+    )
+    return netwrk
