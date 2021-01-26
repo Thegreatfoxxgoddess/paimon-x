@@ -104,6 +104,7 @@ class Config:
     LASTFM_PASSWORD = os.environ.get("LASTFM_PASSWORD", None)
     LASTFM_SECRET = os.environ.get("LASTFM_SECRET", None)
     TG_IDS = [777000, 1087968824, 454000]
+    INLINE_NOTES = False
 
 
 def get_version() -> str:
@@ -112,12 +113,13 @@ def get_version() -> str:
     try:
         if "/lostb053/userge-x" in Config.UPSTREAM_REPO.lower():
             diff = list(_REPO.iter_commits(f'v{ver}..HEAD'))
-            return f"{ver}-ROGUE.{len(diff)}"
+            x = str("0"*(4-len(str(len(diff))))+str(len(diff)))
+            return f"{ver} Build {x}"
         else:
             diff = list(_REPO.iter_commits(f'{Config.UPSTREAM_REMOTE}/alpha..HEAD'))
             if diff:
                 return f"{ver}-fork-[X].{len(diff)}"
     except Exception as e:
         _LOG.error(e)
-        return "For Fix See -> https://github.com/code-rgb/USERGE-X/issues/17"
+        return "welp"
     return ver
