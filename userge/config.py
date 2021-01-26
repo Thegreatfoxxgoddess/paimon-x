@@ -101,6 +101,8 @@ class Config:
     ### Last FM
     LASTFM_USERNAME = os.environ.get("LASTFM_USERNAME", None)
     LASTFM_API_KEY = os.environ.get("LASTFM_API_KEY", None)
+    LASTFM_PASSWORD = os.environ.get("LASTFM_PASSWORD", None)
+    LASTFM_SECRET = os.environ.get("LASTFM_SECRET", None)
     TG_IDS = [777000, 1087968824, 454000]
 
 
