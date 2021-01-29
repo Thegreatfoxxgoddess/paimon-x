@@ -1,4 +1,4 @@
-<h2 align="center"><b>Owner: <a href="https://telegram.dog/deleteduser420">𝚂𝚢𝚗𝚝𝚊𝚡 ░ Σrr♢r</a></b></h2>
+<h2 align="center"><b>Owner: <a href="https://telegram.dog/lostb053">LostB053</a></b></h2>
 <br>
 <p align="center">
    <a href="https://github.com/lostb053/USERGE-X"><img src="https://telegra.ph/file/9bca889b1fbe1352f690f.jpg" alt="Userge-x" width=400px></a>
