@@ -112,8 +112,8 @@ def get_version() -> str:
     ver = f"{versions.__major__}.{versions.__minor__}.{versions.__micro__}"
     try:
         if "/lostb053/userge-x" in Config.UPSTREAM_REPO.lower():
-            diff = list(_REPO.iter_commits(f'v{ver}..HEAD'))
-            x = str("0"*(4-len(str(len(diff))))+str(len(diff)))
+            diff = str(len(list(_REPO.iter_commits(f'v{ver}..HEAD'))))
+            x = str("0"*(4-len(diff))+diff)
             return f"{ver} Build {x}"
         else:
             diff = list(_REPO.iter_commits(f'{Config.UPSTREAM_REMOTE}/alpha..HEAD'))
@@ -121,5 +121,5 @@ def get_version() -> str:
                 return f"{ver}-fork-[X].{len(diff)}"
     except Exception as e:
         _LOG.error(e)
-        return "welp"
+        return "ersion oof"
     return ver
