@@ -43,10 +43,7 @@ async def img_sampler(message: Message):
         "no_directory": "no_directory",
     }
     # passing the arguments to the function
-    try:
-        paths = response.download(arguments)
-    except Exception as e:
-        return await cat.edit(f"Error: \n`{e}`")
+    paths = response.download(arguments)
     media = []
     if paths:
         lst = paths[0][query]
