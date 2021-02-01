@@ -12,8 +12,8 @@
 
 [![Open Source Love svg1](https://badges.frapsoft.com/os/v1/open-source.png?v=103)](https://github.com/code-rgb/userge-x)
 [![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg?&style=flat-square)](https://github.com/code-rgb/USERGE-X#copyright--license)
-[![Stars](https://img.shields.io/github/stars/lostb053/USERGE-X?&style=flat-square)](https://github.com/code-rgb/USERGE-X/stargazers)
-[![Forks](https://img.shields.io/github/forks/lostb053/USERGE-X?&style=flat-square)](https://github.com/code-rgb/USERGE-X/network/members)
+[![Stars](https://img.shields.io/github/stars/lostb053/USERGE-X?&style=flat-square)](https://github.com/lostb053/USERGE-X/stargazers)
+[![Forks](https://img.shields.io/github/forks/lostb053/USERGE-X?&style=flat-square)](https://github.com/lostb053/USERGE-X/network/members)
 ![Repo Size](https://img.shields.io/github/repo-size/lostb053/userge-x?style=flat-square)
 [![CodeFactor](https://www.codefactor.io/repository/github/lostb053/userge-x/badge?&style=flat-square)](https://www.codefactor.io/repository/github/lostb053/userge-x)
 <br>
