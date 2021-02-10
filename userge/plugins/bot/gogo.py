@@ -106,14 +106,26 @@ class Anime:
             row_.append(btn_)
         if episode > 1:
             row_.append(
-                [InlineKeyboardButton(str(episode-1), callback_data=f"gogo_get_qual{key_}_{episode-1}")]
+                [
+                    InlineKeyboardButton(
+                        str(episode - 1),
+                        callback_data=f"gogo_get_qual{key_}_{episode-1}",
+                    )
+                ]
             )
         row_.append(
             [InlineKeyboardButton("Back", callback_data=f"get_currentpg{key_}")]
         )
-        if episode < len(await Anime.get_eps(await Anime._get_html(f"{await Anime._get_name(url)}"))):
+        if episode < len(
+            await Anime.get_eps(await Anime._get_html(f"{await Anime._get_name(url)}"))
+        ):
             row_.append(
-                [InlineKeyboardButton(str(episode+1), callback_data=f"gogo_get_qual{key_}_{episode+1}")]
+                [
+                    InlineKeyboardButton(
+                        str(episode + 1),
+                        callback_data=f"gogo_get_qual{key_}_{episode+1}",
+                    )
+                ]
             )
         return InlineKeyboardMarkup(row_)
 
