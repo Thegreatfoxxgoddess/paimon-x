@@ -116,7 +116,7 @@ def get_version() -> str:
             x = str("0"*(4-len(diff))+diff)
             return f"{ver} Build {x}"
         else:
-            diff = list(_REPO.iter_commits(f'{Config.UPSTREAM_REMOTE}/alpha..HEAD'))
+            diff = list(_REPO.iter_commits(f'{Config.UPSTREAM_REMOTE}/master..HEAD'))
             if diff:
                 return f"{ver}-fork-[X].{len(diff)}"
     except Exception as e:
