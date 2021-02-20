@@ -57,8 +57,8 @@ _checkDefaultVars() {
         [G_DRIVE_IS_TD]=true
         [CMD_TRIGGER]="."
         [SUDO_TRIGGER]="!"
-        [FINISHED_PROGRESS_STR]="❑"
-        [UNFINISHED_PROGRESS_STR]="□"
+        [FINISHED_PROGRESS_STR]="█"
+        [UNFINISHED_PROGRESS_STR]="░"
     )
     for key in ${!def_vals[@]}; do
         set -a
@@ -190,7 +190,7 @@ _setupPlugins() {
 }
 
 _checkUnoffPlugins() {
-    _setupPlugins Xtra true $LOAD_UNOFFICIAL_PLUGINS https://github.com/lostb053/Userge-Plugins.git
+    _setupPlugins Xtra true $LOAD_UNOFFICIAL_PLUGINS https://github.com/code-rgb/Userge-Plugins.git
 }
 
 _checkCustomPlugins() {
