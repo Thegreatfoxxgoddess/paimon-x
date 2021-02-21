@@ -1,10 +1,8 @@
 from http.client import CONFLICT
-import aiohttp
-import pylast
+import aiohttp, pylast, random
 from userge import Config, get_collection, userge
 
 du = "https://last.fm/user/"
-API = "http://ws.audioscrobbler.com/2.0"
 
 def tglst():
     tglst_ = [
@@ -735,20 +733,17 @@ def tglst():
     return tglst_
 
 def pcurl():
-    PIC_URL = [
-        "https://i.imgur.com/l772pcA.png",
-        "https://i.imgur.com/KehK98D.png",
-        "https://i.imgur.com/LuwSKeO.png",
-        "https://i.imgur.com/EZ1S9cJ.png",
-        "https://i.imgur.com/g20T1of.png",
-        "https://i.imgur.com/iXzXaDp.png",
+    PURL = [
+        "https://i.imgur.com/l772pcA.png", "https://i.imgur.com/KehK98D.png",
+        "https://i.imgur.com/LuwSKeO.png", "https://i.imgur.com/EZ1S9cJ.png",
+        "https://i.imgur.com/g20T1of.png", "https://i.imgur.com/iXzXaDp.png",
     ]
-    return PIC_URL
+    return PURL
 
 
 async def get_response(params: dict):
     async with aiohttp.ClientSession() as session:
-        async with session.get(API, params=params) as resp:
+        async with session.get("http://ws.audioscrobbler.com/2.0", params=params) as resp:
             status_code = resp.status
             json_ = await resp.json()
         await session.close()
@@ -765,8 +760,7 @@ async def user():
 
 def auth_():
     netwrk = pylast.LastFMNetwork(
-        api_key=Config.LASTFM_API_KEY,
-        api_secret=Config.LASTFM_SECRET,
+        api_key=Config.LASTFM_API_KEY, api_secret=Config.LASTFM_SECRET, 
         username=Config.LASTFM_USERNAME,
         password_hash=pylast.md5(Config.LASTFM_PASSWORD)
     )
@@ -775,7 +769,10 @@ def auth_():
 def ripimg():
     welp = [
         "https:\/\/lastfm.freetls.fastly.net\/i\/u\/300x300\/2a96cbd8b46e442fc41c2b86b821562f.png",
-        "https://lastfm.freetls.fastly.net/i/u/300x300/2a96cbd8b46e442fc41c2b86b821562f.png",
-        ""
+        "https://lastfm.freetls.fastly.net/i/u/300x300/2a96cbd8b46e442fc41c2b86b821562f.png", "",
     ]
     return welp
+
+def rand_array(array: list, string: bool = True):
+    random_num = random.choice(array)
+    return str(random_num) if string else random_num
