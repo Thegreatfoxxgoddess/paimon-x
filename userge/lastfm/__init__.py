@@ -773,6 +773,6 @@ def ripimg():
     ]
     return welp
 
-def rand_array(array: list, string: bool = True):
+def rand(array: list, string: bool = True):
     random_num = random.choice(array)
     return str(random_num) if string else random_num
