@@ -4,10 +4,18 @@ from userge import Config, get_collection, userge
 from userge.utils import rand_array
 
 du = "https://last.fm/user/"
-welp = [
-    "https:\/\/lastfm.freetls.fastly.net\/i\/u\/300x300\/2a96cbd8b46e442fc41c2b86b821562f.png",
-    "https://lastfm.freetls.fastly.net/i/u/300x300/2a96cbd8b46e442fc41c2b86b821562f.png", "",
+pcurl = [
+    "https://i.imgur.com/l772pcA.png", "https://i.imgur.com/KehK98D.png",
+    "https://i.imgur.com/LuwSKeO.png", "https://i.imgur.com/EZ1S9cJ.png",
+    "https://i.imgur.com/g20T1of.png", "https://i.imgur.com/iXzXaDp.png",
 ]
+
+def ripimg():
+    welp = [
+        "https:\/\/lastfm.freetls.fastly.net\/i\/u\/300x300\/2a96cbd8b46e442fc41c2b86b821562f.png",
+        "https://lastfm.freetls.fastly.net/i/u/300x300/2a96cbd8b46e442fc41c2b86b821562f.png", "",
+    ]
+    return welp
 
 def tglst():
     tglst_ = [
@@ -737,15 +745,6 @@ def tglst():
     ]
     return tglst_
 
-def pcurl():
-    PURL = [
-        "https://i.imgur.com/l772pcA.png", "https://i.imgur.com/KehK98D.png",
-        "https://i.imgur.com/LuwSKeO.png", "https://i.imgur.com/EZ1S9cJ.png",
-        "https://i.imgur.com/g20T1of.png", "https://i.imgur.com/iXzXaDp.png",
-    ]
-    return PURL
-
-
 async def resp(params: dict):
     async with aiohttp.ClientSession() as session:
         async with session.get("http://ws.audioscrobbler.com/2.0", params=params) as resp:
@@ -753,7 +752,6 @@ async def resp(params: dict):
             json_ = await resp.json()
         await session.close()
     return status_code, json_
-
 
 async def user():
     data = await get_collection("CONFIGS").find_one({"_id": "SHOW_LASTFM"})
@@ -796,8 +794,5 @@ async def info(wo: str, query: str, art, tr):
     res = await resp(params)
     return res
 
-def ri(data):
-    img = data.get("image").get("#text")
-    if img in welp:
-        img = rand_array(pcurl())
-    return img
+def rand():
+    return rand_array(pcurl)
