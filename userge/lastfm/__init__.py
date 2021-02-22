@@ -1,8 +1,13 @@
 from http.client import CONFLICT
 import aiohttp, pylast, random
 from userge import Config, get_collection, userge
+from userge.utils import rand_array
 
 du = "https://last.fm/user/"
+welp = [
+    "https:\/\/lastfm.freetls.fastly.net\/i\/u\/300x300\/2a96cbd8b46e442fc41c2b86b821562f.png",
+    "https://lastfm.freetls.fastly.net/i/u/300x300/2a96cbd8b46e442fc41c2b86b821562f.png", "",
+]
 
 def tglst():
     tglst_ = [
@@ -741,7 +746,7 @@ def pcurl():
     return PURL
 
 
-async def get_response(params: dict):
+async def resp(params: dict):
     async with aiohttp.ClientSession() as session:
         async with session.get("http://ws.audioscrobbler.com/2.0", params=params) as resp:
             status_code = resp.status
@@ -766,13 +771,33 @@ def auth_():
     )
     return netwrk
 
-def ripimg():
-    welp = [
-        "https:\/\/lastfm.freetls.fastly.net\/i\/u\/300x300\/2a96cbd8b46e442fc41c2b86b821562f.png",
-        "https://lastfm.freetls.fastly.net/i/u/300x300/2a96cbd8b46e442fc41c2b86b821562f.png", "",
-    ]
-    return welp
+async def recs(query: str, typ: str, lim: int):
+    params = {
+        "method": f"user.get{typ}",
+        "user": query,
+        "limit": lim,
+        "api_key": Config.LASTFM_API_KEY,
+        "format": "json",
+    }
+    res = await resp(params)
+    return res
 
-def rand(array: list, string: bool = True):
-    random_num = random.choice(array)
-    return str(random_num) if string else random_num
+async def info(wo: str, query: str, art, tr):
+    params = {
+        "method": f"{wo}.getInfo",
+        "api_key": Config.LASTFM_API_KEY,
+        "format": "json",
+    }
+    if wo=="user":
+        params['user']=query
+    else:
+        params['track']=tr
+        params['artist']=art
+    res = await resp(params)
+    return res
+
+def ri(data):
+    img = data.get("image").get("#text")
+    if img in welp:
+        img = rand_array(pcurl())
+    return img
