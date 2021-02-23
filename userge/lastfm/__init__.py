@@ -41,7 +41,8 @@ async def info(wo: str, query: str, art, tr):
     if wo=="user":
         params['user']=query
     else:
-        params['track']=tr
-        params['artist']=art
+        params['track'], params['artist']=tr, art
+        if query!="":
+            params['user']=query
     res = await resp(params)
     return res
