@@ -31,12 +31,12 @@ async def resp(params: dict):
         await session.close()
     return status_code, json_
 
-async def recs(query: str, typ: str, lim: int):
+async def recs(query, typ, lim):
     params = {"method": f"user.get{typ}", "user": query, "limit": lim, "api_key": Config.LASTFM_API_KEY, "format": "json"}
     res = await resp(params)
     return res
 
-async def info(wo: str, query: str, art, tr):
+async def info(wo, query, art, tr):
     params = {"method": f"{wo}.getInfo", "api_key": Config.LASTFM_API_KEY, "format": "json"}
     if wo=="user":
         params['user']=query
