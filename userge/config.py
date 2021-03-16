@@ -100,6 +100,8 @@ class Config:
     DEEP_AI = os.environ.get("DEEP_AI")
     LASTFM_USERNAME = os.environ.get("LASTFM_USERNAME")
     LASTFM_API_KEY = os.environ.get("LASTFM_API_KEY")
+    LASTFM_PASSWORD = os.environ.get("LASTFM_PASSWORD", None)
+    LASTFM_SECRET = os.environ.get("LASTFM_SECRET", None)
     TG_IDS = [777000, 1087968824, 454000]
     INLINE_NOTES = False
     BOT_ANTIFLOOD = False
@@ -109,15 +111,15 @@ def get_version() -> str:
     """ get USERGE-X version """
     ver = f"{versions.__major__}.{versions.__minor__}.{versions.__micro__}"
     try:
-        if "/code-rgb/userge-x" in Config.UPSTREAM_REPO.lower():
-            diff = list(_REPO.iter_commits(f'v{ver}..HEAD'))
-            if diff:
-                return f"{ver}-LOGAN.{len(diff)}"
+        if "/lostb053/userge-x" in Config.UPSTREAM_REPO.lower():
+            diff = str(len(list(_REPO.iter_commits(f'v{ver}..HEAD'))))
+            x = str("0"*(4-len(diff))+diff)
+            return f"{ver} Build {x}"
         else:
-            diff = list(_REPO.iter_commits(f'{Config.UPSTREAM_REMOTE}/alpha..HEAD'))
+            diff = list(_REPO.iter_commits(f'{Config.UPSTREAM_REMOTE}/master..HEAD'))
             if diff:
                 return f"{ver}-fork-[X].{len(diff)}"
     except Exception as e:
         _LOG.error(e)
-        return ver
-
+        return "ersion oof, check release tags"
+    return ver
