@@ -89,39 +89,34 @@ class Config:
     STATUS = None
     BOT_FORWARDS = False
     BOT_MEDIA = os.environ.get("BOT_MEDIA")
-    ### Spotify
     SPOTIFY_CLIENT_ID = os.environ.get('SPOTIFY_CLIENT_ID')
     SPOTIFY_CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET')
     SPOTIFY_MODE = False
-    ### MEME Generator 
     IMGFLIP_ID = os.environ.get('IMGFLIP_ID')
     IMGFLIP_PASS = os.environ.get('IMGFLIP_PASS')
     ALLOW_NSFW = os.environ.get("ALLOW_NSFW", "False")
     PM_LOG_GROUP_ID = int(os.environ.get("PM_LOG_GROUP_ID", 0))
     PM_LOGGING = False
     DEEP_AI = os.environ.get("DEEP_AI")
-    ### Last FM
     LASTFM_USERNAME = os.environ.get("LASTFM_USERNAME")
     LASTFM_API_KEY = os.environ.get("LASTFM_API_KEY")
-    LASTFM_PASSWORD = os.environ.get("LASTFM_PASSWORD", None)
-    LASTFM_SECRET = os.environ.get("LASTFM_SECRET", None)
     TG_IDS = [777000, 1087968824, 454000]
     INLINE_NOTES = False
+    BOT_ANTIFLOOD = False
 
 
 def get_version() -> str:
     """ get USERGE-X version """
     ver = f"{versions.__major__}.{versions.__minor__}.{versions.__micro__}"
     try:
-        if "/lostb053/userge-x" in Config.UPSTREAM_REPO.lower():
-            diff = str(len(list(_REPO.iter_commits(f'v{ver}..HEAD'))))
-            x = str("0"*(4-len(diff))+diff)
-            return f"{ver} Build {x}"
+        if "/code-rgb/userge-x" in Config.UPSTREAM_REPO.lower():
+            diff = list(_REPO.iter_commits(f'v{ver}..HEAD'))
+            if diff:
+                return f"{ver}-LOGAN.{len(diff)}"
         else:
-            diff = list(_REPO.iter_commits(f'{Config.UPSTREAM_REMOTE}/master..HEAD'))
+            diff = list(_REPO.iter_commits(f'{Config.UPSTREAM_REMOTE}/alpha..HEAD'))
             if diff:
                 return f"{ver}-fork-[X].{len(diff)}"
     except Exception as e:
         _LOG.error(e)
-        return "ersion oof, check release tags"
-    return ver
+        return ver
