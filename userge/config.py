@@ -120,3 +120,4 @@ def get_version() -> str:
     except Exception as e:
         _LOG.error(e)
         return ver
+    
