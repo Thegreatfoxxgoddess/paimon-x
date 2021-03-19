@@ -121,5 +121,4 @@ def get_version() -> str:
                 return f"{ver}-fork-[X].{len(diff)}"
     except Exception as e:
         _LOG.error(e)
-        return "ersion oof, check release tags"
-    return ver
+        return ver
