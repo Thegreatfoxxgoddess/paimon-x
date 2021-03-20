@@ -196,8 +196,10 @@ if userge.has_bot:
             )
             btns = [
                 [
-                    InlineKeyboardButton("👤  CONTACT", url=contact_url),
-                    InlineKeyboardButton("⭐️  REPO", url=Config.UPSTREAM_REPO),
+                    InlineKeyboardButton(
+                        "MÚSICA", url=f"https://t.me/THEGREATFOXXGODDESS"
+                    ),
+                    InlineKeyboardButton("REPO", url=Config.UPSTREAM_REPO),
                 ]
             ]
         try:
