@@ -198,7 +198,7 @@ if userge.has_bot:
             try:
                 b_id = c["user_id"]
                 await userge.bot.send_message(
-                    b_id, "🔊 You received a **new** Broadcast."
+                    b_id, "You received a **new** Broadcast."
                 )
                 if to_copy:
                     await replied.copy(b_id)
@@ -224,7 +224,7 @@ if userge.has_bot:
                     except FloodWait as e:
                         await asyncio.sleep(e.x)
         end_ = time()
-        b_info = f"🔊  Successfully broadcasted message to ➜  <b>{count} users.</b>"
+        b_info = f" Successfully broadcasted message to ➜  <b>{count} users.</b>"
         if len(blocked_users) != 0:
             b_info += f"\n🚫  <b>{len(blocked_users)} users</b> blocked your bot recently, so have been removed."
         b_info += f"\n⏳  <code>Process took: {time_formatter(end_ - start_)}</code>."
@@ -245,7 +245,7 @@ if userge.has_bot:
             await message.reply("Reply to a message to see user info")
             return
         fwd = replied.forward_from
-        info_msg = await message.reply("`🔎 Searching for user in database ...`")
+        info_msg = await message.reply("`Searching for user in database ...`")
         usr = None
         if replied.forward_sender_name:
             user_id = BOT_MSGS.search(replied.message_id)
