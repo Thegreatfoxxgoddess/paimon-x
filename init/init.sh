@@ -19,9 +19,9 @@ trap 'echo hi' USR1
 initUserge() {
     printLogo
     assertPrerequisites
-    sendMessage "Initializing USERGE-X ..."
+    sendMessage "initializing paimon-x ..."
     assertEnvironment
-    editLastMessage "Starting USERGE-X ..."
+    editLastMessage "starting paimon-x ..."
     printLine
 }
 
@@ -31,18 +31,18 @@ startUserge() {
 }
 
 stopUserge() {
-    sendMessage "Exiting USERGE-X ..."
+    sendMessage "exiting paimon-x ..."
     endLogBotPolling
 }
 
 handleSigTerm() {
-    log "Exiting With SIGTERM (143) ..."
+    log "exiting with SIGTERM (143) ..."
     stopUserge
     exit 143
 }
 
 handleSigInt() {
-    log "Exiting With SIGINT (130) ..."
+    log "exiting with SIGINT (130) ..."
     stopUserge
     exit 130
 }
