@@ -62,15 +62,15 @@ REPO_X = InlineQueryResultArticle(
     input_message_content=InputTextMessageContent("**Here's how to setup USERGE-X** "),
     url="https://github.com/code-rgb/USERGE-X",
     description="Setup Your Own",
-    thumb_url="https://imgur.com/a/MDnXO9b.pnghttps://imgur.com/a/MDnXO9b.png",
+    thumb_url="https://telegra.ph/file/07afe6576e96d1c15dbe2.jpg",
     reply_markup=InlineKeyboardMarkup(
         [
             [
                 InlineKeyboardButton(
-                    "🔥 USERGE-X Repo", url="https://github.com/code-rgb/USERGE-X"
+                    "USERGE-X Repo", url="https://github.com/code-rgb/USERGE-X"
                 ),
                 InlineKeyboardButton(
-                    "🚀 Deploy USERGE-X",
+                    "Deploy USERGE-X",
                     url=(
                         "https://heroku.com/deploy?template="
                         "https://github.com/code-rgb/USERGE-X/tree/alpha"
@@ -401,27 +401,27 @@ if userge.has_bot:
         if plg.is_loaded:
             tmp_btns.append(
                 InlineKeyboardButton(
-                    "❎ Unload",
+                    "Unload",
                     callback_data=f"unload({'|'.join(pos_list[:3])})".encode(),
                 )
             )
         else:
             tmp_btns.append(
                 InlineKeyboardButton(
-                    "✅ Load", callback_data=f"load({'|'.join(pos_list[:3])})".encode()
+                    "Load", callback_data=f"load({'|'.join(pos_list[:3])})".encode()
                 )
             )
         if plg.is_enabled:
             tmp_btns.append(
                 InlineKeyboardButton(
-                    "➖ Disable",
+                    "Disable",
                     callback_data=f"disable({'|'.join(pos_list[:3])})".encode(),
                 )
             )
         else:
             tmp_btns.append(
                 InlineKeyboardButton(
-                    "➕ Enable",
+                    "Enable",
                     callback_data=f"enable({'|'.join(pos_list[:3])})".encode(),
                 )
             )
@@ -459,25 +459,25 @@ if userge.has_bot:
         if flt.is_loaded:
             tmp_btns.append(
                 InlineKeyboardButton(
-                    "❎ Unload", callback_data=f"unload({cur_pos})".encode()
+                    "Unload", callback_data=f"unload({cur_pos})".encode()
                 )
             )
         else:
             tmp_btns.append(
                 InlineKeyboardButton(
-                    "✅ Load", callback_data=f"load({cur_pos})".encode()
+                    "Load", callback_data=f"load({cur_pos})".encode()
                 )
             )
         if flt.is_enabled:
             tmp_btns.append(
                 InlineKeyboardButton(
-                    "➖ Disable", callback_data=f"disable({cur_pos})".encode()
+                    "Disable", callback_data=f"disable({cur_pos})".encode()
                 )
             )
         else:
             tmp_btns.append(
                 InlineKeyboardButton(
-                    "➕ Enable", callback_data=f"enable({cur_pos})".encode()
+                    "Enable", callback_data=f"enable({cur_pos})".encode()
                 )
             )
         buttons = [tmp_btns] + buttons
@@ -1140,10 +1140,10 @@ if userge.has_bot:
 
             MAIN_MENU = InlineQueryResultArticle(
                 title="Main Menu",
-                input_message_content=InputTextMessageContent(" ＰＡＩＭＯＮ-Ｘ ＭＡＩＮ ＭＥＮＵ "),
+                input_message_content=InputTextMessageContent(" 𝗣𝗔𝗜𝗠𝗢𝗡-𝗫 𝗠𝗔𝗜𝗡 𝗠𝗘𝗡𝗨 "),
                 url="https://github.com/code-rgb/USERGE-X",
                 description="paimon-x main menu",
-                thumb_url="https://imgur.com/a/MDnXO9b.png",
+                thumb_url="https://telegra.ph/file/07afe6576e96d1c15dbe2.jpg",
                 reply_markup=InlineKeyboardMarkup(main_menu_buttons()),
             )
             results.append(MAIN_MENU)
