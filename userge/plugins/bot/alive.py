@@ -14,7 +14,7 @@ from userge.core.ext import RawClient
 from userge.utils import get_file_id, rand_array
 
 _ALIVE_REGEX = comp_regex(
-    r"http[s]?://(i\.imgur\.com|telegra\.ph/file|t\.me)/(\w+)(?:\.|/)(gif|jpg|png|jpeg|[0-9]+)(?:/([0-9]+))?"
+    r"http[s]?://(i\.imgur\.com|telegra\.ph/file|t\.me)/(\w+)(?:\.|/)(gif|jpg|MP4|png|jpeg|[0-9]+)(?:/([0-9]+))?"
 )
 _USER_CACHED_MEDIA, _BOT_CACHED_MEDIA = None, None
 
@@ -227,13 +227,12 @@ class Bot_Alive:
     @staticmethod
     def alive_info() -> str:
         alive_info_ = f"""
-<a href="https://telegram.dog/x_xtests"><b>USERGE-X</a> is Up and Running.</b>
-
-  🐍   <b>Python :</b>    <code>v{versions.__python_version__}</code>
-  🔥   <b>Pyrogram :</b>    <code>v{versions.__pyro_version__}</code>
-  🧬   <b>𝑿 :</b>    <code>v{get_version()}</code>
-
-<b>{Bot_Alive._get_mode()}</b>    <code>|</code>    🕔  <b>{userge.uptime}</b>
+ㅤㅤㅤㅤㅤㅤㅤ
+  🧬  <b> [paimon](https://t.me/Jesusbot) : </b>   <code>v0.4.2</code>
+  🐍  <b> Python  :</b>    <code>v{versions.__python_version__}</code>
+  🔥  <b> Pyro      :</b>    <code>v{versions.__pyro_version__}</code>
+  🦋  <b> User      :</b>    `Alícia`
+  <b>{Bot_Alive._get_mode()}   |   {userge.uptime}</b>
 """
         return alive_info_
 
@@ -258,11 +257,38 @@ class Bot_Alive:
     @staticmethod
     def alive_default_imgs() -> str:
         alive_imgs = [
-            "https://telegra.ph/file/11123ef7dff2f1e19e79d.jpg",
-            "https://i.imgur.com/uzKdTXG.jpg",
-            "https://telegra.ph/file/6ecab390e4974c74c3764.png",
-            "https://telegra.ph/file/995c75983a6c0e4499b55.png",
-            "https://telegra.ph/file/86cc25c78ad667ca5e691.png",
+            "https://telegra.ph/file/6f8aa08193c4a26d32c8f.jpg",
+            "https://telegra.ph/file/f31cf4721636102bba528.jpg",
+            "https://telegra.ph/file/7b93eb9f3a71d4a009961.jpg",
+            "https://telegra.ph/file/59aefb8f199af9e4ce214.jpg",
+            "https://telegra.ph/file/e7b569283c9484c280242.jpg",
+            "https://telegra.ph/file/fccccf1269bd28a22dd24.jpg",
+            "https://telegra.ph/file/ea4adcad104ec3421f9cc.jpg",
+            "https://telegra.ph/file/377e047a87f9fd7e8b4fc.jpg",
+            "https://telegra.ph/file/6f63195d08df591bc4388.jpg",
+            "https://telegra.ph/file/87911231dfc1137c145ef.jpg",
+            "https://telegra.ph/file/0cdff991a8c31dc6eb5e2.jpg",
+            "https://telegra.ph/file/43c24db2b9f7211cdc559.jpg",
+            "https://telegra.ph/file/df2e8a2c5532df9db458d.jpg",
+            "https://telegra.ph/file/c46511ea3f56d287e8c82.jpg",
+            "https://telegra.ph/file/f93b692f0ff3719abe497.jpg",
+            "https://telegra.ph/file/c13c205edd80e06abf440.jpg",
+            "https://telegra.ph/file/5536eee05b34240538491.jpg",
+            "https://telegra.ph/file/9e2f4efa63ffede41528a.jpg",
+            "https://telegra.ph/file/92da4c48a812dff03d338.jpg",
+            "https://telegra.ph/file/92da4c48a812dff03d338.jpg",
+            "https://telegra.ph/file/24062dabe6904a3be2c6f.jpg",
+            "https://telegra.ph/file/ad0489b333dfff59c7d90.jpg",
+            "https://telegra.ph/file/226c91584f99d2850d4c5.jpg",
+            "https://telegra.ph/file/e1bcdeaa8b65f93a2b2c7.jpg",
+            "https://telegra.ph/file/05bec6e7375a8a4eb33f9.jpg",
+            "https://telegra.ph/file/4443de8b0fcfd6dccd65e.jpg",
+            "https://telegra.ph/file/26252450e097240040285.jpg",
+            "https://telegra.ph/file/03ec8ed814ee02625b896.jpg",
+            "https://telegra.ph/file/9a3f71393836a752c6b41.jpg",
+            "https://telegra.ph/file/a480d0a9f97a4e8891688.jpg",
+            "https://telegra.ph/file/75990831f9befadf43862.jpg",
+            "https://telegra.ph/file/f4e9726bc287f3a746c90.jpg",
         ]
         return rand_array(alive_imgs)
 
