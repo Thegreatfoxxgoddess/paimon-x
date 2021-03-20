@@ -177,14 +177,14 @@ if userge.has_bot:
                 await asyncio.sleep(e.x)
             except BadRequest:
                 pass
-            ping = "𝗣𝗶𝗻𝗴:  🏓  {} sec\n"
+            ping = "𝗣𝗶𝗻𝗴:  {} sec\n"
         alive_s = "➕ 𝗘𝘅𝘁𝗿𝗮 𝗣𝗹𝘂𝗴𝗶𝗻𝘀 : {}\n".format(
             _parse_arg(Config.LOAD_UNOFFICIAL_PLUGINS)
         )
         alive_s += f"👥 𝗦𝘂𝗱𝗼 : {_parse_arg(Config.SUDO_ENABLED)}\n"
         alive_s += f"🚨 𝗔𝗻𝘁𝗶𝘀𝗽𝗮𝗺 : {_parse_arg(Config.ANTISPAM_SENTRY)}\n"
         if Config.HEROKU_APP and Config.RUN_DYNO_SAVER:
-            alive_s += "⛽️ 𝗗𝘆𝗻𝗼 𝗦𝗮𝘃𝗲𝗿 :  ✅ 𝙴𝚗𝚊𝚋𝚕𝚎𝚍\n"
+            alive_s += "⛽️ 𝗗𝘆𝗻𝗼 𝗦𝗮𝘃𝗲𝗿 :  𝙴𝚗𝚊𝚋𝚕𝚎𝚍\n"
         alive_s += f"💬 𝗕𝗼𝘁 𝗙𝗼𝗿𝘄𝗮𝗿𝗱𝘀 : {_parse_arg(Config.BOT_FORWARDS)}\n"
         alive_s += f"🛡 𝗣𝗠 𝗚𝘂𝗮𝗿𝗱 : {_parse_arg(not Config.ALLOW_ALL_PMS)}\n"
         alive_s += f"📝 𝗣𝗠 𝗟𝗼𝗴𝗴𝗲𝗿 : {_parse_arg(Config.PM_LOGGING)}"
@@ -198,7 +198,7 @@ if userge.has_bot:
 
 
 def _parse_arg(arg: bool) -> str:
-    return " ✅ 𝙴𝚗𝚊𝚋𝚕𝚎𝚍" if arg else " ❌ 𝙳𝚒𝚜𝚊𝚋𝚕𝚎𝚍"
+    return "𝙴𝚗𝚊𝚋𝚕𝚎𝚍" if arg else "𝙳𝚒𝚜𝚊𝚋𝚕𝚎𝚍"
 
 
 class Bot_Alive:
@@ -232,6 +232,7 @@ class Bot_Alive:
   🐍  <b> Python  :</b>    <code>v{versions.__python_version__}</code>
   🔥  <b> Pyro      :</b>    <code>v{versions.__pyro_version__}</code>
   🦋  <b> User      :</b>    `Alícia`
+
   <b>{Bot_Alive._get_mode()}   |   {userge.uptime}</b>
 """
         return alive_info_
@@ -248,8 +249,8 @@ class Bot_Alive:
     def alive_buttons() -> InlineKeyboardMarkup:
         buttons = [
             [
-                InlineKeyboardButton(text="🔧  SETTINGS", callback_data="settings_btn"),
-                InlineKeyboardButton(text="⚡  REPO", url=Config.UPSTREAM_REPO),
+                InlineKeyboardButton(text="SETTINGS", callback_data="settings_btn"),
+                InlineKeyboardButton(text="REPO", url=Config.UPSTREAM_REPO),
             ]
         ]
         return InlineKeyboardMarkup(buttons)
