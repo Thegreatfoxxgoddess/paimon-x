@@ -179,13 +179,11 @@ if userge.has_bot:
         if from_user.id in Config.OWNER_ID:
             start_msg, btns = default_owner_start(from_user)
         else:
-            start_msg = f"""
-Hello 👋 {from_user.fname},
-Nice To Meet You !, I'm <b>{bot_.fname}</b> A Bot.
-
-        <b><i>Powered by</i> [USERGE-X](https://t.me/x_xtests)
-
-My Master is : {owner_.flname}</b>
+start_msg = f"""
+hey there {from_user.fname},
+nice to meet ya, I'm {bot_.fname}.
+      <i>Powered by userge-x</i>
+my owner is  {owner_.flname}✨🦋
 """
             if Config.BOT_FORWARDS:
                 start_msg += "<b>\n📌 NOTE:</b>\nYou can 📨 <b>Send Message</b> here to contact my <b>Master.</b>"
@@ -196,9 +194,11 @@ My Master is : {owner_.flname}</b>
             )
             btns = [
                 [
-                    InlineKeyboardButton("👤  CONTACT", url=contact_url),
-                    InlineKeyboardButton("⭐️  REPO", url=Config.UPSTREAM_REPO),
-                ]
+                    InlineKeyboardButton(
+                        "MÚSICA", url=f"https://t.me/THEGREATFOXXGODDESS"
+                    ),
+                    InlineKeyboardButton("REPO", url=Config.UPSTREAM_REPO),
+                ]]
             ]
         try:
             await send_bot_media(message, start_msg, InlineKeyboardMarkup(btns))
