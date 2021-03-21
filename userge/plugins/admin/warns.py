@@ -40,8 +40,8 @@ userid_not_valid = "can't get the user!"
 user_is_admin = "Sorry! I can't warn an Admin"
 owner_or_sudo = "I can't Ban My Owner and Sudo Users"
 permission_denied = "You Don't have the permission to do it !"
-warn_removed = "✅ Warn Removed Successfully"
-warn_removed_caption = "✅ Warn removed by {} !"
+warn_removed = "Warn Removed Successfully"
+warn_removed_caption = "Warn removed by {} !"
 no_warns_msg = "Well, {} doesn't have any warns."
 total_warns_msg = "User {} has {}/{} warnings.\n**Reasons** are:"
 purge_warns = "{} reset {} warns of {} in {}!"
@@ -102,7 +102,7 @@ async def warn_func(message: Message):
             warn_mode_text = "banned"
 
         banned_log = (
-            r"\\**#Warn_Action**//"
+            r"**#Warn_Action**"
             + "\n"
             + banned_text.format(warned_user.mention, warn_mode_text)
         )
@@ -115,11 +115,11 @@ async def warn_func(message: Message):
             {"user_id": warned_user.id, "chat_id": message.chat.id}
         )
 
-        warn_action = r"\\**#Warn_Action_Log**//"
+        warn_action = r"**#Warn_Action_Log**"
         warn_action += f"\n{banned_log}"
         await CHANNEL.log(warn_action)
         return
-    warn_text = r"\\**#Warned_User**//"
+    warn_text = r"**#Warned_User**"
     warn_text += f"""
 {by_user.mention} has warned {warned_user.mention} in <b>{chat_title}</b>
 Reason: <code>{reason}</code>
@@ -141,14 +141,14 @@ Warns: {wcount}/{max_warns}
     if message.client.is_bot:
         btn_row = [
             InlineKeyboardButton(
-                "⚠️  Remove Warn", callback_data=f"remove_warn_{warn_id}"
+                "Remove Warn", callback_data=f"remove_warn_{warn_id}"
             )
         ]
         if rules:
             botname = (await userge.bot.get_me()).username
             btn_row.append(
                 InlineKeyboardButton(
-                    "📝  Rules", url=f"https://t.me/{botname}?start={rules}"
+                    "Rules", url=f"https://t.me/{botname}?start={rules}"
                 )
             )
 
@@ -191,10 +191,10 @@ async def warn_mode(message: Message):
     if not warn_mode and message.client.is_bot:
         buttons = [
             [
-                InlineKeyboardButton("⚽️  KICK", callback_data="warnmode_type_kick"),
-                InlineKeyboardButton("🤫  MUTE", callback_data="warnmode_type_mute"),
+                InlineKeyboardButton("KICK", callback_data="warnmode_type_kick"),
+                InlineKeyboardButton("MUTE", callback_data="warnmode_type_mute"),
             ],
-            [InlineKeyboardButton("⚰️  BAN", callback_data="warnmode_type_ban")],
+            [InlineKeyboardButton("BAN", callback_data="warnmode_type_ban")],
         ]
         await message.reply(
             f"Choose a warn mode for:\n**Chat: {message.chat.title}**",
