@@ -228,7 +228,7 @@ class Bot_Alive:
     def alive_info() -> str:
         alive_info_ = f"""
 ㅤㅤㅤㅤㅤㅤㅤ
-  🧬  <b> [paimon](https://t.me/Jesusbot) : </b>   <code>v{get_version()}</code>
+  🧬  <b> [paimon](https://t.me/Jesusbot) : </b>   <code>v0.4.2-93.alpha</code>
   🐍  <b> Python  :</b>    <code>v{versions.__python_version__}</code>
   🔥  <b> Pyro      :</b>    <code>v{versions.__pyro_version__}</code>
   🦋  <b> User      :</b>    `Alícia`
@@ -240,10 +240,10 @@ class Bot_Alive:
     @staticmethod
     def _get_mode() -> str:
         if RawClient.DUAL_MODE:
-            return "↕️  DUAL"
+            return "DUAL"
         if Config.BOT_TOKEN:
-            return "🤖  BOT"
-        return "👤  USER"
+            return "BOT"
+        return "USER"
 
     @staticmethod
     def alive_buttons() -> InlineKeyboardMarkup:
