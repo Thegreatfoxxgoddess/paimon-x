@@ -1,319 +1,407 @@
-""" setup auto pm message """
-
-# Copyright (C) 2020 by UsergeTeam@Github, < https://github.com/UsergeTeam >.
-#
-# This file is part of < https://github.com/UsergeTeam/Userge > project,
-# and is released under the "GNU v3.0 License Agreement".
-# Please see < https://github.com/uaudith/Userge/blob/master/LICENSE >
-#
+# Copyright (C) 2020 BY - GitHub.com/code-rgb [TG - @deleteduser420]
 # All rights reserved.
 
+"""Bot Message forwarding"""
+
 import asyncio
-from typing import Dict
+from time import time
 
-from userge import Config, Message, filters, get_collection, userge
-from userge.utils import SafeDict
-from userge.utils.extras import reported_user_image
-
-CHANNEL = userge.getCLogger(__name__)
-SAVED_SETTINGS = get_collection("CONFIGS")
-ALLOWED_COLLECTION = get_collection("PM_PERMIT")
-PMPERMIT_MSG = {}
-
-
-pmCounter: Dict[int, int] = {}
-allowAllFilter = filters.create(lambda _, __, ___: Config.ALLOW_ALL_PMS)
-noPmMessage = bk_noPmMessage = (
-    "Hello {fname} this is an automated message\n"
-    "Please wait until you get approved to direct message "
-    "And please dont spam until then "
+from pyrogram import filters
+from pyrogram.errors import (
+    BadRequest,
+    FloodWait,
+    Forbidden,
+    PeerIdInvalid,
+    UserIsBlocked,
 )
-blocked_message = bk_blocked_message = "**You were automatically blocked**"
+
+from userge import Config, Message, get_collection, userge
+from userge.utils import mention_html, time_formatter
+from userge.utils.extras import BotChat
+
+LOG = userge.getLogger(__name__)
+CHANNEL = userge.getCLogger(__name__)
+BOT_BAN = get_collection("BOT_BAN")
+BOT_START = get_collection("BOT_START")
+SAVED_SETTINGS = get_collection("CONFIGS")
+BOT_MSGS = BotChat("bot_forwards.csv")
 
 
 async def _init() -> None:
-    global noPmMessage, blocked_message  # pylint: disable=global-statement
-    async for chat in ALLOWED_COLLECTION.find({"status": "allowed"}):
-        Config.ALLOWED_CHATS.add(chat.get("_id"))
-    _pm = await SAVED_SETTINGS.find_one({"_id": "PM GUARD STATUS"})
-    if _pm:
-        Config.ALLOW_ALL_PMS = bool(_pm.get("data"))
-    _pmMsg = await SAVED_SETTINGS.find_one({"_id": "CUSTOM NOPM MESSAGE"})
-    if _pmMsg:
-        noPmMessage = _pmMsg.get("data")
-    _blockPmMsg = await SAVED_SETTINGS.find_one({"_id": "CUSTOM BLOCKPM MESSAGE"})
-    if _blockPmMsg:
-        blocked_message = _blockPmMsg.get("data")
+    data = await SAVED_SETTINGS.find_one({"_id": "BOT_FORWARDS"})
+    if data:
+        Config.BOT_FORWARDS = bool(data["is_active"])
+
+
+allowForwardFilter = filters.create(lambda _, __, ___: Config.BOT_FORWARDS)
+ownersFilter = filters.user(list(Config.OWNER_ID))
 
 
 @userge.on_cmd(
-    "allow",
-    about={
-        "header": "allows someone to contact",
-        "description": "Ones someone is allowed, "
-        "Userge will not interfere or handle such private chats",
-        "usage": "{tr}allow [username | userID]\nreply {tr}allow to a message, "
-        "do {tr}allow in the private chat",
-    },
-    allow_channels=False,
-    allow_via_bot=False,
+    "bot_fwd", about={"header": "enable / disable Bot Forwards"}, allow_channels=False
 )
-async def allow(message: Message):
-    """ allows to pm """
-    userid = await get_id(message)
-    if userid:
-        if userid in pmCounter:
-            del pmCounter[userid]
-        Config.ALLOWED_CHATS.add(userid)
-        a = await ALLOWED_COLLECTION.update_one(
-            {"_id": userid}, {"$set": {"status": "allowed"}}, upsert=True
-        )
-        if a.matched_count:
-            await message.edit("`Already approved to direct message`", del_in=3)
-        else:
-            await (await userge.get_users(userid)).unblock()
-            await message.edit("`Approved to direct message`", del_in=3)
-
-        if userid in PMPERMIT_MSG:
-            await userge.delete_messages(userid, message_ids=PMPERMIT_MSG[userid])
-            del PMPERMIT_MSG[userid]
-
+async def bot_fwd_(message: Message):
+    """ enable / disable Bot Forwards """
+    if Config.BOT_FORWARDS:
+        Config.BOT_FORWARDS = False
+        await message.edit("`Bot Forwards disabled !`", del_in=3, log=__name__)
     else:
-        await message.edit(
-            "I need to reply to a user or provide the username/id or be in a private chat",
-            del_in=3,
-        )
-
-
-@userge.on_cmd(
-    "nopm",
-    about={
-        "header": "Activates guarding on inbox",
-        "description": "Ones someone is allowed, "
-        "Userge will not interfere or handle such private chats",
-        "usage": "{tr}nopm [username | userID]\nreply {tr}nopm to a message, "
-        "do {tr}nopm in the private chat",
-    },
-    allow_channels=False,
-    allow_via_bot=False,
-)
-async def denyToPm(message: Message):
-    """ disallows to pm """
-    userid = await get_id(message)
-    if userid:
-        if userid in Config.ALLOWED_CHATS:
-            Config.ALLOWED_CHATS.remove(userid)
-        a = await ALLOWED_COLLECTION.delete_one({"_id": userid})
-        if a.deleted_count:
-            await message.edit("`Prohibitted to direct message`", del_in=3)
-        else:
-            await message.edit("`Nothing was changed`", del_in=3)
-    else:
-        await message.edit(
-            "I need to reply to a user or provide the username/id or be in a private chat",
-            del_in=3,
-        )
-
-
-async def get_id(message: Message):
-    userid = None
-    if message.chat.type in ["private", "bot"]:
-        userid = message.chat.id
-    if message.reply_to_message:
-        userid = message.reply_to_message.from_user.id
-    if message.input_str:
-        user = message.input_str.lstrip("@")
-        try:
-            userid = (await userge.get_users(user)).id
-        except Exception as e:
-            await message.err(str(e))
-    return userid
-
-
-@userge.on_cmd(
-    "pmguard",
-    about={
-        "header": "Switchs the pm permiting module on",
-        "description": "This is switched off in default. "
-        "You can switch pmguard On or Off with this command. "
-        "When you turn on this next time, "
-        "the previously allowed chats will be there !",
-    },
-    allow_channels=False,
-)
-async def pmguard(message: Message):
-    """ enable or disable auto pm handler """
-    global pmCounter  # pylint: disable=global-statement
-    if Config.ALLOW_ALL_PMS:
-        Config.ALLOW_ALL_PMS = False
-        await message.edit("`PM_guard activated`", del_in=3, log=__name__)
-    else:
-        Config.ALLOW_ALL_PMS = True
-        await message.edit("`PM_guard deactivated`", del_in=3, log=__name__)
-        pmCounter.clear()
+        Config.BOT_FORWARDS = True
+        await message.edit("`Bot Forwards enabled !`", del_in=3, log=__name__)
     await SAVED_SETTINGS.update_one(
-        {"_id": "PM GUARD STATUS"},
-        {"$set": {"data": Config.ALLOW_ALL_PMS}},
+        {"_id": "BOT_FORWARDS"},
+        {"$set": {"is_active": Config.BOT_FORWARDS}},
         upsert=True,
     )
 
 
-@userge.on_cmd(
-    "setpmmsg",
-    about={
-        "header": "Sets the reply message",
-        "description": "You can change the default message which userge gives on un-invited PMs",
-        "flags": {"-r": "reset to default"},
-        "options": {
-            "{fname}": "add first name",
-            "{lname}": "add last name",
-            "{flname}": "add full name",
-            "{uname}": "username",
-            "{chat}": "chat name",
-            "{mention}": "mention user",
-        },
-    },
-    allow_channels=False,
-)
-async def set_custom_nopm_message(message: Message):
-    """ setup custom pm message """
-    global noPmMessage  # pylint: disable=global-statement
-    if "-r" in message.flags:
-        await message.edit("`Custom NOpm message reset`", del_in=3, log=True)
-        noPmMessage = bk_noPmMessage
-        await SAVED_SETTINGS.find_one_and_delete({"_id": "CUSTOM NOPM MESSAGE"})
-    else:
-        string = message.input_or_reply_raw
-        if string:
-            await message.edit("`Custom NOpm message saved`", del_in=3, log=True)
-            noPmMessage = string
-            await SAVED_SETTINGS.update_one(
-                {"_id": "CUSTOM NOPM MESSAGE"}, {"$set": {"data": string}}, upsert=True
-            )
-        else:
-            await message.err("invalid input!")
+if userge.has_bot:
 
-
-@userge.on_cmd(
-    "setbpmmsg",
-    about={
-        "header": "Sets the block message",
-        "description": "You can change the default blockPm message "
-        "which userge gives on un-invited PMs",
-        "flags": {"-r": "reset to default"},
-        "options": {
-            "{fname}": "add first name",
-            "{lname}": "add last name",
-            "{flname}": "add full name",
-            "{uname}": "username",
-            "{chat}": "chat name",
-            "{mention}": "mention user",
-        },
-    },
-    allow_channels=False,
-)
-async def set_custom_blockpm_message(message: Message):
-    """ setup custom blockpm message """
-    global blocked_message  # pylint: disable=global-statement
-    if "-r" in message.flags:
-        await message.edit("`Custom BLOCKpm message reset`", del_in=3, log=True)
-        blocked_message = bk_blocked_message
-        await SAVED_SETTINGS.find_one_and_delete({"_id": "CUSTOM BLOCKPM MESSAGE"})
-    else:
-        string = message.input_or_reply_raw
-        if string:
-            await message.edit("`Custom BLOCKpm message saved`", del_in=3, log=True)
-            blocked_message = string
-            await SAVED_SETTINGS.update_one(
-                {"_id": "CUSTOM BLOCKPM MESSAGE"},
-                {"$set": {"data": string}},
-                upsert=True,
-            )
-        else:
-            await message.err("invalid input!")
-
-
-@userge.on_cmd(
-    "vpmmsg",
-    about={"header": "Displays the reply message for uninvited PMs"},
-    allow_channels=False,
-)
-async def view_current_noPM_msg(message: Message):
-    """ view current pm message """
-    await message.edit(f"--current PM message--\n\n{noPmMessage}")
-
-
-@userge.on_cmd(
-    "vbpmmsg",
-    about={"header": "Displays the reply message for blocked PMs"},
-    allow_channels=False,
-)
-async def view_current_blockPM_msg(message: Message):
-    """ view current block pm message """
-    await message.edit(f"--current blockPM message--\n\n{blocked_message}")
-
-
-@userge.on_filters(
-    ~allowAllFilter
-    & filters.incoming
-    & filters.private
-    & ~filters.bot
-    & ~filters.me
-    & ~filters.service
-    & ~Config.ALLOWED_CHATS,
-    allow_via_bot=False,
-    group=-1,
-)
-async def uninvitedPmHandler(message: Message):
-    """ pm message handler """
-    user_dict = await userge.get_user_dict(message.from_user.id)
-    user_dict.update({"chat": message.chat.title or "this group"})
-    if message.from_user.is_verified:
-        return
-    if message.from_user.id in pmCounter:
-        if pmCounter[message.from_user.id] > 3:
-            del pmCounter[message.from_user.id]
-            # await message.reply(blocked_message)
-            report_img_ = await reported_user_image(message.from_user.first_name)
-            await userge.send_photo(
-                message.chat.id, report_img_, caption=blocked_message
-            )
-            await message.from_user.block()
-            await asyncio.sleep(1)
+    @userge.bot.on_message(
+        allowForwardFilter
+        & ~ownersFilter
+        & filters.private
+        & filters.incoming
+        & ~filters.command("start")
+    )
+    async def forward_bot(_, message: Message):
+        try:
+            msg = await message.forward(Config.OWNER_ID[0])
+        except UserIsBlocked:
+            await CHANNEL.log("**ERROR**: You Blocked your Bot !")
+        except Exception as new_m_e:
             await CHANNEL.log(
-                f"#BLOCKED\n{user_dict['mention']} has been blocked due to spamming in pm !! "
+                f"Can't send message to __ID__: {Config.OWNER_ID[0]}"
+                "\n**Note:** message will be send to the first id in `OWNER_ID` only!"
+                f"\n\n**ERROR:** `{new_m_e}`"
             )
         else:
-            pmCounter[message.from_user.id] += 1
-            await message.reply(
-                f"You have {pmCounter[message.from_user.id]} out of 4 **Warnings**\n"
-                "Please wait until you get approved to pm !",
+            BOT_MSGS.store(msg.message_id, msg.from_user.id)
+
+    @userge.bot.on_message(
+        allowForwardFilter
+        & filters.user(Config.OWNER_ID[0])
+        & filters.private
+        & filters.reply
+        & ~filters.regex(
+            pattern=f"^(/.+|\{Config.SUDO_TRIGGER}(spoiler|cbutton)\s(.+)?)"
+        ),
+    )
+    async def forward_reply(_, message: Message):
+        reply = message.reply_to_message
+        to_copy = not message.poll
+        user_fwd = reply.forward_from
+        if user_fwd:
+            # Incase message is your own forward
+            if user_fwd.id in Config.OWNER_ID:
+                return
+            user_id = user_fwd.id
+        else:
+            if not reply.forward_sender_name:
+                return
+            if not (user_id := BOT_MSGS.search(reply.message_id)):
+                await userge.bot.send_message(
+                    Config.OWNER_ID[0],
+                    "`You can't reply to old messages with if user's"
+                    "forward privacy is enabled`",
+                    del_in=5,
+                )
+                return
+        try:
+            if to_copy:
+                await message.copy(user_id)
+            else:
+                await message.forward(user_id)
+        except UserIsBlocked:
+            await message.err(
+                "You cannot reply to this user as he blocked your bot !", del_in=5
+            )
+        except Exception as fwd_e:
+            LOG.error(fwd_e)
+
+    @userge.bot.on_message(
+        filters.user(Config.OWNER_ID[0])
+        & filters.private
+        & filters.incoming
+        & filters.regex(pattern=r"^/ban\s+(.*)")
+    )
+    async def bot_ban_(_, message: Message):
+        """ ban a user from bot """
+        start_ban = await userge.bot.send_message(message.chat.id, "`Banning...`")
+        user_id, reason = extract_content(message)  # Ban by giving ID & Reason
+        if not user_id:
+            await start_ban.err("User ID Not found", del_in=10)
+            return
+        if not reason:
+            await message.err("Ban Aborted! provide a reason first!")
+            return
+        ban_user = await userge.bot.get_user_dict(user_id, attr_dict=True)
+        if ban_user.id in Config.OWNER_ID:
+            await start_ban.edit("I Can't Ban You My Master")
+            return
+        if ban_user.id in Config.SUDO_USERS:
+            await start_ban.edit(
+                "That user is in my Sudo List,"
+                "Hence I can't ban him from bot\n"
+                "\n**Tip:** Remove them from Sudo List and try again.",
                 del_in=5,
             )
-    else:
-        pmCounter.update({message.from_user.id: 1})
-        PMPERMIT_MSG[message.from_user.id] = (
-            await message.reply(
-                noPmMessage.format_map(SafeDict(**user_dict))
-                + "\n<i>- Protected by paimon</i>"
+            return
+        if found := await BOT_BAN.find_one({"user_id": ban_user.id}):
+            await start_ban.edit(
+                "**#Already_Banned_from_Bot_PM**\n\n"
+                "User Already Exists in My Bot BAN List.\n"
+                f"**Reason For Bot BAN:** `{found.get('reason')}`",
+                del_in=5,
             )
-        ).message_id
-        await asyncio.sleep(1)
-        await CHANNEL.log(f"#NEW_MESSAGE\n{user_dict['mention']} has messaged you")
+        else:
+            await start_ban.edit(await ban_from_bot_pm(ban_user, reason), log=__name__)
 
+    async def ban_from_bot_pm(ban_user, reason: str, log: str = False) -> None:
+        user_ = await userge.bot.get_user_dict(ban_user, attr_dict=True)
+        banned_msg = (
+            f"<i>**You Have been Banned Forever**" f"</i>\n**Reason** : {reason}"
+        )
+        await asyncio.gather(
+            BOT_BAN.insert_one(
+                {"firstname": user_.fname, "user_id": user_.id, "reason": reason}
+            ),
+            userge.bot.send_message(user_.id, banned_msg),
+        )
+        info = (
+            r"\\**#Banned_Bot_PM_User**//"
+            f"\n\n👤 {user_.mention}\n"
+            f"**First Name:** {user_.fname}\n"
+            f"**User ID:** `{user_.id}`\n**Reason:** `{reason}`"
+        )
+        if log:
+            await userge.getCLogger(log).log(info)
+        return info
 
-@userge.on_filters(
-    ~allowAllFilter & filters.outgoing & filters.private & ~Config.ALLOWED_CHATS,
-    allow_via_bot=False,
-)
-async def outgoing_auto_approve(message: Message):
-    """ outgoing handler """
-    userID = message.chat.id
-    if userID in pmCounter:
-        del pmCounter[userID]
-    Config.ALLOWED_CHATS.add(userID)
-    await ALLOWED_COLLECTION.update_one(
-        {"_id": userID}, {"$set": {"status": "allowed"}}, upsert=True
+    @userge.bot.on_message(
+        allowForwardFilter
+        & filters.user(list(Config.OWNER_ID))
+        & filters.private
+        & filters.command("broadcast")
     )
-    user_dict = await userge.get_user_dict(userID)
-    await CHANNEL.log(f"**#AUTO_APPROVED**\n{user_dict['mention']}")
+    async def broadcast_(_, message: Message):
+        replied = message.reply_to_message
+        if not replied:
+            await message.reply("Reply to a message for Broadcasting First !")
+            return
+        start_ = time()
+        br_cast = await replied.reply("`Broadcasting ...`")
+        blocked_users = []
+        count = 0
+        to_copy = not replied.poll
+        async for c in BOT_START.find():
+            try:
+                b_id = c["user_id"]
+                await userge.bot.send_message(
+                    b_id, "🔊 You received a **new** Broadcast."
+                )
+                if to_copy:
+                    await replied.copy(b_id)
+                else:
+                    await replied.forward(b_id)
+                await asyncio.sleep(0.8)
+                # https://github.com/aiogram/aiogram/blob/ee12911f240175d216ce33c78012994a34fe2e25/examples/broadcast_example.py#L65
+            except FloodWait as e:
+                await asyncio.sleep(e.x)
+            except (BadRequest, Forbidden):
+                blocked_users.append(
+                    b_id
+                )  # Collect the user id and removing them later
+            except Exception as err:
+                await CHANNEL.log(str(err))
+            else:
+                count += 1
+                if count % 5 == 0:
+                    try:
+                        await br_cast.edit(
+                            f"`Broadcasting ...`\n\n• ✔️ Success:  **{count}**\n• ✖️ Failed:  **{len(blocked_users)}**"
+                        )
+                    except FloodWait as e:
+                        await asyncio.sleep(e.x)
+        end_ = time()
+        b_info = f"🔊  Successfully broadcasted message to ➜  <b>{count} users.</b>"
+        if len(blocked_users) != 0:
+            b_info += f"\n🚫  <b>{len(blocked_users)} users</b> blocked your bot recently, so have been removed."
+        b_info += f"\n⏳  <code>Process took: {time_formatter(end_ - start_)}</code>."
+        await br_cast.edit(b_info, log=__name__)
+        if blocked_users:
+            for buser in blocked_users:
+                await BOT_START.find_one_and_delete({"user_id": buser})
+
+    @userge.bot.on_message(
+        filters.user(Config.OWNER_ID[0])
+        & filters.private
+        & filters.reply
+        & filters.command("uinfo")
+    )
+    async def uinfo_(_, message: Message):
+        reply = message.reply_to_message
+        user_ = None
+        if not reply:
+            await message.reply("Reply to a message to see user info")
+            return
+        info_msg = await message.reply("`🔎 Searching for this user in my database ...`")
+        if uid_from_db := BOT_MSGS.search(reply.message_id):
+            try:
+                user_ = await userge.bot.get_user_dict(uid_from_db, attr_dict=True)
+            except Exception:
+                pass
+        elif user_from_fwd := reply.forward_from:
+            user_ = await userge.bot.get_user_dict(user_from_fwd, attr_dict=True)
+
+        if not user_:
+            return await message.edit(
+                "**ERROR:** `Sorry !, Can't Find this user in my database :(`", del_in=3
+            )
+        uinfo = (
+            "**#User_Info**"
+            f"\n\n👤 {user_.mention}\n"
+            f"**First Name:** {user_.fname}\n"
+            f"**User ID:** `{user_.id}`"
+        )
+        await info_msg.edit(uinfo)
+
+
+def extract_content(msg: Message):  # Modified a bound method
+    id_reason = msg.matches[0].group(1)
+    replied = msg.reply_to_message
+    user_id, reason = None, None
+    if replied:
+        fwd = replied.forward_from
+        if fwd and id_reason:
+            user_id = fwd.id
+            reason = id_reason
+        if replied.forward_sender_name and id_reason:
+            reason = id_reason
+            user_id = BOT_MSGS.search(replied.message_id)
+    else:
+        if id_reason:
+            data = id_reason.split(maxsplit=1)
+            # Grab First Word and Process it.
+            if len(data) == 2:
+                user, reason = data
+            elif len(data) == 1:
+                user = data[0]
+            # if user id, convert it to integer
+            if user.isdigit():
+                user_id = int(user)
+            # User @ Mention.
+            if user.startswith("@"):
+                user_id = user
+    return user_id, reason
+
+
+@userge.on_cmd(
+    "bblist",
+    about={
+        "header": "Get a List of Bot Banned Users",
+        "description": "Get Up-to-date list of users Bot Banned by you.",
+        "examples": "{tr}bblist",
+    },
+    allow_channels=False,
+)
+async def list_bot_banned(message: Message):
+    """ view Bot Banned users """
+    msg = ""
+    async for c in BOT_BAN.find():
+        msg += (
+            "**User** : "
+            + str(c["firstname"])
+            + "-> with **User ID** -> "
+            + str(c["user_id"])
+            + " is **Bot Banned for** : "
+            + str(c["reason"])
+            + "\n\n"
+        )
+
+    await message.edit_or_send_as_file(
+        f"**--Bot Banned Users List--**\n\n{msg}" if msg else "`bblist empty!`"
+    )
+
+
+@userge.on_cmd(
+    "unbban",
+    about={
+        "header": "Unban an User from bot",
+        "description": "Removes an user from your Bot Ban List",
+        "examples": "{tr}unbban [userid]",
+    },
+    allow_channels=False,
+    allow_bots=True,
+)
+async def ungban_user(message: Message):
+    """ unban a user from Bot's PM"""
+    await message.edit("`UN-BOT Banning ...`")
+    user_id = message.input_str
+    if not user_id:
+        await message.err("No input found !")
+        return
+    user_id = message.input_str.split()[0].strip()
+    try:
+        get_mem = await message.client.get_user_dict(user_id)
+    except (PeerIdInvalid, IndexError):
+        firstname = "Not Known !"
+        if user_id.isdigit():
+            user_id = int(user_id)
+        else:
+            await message.err("User Not Known !, Provide a User ID to search.")
+            return
+    else:
+        firstname = get_mem["fname"]
+        user_id = get_mem["id"]
+    found = await BOT_BAN.find_one({"user_id": user_id})
+    if not found:
+        await message.err("User Not Found in My Bot Ban List")
+        return
+    await asyncio.gather(
+        BOT_BAN.delete_one(found),
+        message.edit(
+            r"\\**#Bot_UnBanned_User**//"
+            f"\n\n  **First Name:** {mention_html(user_id, firstname)}"
+            f"\n  **User ID:** `{user_id}`"
+        ),
+    )
+
+
+@userge.on_cmd(
+    "bot_forwards", about={"header": "Help regarding commands for bot forwards"}
+)
+async def bf_help(message: Message):
+    """See this For Help"""
+    cmd_ = Config.CMD_TRIGGER
+    bot_forwards_help = f"""
+        **Available Commands**
+
+    [Toggle]
+• `{cmd_}bot_fwd` - Enable / Disable bot Forwards
+
+    <i>works **only in** bot pm</i>
+• `/ban` - Ban a User from Bot PM
+    e.g-
+    /ban [reply to forwarded message with reason]
+    /ban [user_id/user_name] reason
+
+• `/broadcast` - Send a Broadcast Message to Users in your `{cmd_}bot_users`
+    e.g-
+    /broadcast [reply to a message]
+
+• `/uinfo` - Get user Info
+    e.g-
+    /uinfo [reply to forwarded message]
+
+    <i>can work outside bot pm</i>
+• `{cmd_}bblist` - BotBanList (Users Banned from your Bot's PM)
+    e.g-
+    {cmd_}bblist
+
+• `{cmd_}unbban` - UnBotBan  (Unban Users that are in BotBanList)
+    e.g-
+    {cmd_}unbban [user_id/user_name]
+    Hint: Check bblist for banned users.
+"""
+    await message.edit(bot_forwards_help, del_in=60)
