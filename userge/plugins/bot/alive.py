@@ -228,7 +228,7 @@ class Bot_Alive:
 
     @staticmethod
     def alive_info(me) -> str:
-        u_name = " ".join([me.first_name, me.last_name or ""])
+        user = " ".join([me.first_name, me.last_name or ""])
         alive_info_ = f"""
 ㅤㅤㅤㅤㅤㅤㅤ
   🧬  <b> [paimon](https://t.me/Jesusbot) : </b>   <code>v0.4.2_93.alpha</code>
