@@ -226,7 +226,7 @@ class Bot_Alive:
         return link_type, link
 
     @staticmethod
-    def alive_info() -> str:
+    def alive_info(me) -> str:
         user = " ".join([me.first_name, me.last_name or ""])
         alive_info_ = f"""
 ㅤㅤㅤㅤㅤㅤㅤ
