@@ -3,13 +3,12 @@
 # improved by @Lostb053
 # further improvement by @Kakashi_HTK/ashwinstr
 
-import time
 from json import dumps
 
 from google_trans_new import google_translator
-from googletrans import LANGUAGES, Translator
+from googletrans import LANGUAGES
 
-from userge import Message, pool, userge
+from userge import Message, userge
 from userge.plugins.utils.translate import _translate_this
 
 translator = google_translator()
@@ -29,8 +28,10 @@ translator = google_translator()
 )
 async def romaji_(message: Message):
     x = message.filtered_input_str
-    if message.reply_to_message:
+    reply = message.reply_to_message
+    if reply:
         x = message.reply_to_message.text or message.reply_to_message.caption
+        replied = reply.message_id
     if not x:
         await message.edit("`No input found...`")
         return
@@ -43,11 +44,11 @@ async def romaji_(message: Message):
             return
         if len(flags) == 1:
             tran = await _translate_this(x, flag, "auto")
-            await message.edit("`romanising...`")
+            await message.edit("`Transcribing...`")
             z = translator.detect(tran.text)
             y = (tran.text).split("\n")
     else:
-        await message.edit("`romanising...`")
+        await message.edit("`Transcribing...`")
         z = translator.detect(x)
         y = x.split("\n")
     result = translator.translate(y, lang_src=z, lang_tgt="en", pronounce=True)
@@ -55,15 +56,18 @@ async def romaji_(message: Message):
     if k is None:
         result = translator.translate(y, lang_src="en", lang_tgt="ja", pronounce=True)
         k = result[2]
-    await message.reply(k.replace("', '", "\n").replace("['", "").replace("']", ""))
-
-
-@pool.run_in_thread
-def _translate_this(x: str, dest: str, src: str):
-    for i in range(10):
-        try:
-            return Translator().translate(x, dest=dest, src=src)
-        except AttributeError:
-            if i == 9:
-                raise
-            time.sleep(0.3)
+    lang = LANGUAGES[f"{tran.dest.lower()}"]
+    out = f"Transcribed to <b>{lang.title()}</b>:\n"
+    rom = (
+        k.replace("', '", "\n")
+        .replace("['", "")
+        .replace("']", "")
+        .replace("[", "")
+        .replace("]", ".")
+    )
+    out += f"`{rom}`"
+    if reply:
+        await message.delete()
+        await userge.send_message(message.chat.id, out, reply_to_message_id=replied)
+    else:
+        await message.edit(out)
