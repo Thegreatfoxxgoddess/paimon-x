@@ -93,7 +93,7 @@ async def kang_(message: Message):
 
         u_name = user.username
         u_name = "@" + u_name if u_name else user.first_name or user.id
-        packname = f"a{user.id}_by_x_{pack}"
+        packname = f"a{user.id}_by_userge_{pack}"
         custom_packnick = Config.CUSTOM_PACK_NAME or f"{u_name}'s kang pack"
         packnick = f"{custom_packnick} Vol.{pack}"
         cmd = "/newpack"
@@ -330,5 +330,5 @@ async def sticker_search(message: Message):
             link_ = (pack.a).get("href")
             sticker_pack += f"\n• [{title_}]({link_})"
     if not sticker_pack:
-        sticker_pack = "`❌ Not Found!`"
+        sticker_pack = "`Not Found!`"
     await message.edit((titlex + sticker_pack), disable_web_page_preview=True)
