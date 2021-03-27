@@ -85,9 +85,8 @@ async def send_alive_message(message: Message) -> None:
     global _USER_CACHED_MEDIA, _BOT_CACHED_MEDIA
     chat_id = message.chat.id
     me = await userge.get_me()
-    user = " ".join([me.first_name, me.last_name or ""])
     client = message.client
-    caption = Bot_Alive.alive_info()
+    caption = Bot_Alive.alive_info(me)
     if client.is_bot:
         reply_markup = Bot_Alive.alive_buttons()
         file_id = _BOT_CACHED_MEDIA
@@ -228,6 +227,7 @@ class Bot_Alive:
 
     @staticmethod
     def alive_info() -> str:
+    user = " ".join([me.first_name, me.last_name or ""])
         alive_info_ = f"""
 ㅤㅤㅤㅤㅤㅤㅤ
   🧬  <b> [paimon](https://t.me/Jesusbot) : </b>   <code>v0.4.2_93.alpha</code>
