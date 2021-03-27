@@ -159,6 +159,7 @@ if userge.has_bot:
 
     @userge.bot.on_callback_query(filters.regex(pattern=r"^settings_btn$"))
     async def alive_cb(_, c_q: CallbackQuery):
+        me = await userge.get_me()
         allow = bool(
             c_q.from_user
             and (
@@ -233,7 +234,7 @@ class Bot_Alive:
   🧬  <b> [paimon](https://t.me/Jesusbot) : </b>   <code>v0.4.2_93.alpha</code>
   🐍  <b> Python  :</b>    <code>v{versions.__python_version__}</code>
   🔥  <b> Pyro      :</b>    <code>v{versions.__pyro_version__}</code>
-  🦋  <b> User      :</b>    'f"User : {user}"'
+  🦋  <b> User      :</b>    '{user}'
 
   <b>{Bot_Alive._get_mode()}   |   {userge.uptime}</b>
 """
