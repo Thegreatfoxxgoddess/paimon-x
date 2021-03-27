@@ -624,7 +624,8 @@ if userge.has_bot:
                     return
 
             if string == "alive":
-                alive_info = Bot_Alive.alive_info()
+                me = await userge.get_me()
+                alive_info = Bot_Alive.alive_info(me)
                 buttons = Bot_Alive.alive_buttons()
                 if not Config.ALIVE_MEDIA:
                     results.append(
