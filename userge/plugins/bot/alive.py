@@ -84,6 +84,8 @@ async def send_inline_alive(message: Message) -> None:
 async def send_alive_message(message: Message) -> None:
     global _USER_CACHED_MEDIA, _BOT_CACHED_MEDIA
     chat_id = message.chat.id
+    me = await userge.get_me()
+    user = " ".join([me.first_name, me.last_name or ""])
     client = message.client
     caption = Bot_Alive.alive_info()
     if client.is_bot:
@@ -231,7 +233,7 @@ class Bot_Alive:
   🧬  <b> [paimon](https://t.me/Jesusbot) : </b>   <code>v0.4.2_93.alpha</code>
   🐍  <b> Python  :</b>    <code>v{versions.__python_version__}</code>
   🔥  <b> Pyro      :</b>    <code>v{versions.__pyro_version__}</code>
-  🦋  <b> User      :</b>    `Alícia`
+  🦋  <b> User      :</b>    'f"User : {user}"'
 
   <b>{Bot_Alive._get_mode()}   |   {userge.uptime}</b>
 """
