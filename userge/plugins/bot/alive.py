@@ -234,7 +234,7 @@ class Bot_Alive:
   🧬  <b> [paimon](https://t.me/Jesusbot) : </b>   <code>v0.4.2_93.alpha</code>
   🐍  <b> Python  :</b>    <code>v{versions.__python_version__}</code>
   🔥  <b> Pyro      :</b>    <code>v{versions.__pyro_version__}</code>
-  🦋  <b> User      :</b>    '{user}'
+  🦋  <b> User      :</b>    `{user}`
 
   <b>{Bot_Alive._get_mode()}   |   {userge.uptime}</b>
 """
