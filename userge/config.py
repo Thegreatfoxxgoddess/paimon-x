@@ -160,7 +160,7 @@ def hbot_version(tag: str) -> str:
                 ).status_code == 200:
                     rcom = r_com.json()
                     if commits := rcom.get("total_commits"):
-                        commits = f".{commits}"
+                        str_ = str(("0"*(4-(len(str(commits))))))+str(commits)
                     branch = rcom.get("target_commitish")
                 if (
                     r_name := req.get(g_api + f"/releases/tags/v{tag}")
@@ -168,4 +168,4 @@ def hbot_version(tag: str) -> str:
                     tag_name = (r_name.json().get("name") or "").replace(" ", "-")
             except JSONDecodeError:
                 pass
-    return f"{tag}|{tag_name or ''}{commits or ''}@{pref_branch or branch or 'alpha'}"
+    return f"{tag} Build {str_ or ''}"
