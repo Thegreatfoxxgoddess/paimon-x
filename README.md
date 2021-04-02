@@ -1,7 +1,7 @@
 <h2 align="center"><b>Owner: <a href="https://telegram.dog/lostb053">HERZLOSS KERL</a></b></h2>
 <br>
 <p align="center">
-   <a href="https://github.com/code-rgb/USERGE-X"><img src="https://i.imgur.com/53mdl2v.png" alt="Userge-x" width=400px></a>
+   <a href="https://github.com/code-rgb/USERGE-X"><img src="https://github.com/lostb053/USERGE-X/blob/alpha/resources/logo_alt.png" alt="Userge-x" width=400px></a>
    <br>
    <br>
 </p>
