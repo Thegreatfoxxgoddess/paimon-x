@@ -845,6 +845,8 @@ if userge.has_bot:
                         switch_pm_parameter="inline",
                     )
                     return
+                else:
+                    await inline_query.answer('No results found!!!', cache_time=1, show_alert=True)
 
             if str_y[0] == "spoiler":
                 if not os.path.exists(f"{Config.CACHE_PATH}/spoiler_db.json"):
