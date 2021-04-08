@@ -22,8 +22,8 @@ from pyrogram.types import (
 from youtubesearchpython import VideosSearch
 
 from userge import Config, Message, get_collection, userge
-from userge.plugins.xtra.anilist import get_ani, return_json_senpai
 from userge.core.ext import RawClient
+from userge.plugins.xtra.anilist import get_ani, return_json_senpai
 from userge.utils import get_file_id, get_response
 from userge.utils import parse_buttons as pb
 from userge.utils import rand_key
@@ -96,6 +96,7 @@ query ($search: String, $pp: Int) {
     }
 }
 """
+
 
 async def _init() -> None:
     data = await SAVED_SETTINGS.find_one({"_id": "CURRENT_CLIENT"})
@@ -924,33 +925,51 @@ if userge.has_bot:
             if len(str_y) == 2 and str_y[0] == "ani":
                 get_list = {"search": str_y[1], "pp": 10}
                 result = await return_json_senpai(PAGE_QUERY, get_list)
-                data = result["data"]["Page"]["media"]    
+                data = result["data"]["Page"]["media"]
                 results = []
                 for i in data:
-                    vars_ = {"id": int(i['id']), "asHtml": True, "type": "ANIME"}
+                    vars_ = {"id": int(i["id"]), "asHtml": True, "type": "ANIME"}
                     ani = await get_ani(vars_)
                     msg = ani[1]
                     btns = []
-                    if ani[2]=="None":
-                        if ani[3]!="None":
-                            btns.append([InlineKeyboardButton(text="Sequel", callback_data=f"btn_{ani[3]}")])
-                    else:
-                        if ani[3]!="None":
+                    if ani[2] == "None":
+                        if ani[3] != "None":
                             btns.append(
                                 [
-                                    InlineKeyboardButton(text="Prequel", callback_data=f"btn_{ani[2]}"),
-                                    InlineKeyboardButton(text="Sequel", callback_data=f"btn_{ani[3]}")
+                                    InlineKeyboardButton(
+                                        text="Sequel", callback_data=f"btn_{ani[3]}"
+                                    )
+                                ]
+                            )
+                    else:
+                        if ani[3] != "None":
+                            btns.append(
+                                [
+                                    InlineKeyboardButton(
+                                        text="Prequel", callback_data=f"btn_{ani[2]}"
+                                    ),
+                                    InlineKeyboardButton(
+                                        text="Sequel", callback_data=f"btn_{ani[3]}"
+                                    ),
                                 ]
                             )
                         else:
-                            btns.append([InlineKeyboardButton(text="Prequel", callback_data=f"btn_{ani[2]}")])
+                            btns.append(
+                                [
+                                    InlineKeyboardButton(
+                                        text="Prequel", callback_data=f"btn_{ani[2]}"
+                                    )
+                                ]
+                            )
                     results.append(
                         InlineQueryResultPhoto(
                             photo_url=ani[0],
-                            title=i['title']['english'] or i['title']['romaji'],
+                            title=i["title"]["english"] or i["title"]["romaji"],
                             caption=msg,
-                            description=i['id'],
-                            reply_markup=InlineKeyboardMarkup(btns) if btns!=[] else None,
+                            description=i["id"],
+                            reply_markup=InlineKeyboardMarkup(btns)
+                            if btns != []
+                            else None,
                         )
                     )
                 if len(results) != 0:
