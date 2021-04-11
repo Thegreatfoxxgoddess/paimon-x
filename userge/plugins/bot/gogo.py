@@ -104,13 +104,27 @@ class Anime:
                     btn_ = []
         if len(btn_) != 0:
             row_.append(btn_)
-        if int(episode)>1:
-            row_.append([InlineKeyboardButton(f"{int(episode)-1}", callback_data=f"gogo_get_qual{key_}_{int(episode)-1}_{total_}")])
+        if int(episode) > 1:
+            row_.append(
+                [
+                    InlineKeyboardButton(
+                        f"{int(episode)-1}",
+                        callback_data=f"gogo_get_qual{key_}_{int(episode)-1}_{total_}",
+                    )
+                ]
+            )
         row_.append(
             [InlineKeyboardButton("Back", callback_data=f"get_currentpg{key_}")]
         )
-        if int(episode)<total_:
-            row_.append([InlineKeyboardButton(f"{int(episode)+1}", callback_data=f"gogo_get_qual{key_}_{int(episode)+1}_{total_}")])
+        if int(episode) < total_:
+            row_.append(
+                [
+                    InlineKeyboardButton(
+                        f"{int(episode)+1}",
+                        callback_data=f"gogo_get_qual{key_}_{int(episode)+1}_{total_}",
+                    )
+                ]
+            )
         return InlineKeyboardMarkup(row_)
 
 
@@ -175,7 +189,9 @@ if userge.has_bot:
         await c_q.edit_message_text(
             text=f"{key_data.get('body')}\n**[  Episode: {episode}  ]**\n\n📹 __Choose the desired video quality from below.__\n**Note:** for uploading to TG:\n`{Config.CMD_TRIGGER}upload [link] | [filename].mp4`",
             reply_markup=(
-                await Anime.get_quality(url=url_, episode=episode, key_=key_, total_=total)
+                await Anime.get_quality(
+                    url=url_, episode=episode, key_=key_, total_=total
+                )
             ),
         )
 
