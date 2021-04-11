@@ -87,7 +87,7 @@ class Anime:
         return name_
 
     @staticmethod
-    async def get_quality(url: str, episode: int, key_: str):
+    async def get_quality(url: str, episode: int, key_: str, total: int):
         endpoint = f"{Anime._get_name(url)}-episode-{episode}"
         page_ = await Anime._get_html(endpoint)
         link_ = page_.find("li", {"class": "dowloads"}).a.get("href")
@@ -104,8 +104,16 @@ class Anime:
                     btn_ = []
         if len(btn_) != 0:
             row_.append(btn_)
+        if episode>1:
+            row_.append(
+            [InlineKeyboardButton(f"{episode-1}", callback_data=f"gogogetqual_{key_}_{episode-1}_{total}")]
+        )
         row_.append(
             [InlineKeyboardButton("Back", callback_data=f"get_currentpg{key_}")]
+        )
+        if episode<total:
+            row_.append(
+            [InlineKeyboardButton(f"{episode+1}", callback_data=f"gogogetqual_{key_}_{episode+1}_{total}")]
         )
         return InlineKeyboardMarkup(row_)
 
@@ -126,7 +134,7 @@ if userge.has_bot:
         for i in range(1, int(res) + 1):
             btn_.append(
                 InlineKeyboardButton(
-                    "EP " + str(i), callback_data=f"gogo_get_qual{key_}_{i}"
+                    "EP " + str(i), callback_data=f"gogogetqual_{key_}_{i}_{res}"
                 )
             )
             if len(btn_) == 4:
@@ -156,12 +164,13 @@ if userge.has_bot:
         )
 
     @userge.bot.on_callback_query(
-        filters.regex(pattern=r"gogo_get_qual([a-z0-9]+)_([\d]+)")
+        filters.regex(pattern=r"gogogetqual_(.*)")
     )
     @check_owner
     async def get_qual_from_eps(c_q: CallbackQuery):
-        key_ = c_q.matches[0].group(1)
-        episode = int(c_q.matches[0].group(2))
+        key_ = c_q.split("_")[1]
+        episode = int(c_q.split("_")[2])
+        ttl = int(c_q.split("_")[3])
         key_data = GOGO_DB.get(key_)
         if not key_data:
             return await c_q.answer("Not Found")
@@ -170,7 +179,7 @@ if userge.has_bot:
         await c_q.edit_message_text(
             text=f"{key_data.get('body')}\n**[  Episode: {episode}  ]**\n\n📹 __Choose the desired video quality from below.__\n**Note:** for uploading to TG:\n`{Config.CMD_TRIGGER}upload [link] | [filename].mp4`",
             reply_markup=(
-                await Anime.get_quality(url=url_, episode=episode, key_=key_)
+                await Anime.get_quality(url=url_, episode=episode, key_=key_, total=ttl)
             ),
         )
 
