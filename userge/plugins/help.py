@@ -98,6 +98,7 @@ query ($search: String, $pp: Int) {
 }
 """
 
+
 async def _init() -> None:
     data = await SAVED_SETTINGS.find_one({"_id": "CURRENT_CLIENT"})
     if data:
