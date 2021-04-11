@@ -104,27 +104,25 @@ class Anime:
                     btn_ = []
         if len(btn_) != 0:
             row_.append(btn_)
+        nn = []
         if episode > 1:
-            row_.append(
-                [
-                    InlineKeyboardButton(
-                        f"{episode-1}",
-                        callback_data=f"gogogetqual_{key_}_{episode-1}_{total}",
-                    )
-                ]
+            nn.append(
+                InlineKeyboardButton(
+                    f"EP {episode-1}",
+                    callback_data=f"gogogetqual_{key_}_{episode-1}_{total}",
+                )
             )
-        row_.append(
-            [InlineKeyboardButton("Back", callback_data=f"get_currentpg{key_}")]
+        nn.append(
+            InlineKeyboardButton("Back", callback_data=f"get_currentpg{key_}")
         )
         if episode < total:
-            row_.append(
-                [
-                    InlineKeyboardButton(
-                        f"{episode+1}",
-                        callback_data=f"gogogetqual_{key_}_{episode+1}_{total}",
-                    )
-                ]
+            nn.append(
+                InlineKeyboardButton(
+                    f"EP {episode+1}",
+                    callback_data=f"gogogetqual_{key_}_{episode+1}_{total}",
+                )
             )
+        row_.append(nn)
         return InlineKeyboardMarkup(row_)
 
 
