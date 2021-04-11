@@ -112,9 +112,7 @@ class Anime:
                     callback_data=f"gogogetqual_{key_}_{episode-1}_{total}",
                 )
             )
-        nn.append(
-            InlineKeyboardButton("Back", callback_data=f"get_currentpg{key_}")
-        )
+        nn.append(InlineKeyboardButton("Back", callback_data=f"get_currentpg{key_}"))
         if episode < total:
             nn.append(
                 InlineKeyboardButton(
