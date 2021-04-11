@@ -980,6 +980,13 @@ if userge.has_bot:
                         switch_pm_text="Available Commands",
                         switch_pm_parameter="inline",
                     )
+                else:
+                    await inline_query.answer(
+                        results=["No Results found"],
+                        cache_time=1,
+                        switch_pm_text="Available Commands",
+                        switch_pm_parameter="inline",
+                    )
 
             if str_x[0].lower() == "op" and len(str_x) > 1:
                 txt = i_q[3:]
