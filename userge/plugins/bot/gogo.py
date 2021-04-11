@@ -168,7 +168,7 @@ if userge.has_bot:
     )
     @check_owner
     async def get_qual_from_eps(c_q: CallbackQuery):
-        key_ = c_q.split("_")[1]
+        key_ = c_q.data.split("_")[1]
         episode = int(c_q.split("_")[2])
         ttl = int(c_q.split("_")[3])
         key_data = GOGO_DB.get(key_)
