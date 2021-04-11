@@ -968,7 +968,9 @@ if userge.has_bot:
                             title=i["title"]["romaji"],
                             input_message_content=msg,
                             description=i["id"],
-                            reply_markup={InlineKeyboardMarkup(btns) if btns != [] else None},
+                            reply_markup={
+                                InlineKeyboardMarkup(btns) if btns != [] else None
+                            },
                         )
                     )
                 if len(results) != 0:
