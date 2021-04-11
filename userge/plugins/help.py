@@ -80,6 +80,7 @@ REPO_X = InlineQueryResultArticle(
     ),
 )
 
+
 async def _init() -> None:
     data = await SAVED_SETTINGS.find_one({"_id": "CURRENT_CLIENT"})
     if data:
