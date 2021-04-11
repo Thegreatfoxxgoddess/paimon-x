@@ -104,17 +104,27 @@ class Anime:
                     btn_ = []
         if len(btn_) != 0:
             row_.append(btn_)
-        if episode>1:
+        if episode > 1:
             row_.append(
-            [InlineKeyboardButton(f"{episode-1}", callback_data=f"gogogetqual_{key_}_{episode-1}_{total}")]
-        )
+                [
+                    InlineKeyboardButton(
+                        f"{episode-1}",
+                        callback_data=f"gogogetqual_{key_}_{episode-1}_{total}",
+                    )
+                ]
+            )
         row_.append(
             [InlineKeyboardButton("Back", callback_data=f"get_currentpg{key_}")]
         )
-        if episode<total:
+        if episode < total:
             row_.append(
-            [InlineKeyboardButton(f"{episode+1}", callback_data=f"gogogetqual_{key_}_{episode+1}_{total}")]
-        )
+                [
+                    InlineKeyboardButton(
+                        f"{episode+1}",
+                        callback_data=f"gogogetqual_{key_}_{episode+1}_{total}",
+                    )
+                ]
+            )
         return InlineKeyboardMarkup(row_)
 
 
@@ -163,9 +173,7 @@ if userge.has_bot:
             reply_markup=InlineKeyboardMarkup(paginate[0])
         )
 
-    @userge.bot.on_callback_query(
-        filters.regex(pattern=r"gogogetqual_(.*)")
-    )
+    @userge.bot.on_callback_query(filters.regex(pattern=r"gogogetqual_(.*)"))
     @check_owner
     async def get_qual_from_eps(c_q: CallbackQuery):
         key_ = c_q.split("_")[1]
