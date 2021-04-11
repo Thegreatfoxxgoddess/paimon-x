@@ -963,14 +963,12 @@ if userge.has_bot:
                                 ]
                             )
                     results.append(
-                        InlineQueryResultPhoto(
-                            photo_url=ani[0],
-                            title=i["title"]["english"] or i["title"]["romaji"],
-                            caption=msg,
+                        InlineQueryResultArticle(
+                            thumb_url=ani[0],
+                            title=i["title"]["romaji"],
+                            input_message_content=msg,
                             description=i["id"],
-                            reply_markup=InlineKeyboardMarkup(btns)
-                            if btns != []
-                            else None,
+                            reply_markup={InlineKeyboardMarkup(btns) if btns != [] else None},
                         )
                     )
                 if len(results) != 0:
