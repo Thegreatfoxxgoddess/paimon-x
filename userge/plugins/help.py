@@ -23,7 +23,6 @@ from youtubesearchpython import VideosSearch
 
 from userge import Config, Message, get_collection, userge
 from userge.core.ext import RawClient
-from userge.plugins.xtra.anilist import get_ani, return_json_senpai
 from userge.utils import get_file_id, get_response
 from userge.utils import parse_buttons as pb
 from userge.utils import rand_key
@@ -80,24 +79,6 @@ REPO_X = InlineQueryResultArticle(
         ]
     ),
 )
-
-PAGE_QUERY = """
-query ($search: String, $pp: Int) {
-    Page (perPage: $pp) {
-        media (search: $search, type: ANIME) {
-            id
-            title {
-                romaji
-                english
-            }
-            coverImage {
-                extraLarge
-            }
-        }
-    }
-}
-"""
-
 
 async def _init() -> None:
     data = await SAVED_SETTINGS.find_one({"_id": "CURRENT_CLIENT"})
@@ -922,71 +903,6 @@ if userge.has_bot:
                                         reply_markup=InlineKeyboardMarkup(buttons),
                                     )
                                 )
-
-            if len(str_y) == 2 and str_y[0] == "ani":
-                get_list = {"search": str_y[1], "pp": 10}
-                result = await return_json_senpai(PAGE_QUERY, get_list)
-                data = result["data"]["Page"]["media"]
-                results = []
-                for i in data:
-                    vars_ = {"id": int(i["id"]), "asHtml": True, "type": "ANIME"}
-                    ani = await get_ani(vars_)
-                    msg = ani[1]
-                    btns = []
-                    if ani[2] == "None":
-                        if ani[3] != "None":
-                            btns.append(
-                                [
-                                    InlineKeyboardButton(
-                                        text="Sequel", callback_data=f"btn_{ani[3]}"
-                                    )
-                                ]
-                            )
-                    else:
-                        if ani[3] != "None":
-                            btns.append(
-                                [
-                                    InlineKeyboardButton(
-                                        text="Prequel", callback_data=f"btn_{ani[2]}"
-                                    ),
-                                    InlineKeyboardButton(
-                                        text="Sequel", callback_data=f"btn_{ani[3]}"
-                                    ),
-                                ]
-                            )
-                        else:
-                            btns.append(
-                                [
-                                    InlineKeyboardButton(
-                                        text="Prequel", callback_data=f"btn_{ani[2]}"
-                                    )
-                                ]
-                            )
-                    results.append(
-                        InlineQueryResultArticle(
-                            thumb_url=ani[0],
-                            title=i["title"]["romaji"],
-                            input_message_content=msg,
-                            description=i["id"],
-                            reply_markup={
-                                InlineKeyboardMarkup(btns) if btns != [] else None
-                            },
-                        )
-                    )
-                if len(results) != 0:
-                    await inline_query.answer(
-                        results=results,
-                        cache_time=1,
-                        switch_pm_text="Available Commands",
-                        switch_pm_parameter="inline",
-                    )
-                else:
-                    await inline_query.answer(
-                        results=["No Results found"],
-                        cache_time=1,
-                        switch_pm_text="Available Commands",
-                        switch_pm_parameter="inline",
-                    )
 
             if str_x[0].lower() == "op" and len(str_x) > 1:
                 txt = i_q[3:]
