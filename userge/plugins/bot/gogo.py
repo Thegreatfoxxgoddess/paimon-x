@@ -96,12 +96,11 @@ class Anime:
         btn_, row_ = [], []
         for i in page.findAll("div", {"class": "dowload"}):
             qual = i.a
-            if qual.get("target") != "_blank":
-                name = qual.text.replace("Download", "").strip()
-                btn_.append(InlineKeyboardButton(name, url=qual.get("href")))
-                if len(btn_) == 2:
-                    row_.append(btn_)
-                    btn_ = []
+            name = qual.text.replace("Download", "").strip()
+            btn_.append(InlineKeyboardButton(name, url=qual.get("href")))
+            if len(btn_) == 2:
+                row_.append(btn_)
+                btn_ = []
         if len(btn_) != 0:
             row_.append(btn_)
         nn = []
