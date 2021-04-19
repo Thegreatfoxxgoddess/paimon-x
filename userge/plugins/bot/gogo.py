@@ -12,6 +12,7 @@ from urllib.parse import quote
 from bs4 import BeautifulSoup as soup
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
+from pyrogram.types.bots_and_keyboards import callback_game
 
 from userge import Message, userge
 from userge.utils import check_owner, get_response, rand_key
@@ -97,6 +98,15 @@ class Anime:
         for i in page.findAll("div", {"class": "dowload"}):
             qual = i.a
             name = qual.text.replace("Download", "").strip()
+            if str(name).lower()=="streamsb":
+                row_.append(
+                    [
+                        InlineKeyboardButton(
+                            name,
+                            callback_data=f'ssb_{qual.get("href")}_{episode}_{key_}_{total}'
+                        )
+                    ]
+                )
             btn_.append(InlineKeyboardButton(name, url=qual.get("href")))
             if len(btn_) == 2:
                 row_.append(btn_)
@@ -245,3 +255,38 @@ if userge.has_bot:
         mrkp = data_.get("current_pg")
         body_ = data_.get("body")
         await c_q.edit_message_text(text=body_, reply_markup=InlineKeyboardMarkup(mrkp))
+
+    @userge.bot.on_callback_query(filters.regex(pattern=r"ssb_(.*)"))
+    @check_owner
+    async def ssblinkz(c_q: CallbackQuery):
+        ssb_link = c_q.data.split("_")[1]
+        episode = c_q.data.split("_")[2]
+        key_ = c_q.data.split("_")[3]
+        total = c_q.data.split("_")[4]
+        fp = await get_response.text(ssb_link)
+        fpc = soup(fp, "lxml")
+        fpcd = fpc.find("table").findAll("td")
+        dl = []
+        for i in fpcd:
+            if i.a:
+                splp = str(i.a.get("onclick")).replace("download_video('", "").replace("')", "").split("','")
+                qual = "Normal Quality" if splp[1]=="n" else "High Quality"
+                spl = f"https://streamsb.net/dl?op=download_orig&id={splp[0]}&mode={splp[1]}&hash={splp[2]}"
+                sp = await get_response.text(spl)
+                spc = soup(sp, "lxml")
+                spcd = spc.find("div", {"id": "container"}).find("span").find("a")
+                dl.append([qual, spcd.get("href")])
+        btn=[
+            [
+                InlineKeyboardButton(dl[0][0], url=dl[0][1]),
+                InlineKeyboardButton(dl[1][0], url=dl[1][1])
+            ],
+            [
+                InlineKeyboardButton(
+                    "Back",
+                    callback_data=f"gogogetqual_{key_}_{episode}_{total}"
+                )
+            ]
+        ]
+        await c_q.answer()
+        await c_q.edit_message_reply_markup(reply_markup=(InlineKeyboardMarkup(btn)))
