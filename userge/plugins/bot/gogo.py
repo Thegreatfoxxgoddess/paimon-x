@@ -106,7 +106,8 @@ class Anime:
                         )
                     ]
                 )
-            btn_.append(InlineKeyboardButton(name, url=qual.get("href")))
+            else:
+                btn_.append(InlineKeyboardButton(name, url=qual.get("href")))
             if len(btn_) == 2:
                 row_.append(btn_)
                 btn_ = []
@@ -278,7 +279,7 @@ if userge.has_bot:
                 spl = f"https://streamsb.net/dl?op=download_orig&id={splp[0]}&mode={splp[1]}&hash={splp[2]}"
                 sp = await get_response.text(spl)
                 spc = soup(sp, "lxml")
-                spcd = spc.find("div", {"id": "container"}).find("span").find("a")
+                spcd = spc.find("div", {"id": "contentbox"}).find("span").find("a")
                 dl.append([qual, spcd.get("href")])
         btn = [
             [
