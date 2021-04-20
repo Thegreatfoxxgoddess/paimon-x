@@ -267,7 +267,7 @@ if userge.has_bot:
         fpc = soup(fp, "lxml")
         fpcd = fpc.find("table").findAll("td")
         dl = []
-        error_ = False
+        error_ = []
         for i in fpcd:
             if i.a:
                 splp = (
@@ -280,11 +280,11 @@ if userge.has_bot:
                 spl = f"https://streamsb.net/dl?op=download_orig&id={splp[0]}&mode={splp[1]}&hash={splp[2]}"
                 sp = await get_response.text(spl)
                 spc = soup(sp, "lxml")
-                if not spc.find("b", {"class": "err"}):
+                try:
                     spcd = spc.find("div", {"id": "contentbox"}).find("span").find("a")
                     dl.append([qual, spcd.get("href")])
-                else:
-                    error_ = True
+                except AttributeError:
+                    error_.append("Error")
         btn = [
             [
                 InlineKeyboardButton(dl[0][0], url=dl[0][1]),
@@ -307,7 +307,7 @@ if userge.has_bot:
             ]
         ]
         await c_q.answer()
-        if not error_:
+        if not "Error" in error_:
             await c_q.edit_message_reply_markup(reply_markup=(InlineKeyboardMarkup(btn)))
         else:
             await c_q.edit_message_text(
