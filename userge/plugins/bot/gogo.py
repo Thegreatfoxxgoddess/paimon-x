@@ -285,32 +285,32 @@ if userge.has_bot:
                     dl.append([qual, spcd.get("href")])
                 except AttributeError:
                     error_.append("Error")
-        btn = [
-            [
-                InlineKeyboardButton(dl[0][0], url=dl[0][1]),
-                InlineKeyboardButton(dl[1][0], url=dl[1][1]),
-            ],
-            [
-                InlineKeyboardButton(
-                    "Back", callback_data=f"gogogetqual_{key_}_{episode}_{total}"
-                )
-            ],
-        ]
-        err_btn = [
-            [InlineKeyboardButton("StreamSB", url=ssb_link)],
-            [
-                InlineKeyboardButton(
-                    "Back", callback_data=f"gogogetqual_{key_}_{episode}_{total}"
-                )
-            ],
-        ]
         await c_q.answer()
         if "Error" not in error_:
+            btn = [
+                [
+                    InlineKeyboardButton(dl[0][0], url=dl[0][1]),
+                    InlineKeyboardButton(dl[1][0], url=dl[1][1]),
+                ],
+                [
+                    InlineKeyboardButton(
+                        "Back", callback_data=f"gogogetqual_{key_}_{episode}_{total}"
+                    )
+                ],
+            ]
             await c_q.edit_message_reply_markup(
                 reply_markup=(InlineKeyboardMarkup(btn))
             )
         else:
+            btn = [
+                [InlineKeyboardButton("StreamSB", url=ssb_link)],
+                [
+                    InlineKeyboardButton(
+                        "Back", callback_data=f"gogogetqual_{key_}_{episode}_{total}"
+                    )
+                ],
+            ]
             await c_q.edit_message_text(
                 text="Error while fetching links\nGo to the following url to download anime manually",
-                reply_markup=InlineKeyboardMarkup(err_btn),
+                reply_markup=InlineKeyboardMarkup(btn),
             )
