@@ -244,4 +244,67 @@ if userge.has_bot:
         await c_q.answer()
         mrkp = data_.get("current_pg")
         body_ = data_.get("body")
+<<<<<<< HEAD
         await c_q.edit_message_text(text=body_, reply_markup=InlineKeyboardMarkup(mrkp))
+=======
+        await c_q.edit_message_text(text=body_, reply_markup=InlineKeyboardMarkup(mrkp))
+
+    @userge.bot.on_callback_query(filters.regex(pattern=r"ssb_(.*)"))
+    @check_owner
+    async def ssblinkz(c_q: CallbackQuery):
+        ssb_link = c_q.data.split("_")[1]
+        episode = c_q.data.split("_")[2]
+        key_ = c_q.data.split("_")[3]
+        total = c_q.data.split("_")[4]
+        fp = await get_response.text(ssb_link)
+        fpc = soup(fp, "lxml")
+        fpcd = fpc.find("table").findAll("td")
+        dl = []
+        error_ = []
+        for i in fpcd:
+            if i.a:
+                splp = (
+                    str(i.a.get("onclick"))
+                    .replace("download_video('", "")
+                    .replace("')", "")
+                    .split("','")
+                )
+                qual = "Normal Quality" if splp[1] == "n" else "High Quality"
+                spl = f"https://streamsb.net/dl?op=download_orig&id={splp[0]}&mode={splp[1]}&hash={splp[2]}"
+                sp = await get_response.text(spl)
+                spc = soup(sp, "lxml")
+                try:
+                    spcd = spc.find("div", {"id": "contentbox"}).find("span").find("a")
+                    dl.append([qual, spcd.get("href")])
+                except AttributeError:
+                    error_.append("Error")
+        await c_q.answer()
+        if "Error" not in error_:
+            btn = [
+                [
+                    InlineKeyboardButton(dl[0][0], url=dl[0][1]),
+                    InlineKeyboardButton(dl[1][0], url=dl[1][1]),
+                ],
+                [
+                    InlineKeyboardButton(
+                        "Back", callback_data=f"gogogetqual_{key_}_{episode}_{total}"
+                    )
+                ],
+            ]
+            await c_q.edit_message_reply_markup(
+                reply_markup=(InlineKeyboardMarkup(btn))
+            )
+        else:
+            btn = [
+                [InlineKeyboardButton("StreamSB", url=ssb_link)],
+                [
+                    InlineKeyboardButton(
+                        "Back", callback_data=f"gogogetqual_{key_}_{episode}_{total}"
+                    )
+                ],
+            ]
+            await c_q.edit_message_text(
+                text="Error while fetching links\nGo to the following url to download anime manually",
+                reply_markup=InlineKeyboardMarkup(btn),
+            )
+>>>>>>> d6e0ada296d17ea5e14a973ef069f3ddbe34282d
