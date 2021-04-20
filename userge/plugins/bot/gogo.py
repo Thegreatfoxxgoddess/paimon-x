@@ -267,6 +267,7 @@ if userge.has_bot:
         fpc = soup(fp, "lxml")
         fpcd = fpc.find("table").findAll("td")
         dl = []
+        error_ = False
         for i in fpcd:
             if i.a:
                 splp = (
@@ -279,8 +280,11 @@ if userge.has_bot:
                 spl = f"https://streamsb.net/dl?op=download_orig&id={splp[0]}&mode={splp[1]}&hash={splp[2]}"
                 sp = await get_response.text(spl)
                 spc = soup(sp, "lxml")
-                spcd = spc.find("div", {"id": "contentbox"}).find("span").find("a")
-                dl.append([qual, spcd.get("href")])
+                if not spc.find("b", {"class": "err"}):
+                    spcd = spc.find("div", {"id": "contentbox"}).find("span").find("a")
+                    dl.append([qual, spcd.get("href")])
+                else:
+                    error_ = True
         btn = [
             [
                 InlineKeyboardButton(dl[0][0], url=dl[0][1]),
@@ -292,5 +296,21 @@ if userge.has_bot:
                 )
             ],
         ]
+        err_btn = [
+            [
+                InlineKeyboardButton("StreamSB", url=ssb_link)
+            ],
+            [
+                InlineKeyboardButton(
+                    "Back", callback_data=f"gogogetqual_{key_}_{episode}_{total}"
+                )
+            ]
+        ]
         await c_q.answer()
-        await c_q.edit_message_reply_markup(reply_markup=(InlineKeyboardMarkup(btn)))
+        if not error_:
+            await c_q.edit_message_reply_markup(reply_markup=(InlineKeyboardMarkup(btn)))
+        else:
+            await c_q.edit_message_text(
+                text="Error while fetching links\nGo to the following url to download anime manually",
+                reply_markup=InlineKeyboardMarkup(err_btn)
+            )
