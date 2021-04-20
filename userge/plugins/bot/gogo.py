@@ -297,14 +297,12 @@ if userge.has_bot:
             ],
         ]
         err_btn = [
-            [
-                InlineKeyboardButton("StreamSB", url=ssb_link)
-            ],
+            [InlineKeyboardButton("StreamSB", url=ssb_link)],
             [
                 InlineKeyboardButton(
                     "Back", callback_data=f"gogogetqual_{key_}_{episode}_{total}"
                 )
-            ]
+            ],
         ]
         await c_q.answer()
         if not "Error" in error_:
@@ -312,5 +310,5 @@ if userge.has_bot:
         else:
             await c_q.edit_message_text(
                 text="Error while fetching links\nGo to the following url to download anime manually",
-                reply_markup=InlineKeyboardMarkup(err_btn)
+                reply_markup=InlineKeyboardMarkup(err_btn),
             )
