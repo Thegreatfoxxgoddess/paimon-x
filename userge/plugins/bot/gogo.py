@@ -305,8 +305,10 @@ if userge.has_bot:
             ],
         ]
         await c_q.answer()
-        if not "Error" in error_:
-            await c_q.edit_message_reply_markup(reply_markup=(InlineKeyboardMarkup(btn)))
+        if "Error" not in error_:
+            await c_q.edit_message_reply_markup(
+                reply_markup=(InlineKeyboardMarkup(btn))
+            )
         else:
             await c_q.edit_message_text(
                 text="Error while fetching links\nGo to the following url to download anime manually",
