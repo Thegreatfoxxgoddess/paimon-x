@@ -81,7 +81,7 @@ class Config:
     TMP_PATH = "userge/plugins/temp/"
     MAX_MESSAGE_LENGTH = 4096
     MSG_DELETE_TIMEOUT = 120
-    WELCOME_DELETE_TIMEOUT = 120
+    WELCOME_DELETE_TIMEOUT = 500
     EDIT_SLEEP_TIMEOUT = 10
     AUTOPIC_TIMEOUT = 300
     ALLOWED_CHATS = filters.chat([])
