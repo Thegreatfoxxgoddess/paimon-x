@@ -231,7 +231,7 @@ class Bot_Alive:
         user = " ".join([me.first_name, me.last_name or ""])
         alive_info_ = f"""
 ㅤㅤㅤㅤㅤㅤㅤ
-  🧬  <b> [paimon](https://t.me/Jesusbot) : </b>   <code>v0.4.2_93.alpha</code>
+  🧬  <b> [paimon](https://t.me/aliciadarkxd_bot) : </b>   <code>v0.4.2_69</code>
   🐍  <b> Python  :</b>    <code>v{versions.__python_version__}</code>
   🔥  <b> Pyro      :</b>    <code>v{versions.__pyro_version__}</code>
   🦋  <b> User      :</b>    `{user}`
