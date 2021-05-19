@@ -26,7 +26,7 @@ from userge.utils import get_response
 )
 async def getlink_(message: Message):
     """song links"""
-    if not (link := await find_url_from_msg(msg)):
+    if not (link := (await find_url_from_msg(message))[0]):
         return
     await message.edit(f'🔎 Searching for `"{link}"`')
     resp = await get_song_link(link)
@@ -44,20 +44,23 @@ async def get_song_link(link: str) -> Optional[Dict]:
             "https://api.song.link/v1-alpha.1/links?url=" + quote(link)
         )
     except ValueError:
-        r = None
-    return r
+        pass
+    else:
+        return r
 
 
-async def find_url_from_msg(message: Message) -> Optional[str]:
+async def find_url_from_msg(message: Message, show_err: bool = True) -> Optional[str]:
     reply = message.reply_to_message
+    msg = None
     if message.input_str:
         txt = message.input_str
         msg = message
     elif reply and (reply.text or reply.caption):
         txt = reply.text or reply.caption
         msg = reply
-    else:
-        await message.err("No Input Found !", del_in=5)
+    if not msg:
+        if show_err:
+            await message.err("No Input Found !", del_in=5)
         return
     try:
         url_e = [
@@ -66,11 +69,13 @@ async def find_url_from_msg(message: Message) -> Optional[str]:
             if _.type in ("url", "text_link")
         ]
     except TypeError:
-        await message.err("No Valid URL was found !", del_in=5)
+        if show_err:
+            await message.err("No Valid URL was found !", del_in=5)
         return
-    y = url_e[0]
-    link = txt[y.offset : (y.offset + y.length)] if y.type == "url" else y.url
-    return link
+    if len(url_e) > 0:
+        y = url_e[0]
+        link = txt[y.offset : (y.offset + y.length)] if y.type == "url" else y.url
+        return link, msg
 
 
 def beautify(text: str) -> str:
