@@ -57,9 +57,9 @@ async def _init() -> None:
     allow_channels=False,
 )
 async def restart_(message: Message):
-    """ restart paimon-x """
-    await message.edit("`Restarting paimon-x Services`", log=__name__)
-    LOG.info("paimon-x Services - Restart initiated")
+    """ restart USERGE-X """
+    await message.edit("`Restarting USERGE-X Services`", log=__name__)
+    LOG.info("USERGE-X Services - Restart initiated")
     if "t" in message.flags:
         shutil.rmtree(Config.TMP_PATH, ignore_errors=True)
     if "d" in message.flags:
@@ -81,10 +81,10 @@ async def restart_(message: Message):
 
 
 @userge.on_cmd(
-    "shutdown", about={"header": "shutdown paimon-x :)"}, allow_channels=False
+    "shutdown", about={"header": "shutdown USERGE-X :)"}, allow_channels=False
 )
 async def shutdown_(message: Message) -> None:
-    """ shutdown paimon-x """
+    """ shutdown USERGE-X """
     await message.edit("`shutting down ...`")
     if Config.HEROKU_APP:
         try:
@@ -109,7 +109,7 @@ async def shutdown_(message: Message) -> None:
     allow_channels=False,
 )
 async def die_(message: Message) -> None:
-    """ set offline timeout to die paimon-x """
+    """ set offline timeout to die USERGE-X """
     global MAX_IDLE_TIME  # pylint: disable=global-statement
     if not Config.HEROKU_APP:
         await message.err("`heroku app not detected !`")
@@ -337,11 +337,11 @@ async def view_disabled_chats_(message: Message):
 
 @userge.on_cmd(
     "sleep (\\d+)",
-    about={"header": "sleep paimon-x :P", "usage": "{tr}sleep [timeout in seconds]"},
+    about={"header": "sleep USERGE-X :P", "usage": "{tr}sleep [timeout in seconds]"},
     allow_channels=False,
 )
 async def sleep_(message: Message) -> None:
-    """ sleep paimon-x """
+    """ sleep USERGE-X """
     seconds = int(message.matches[0].group(1))
     await message.edit(f"`sleeping {seconds} seconds...`")
     asyncio.get_event_loop().create_task(_slp_wrkr(seconds))
