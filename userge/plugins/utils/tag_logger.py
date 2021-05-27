@@ -7,7 +7,7 @@ import os
 import aiofiles
 import ujson
 from pyrogram import filters
-from pyrogram.errors import FloodWait, MessageIdInvalid
+from pyrogram.errors import FloodWait
 
 from userge import Config, Message, get_collection, userge
 
@@ -29,9 +29,47 @@ async def _init() -> None:
 tagLoggingFilter = filters.create(lambda _, __, ___: Config.TAG_LOGGING)
 
 
-@userge.on_message(
-    filters.group & ~filters.bot & ~filters.service & tagLoggingFilter, group=5
+@userge.on_cmd(
+    "tag_log",
+    about={
+        "header": "Toggle logging of PM and groups[all]",
+        "description": "Logs all PMs and group mentions",
+        "flag": {
+            "-c": "Check tag_log status",
+        },
+        "usage": "{tr}tag_log",
+    },
+    allow_channels=False,
 )
+async def all_log(message: Message):
+    """enable / disable [all Logger]"""
+    if not hasattr(Config, "TAG_LOGGING"):
+        setattr(Config, "TAG_LOGGING", False)
+    if not Config.PM_LOG_GROUP_ID:
+        return await message.edit(
+            "Make a group and provide it's ID in `PM_LOG_GROUP_ID` var.",
+            del_in=5,
+        )
+    flag = message.flags
+    if "-c" in flag:
+        if Config.TAG_LOGGING:
+            switch = "enabled"
+        else:
+            switch = "disabled"
+        await message.edit(f"Tag logger is {switch}...", del_in=3)
+        return
+    if Config.TAG_LOGGING:
+        Config.TAG_LOGGING = False
+        await message.edit("`Tag logger disabled !`", del_in=3)
+    else:
+        Config.TAG_LOGGING = True
+        await message.edit("`Tag logger enabled !`", del_in=3)
+    await SAVED_SETTINGS.update_one(
+        {"_id": "TAG_LOGGING"}, {"$set": {"is_active": Config.TAG_LOGGING}}, upsert=True
+    )
+
+
+@userge.on_message(filters.group & ~filters.bot & tagLoggingFilter, group=5)
 async def grp_log(_, message: Message):
     if not GROUP_LOG_GROUP_ID:
         return
@@ -39,19 +77,13 @@ async def grp_log(_, message: Message):
         if message.chat.id == NO_LOG_GROUP_ID:
             return
     dash = "==========================="
-    try:
-        sender_id = message.from_user.id
-    except BaseException:
-        return
+    sender_id = message.from_user.id
     sender_m_id = message.message_id
     reply = message.reply_to_message
     me_id = user(info="id")
     if reply:
         replied_m_id = reply.message_id
-        try:
-            replied_id = reply.from_user.id
-        except BaseException:
-            return
+        replied_id = reply.from_user.id
         if sender_id == me_id:
             replied_name = " ".join(
                 [reply.from_user.first_name, reply.from_user.last_name or ""]
@@ -106,17 +138,11 @@ async def grp_log(_, message: Message):
                 )
             except FloodWait as e:
                 await asyncio.sleep(e.x + 3)
-            except MessageIdInvalid:
-                pass
             return
     mention = f'@{user(info="username")}'
     text = message.text or message.caption
     if text and mention in text:
         text_id = message.message_id
-        sender_name = " ".join(
-            [message.from_user.first_name, message.from_user.last_name or ""]
-        )
-        sender_men = f"<a href='tg://user?id={sender_id}'>{sender_name}</a>"
         log2 = f"""
 #⃣ #TAGS
 👤 <b>Sent by :</b> {sender_men}
@@ -141,8 +167,6 @@ async def grp_log(_, message: Message):
             )
         except FloodWait as e:
             await asyncio.sleep(e.x + 3)
-        except MessageIdInvalid:
-            pass
         return
     if (not reply) and (sender_id == me_id):
         sent_m_id = message.message_id
@@ -170,8 +194,6 @@ async def grp_log(_, message: Message):
             )
         except FloodWait as e:
             await asyncio.sleep(e.x + 3)
-        except MessageIdInvalid:
-            pass
         return
 
 
@@ -232,11 +254,6 @@ async def pm_log(_, message: Message):
                 Config.PM_LOG_GROUP_ID, chat_id, id, disable_notification=True
             )
             return
-        if message.sticker:
-            await userge.send_message(
-                Config.PM_LOG_GROUP_ID,
-                f"👤 <a href='tg://user?id={chat_id}'>{chat_name}</a> ⬇",
-            )
         await asyncio.sleep(0.2)
         await userge.send_message(Config.PM_LOG_GROUP_ID, dash)
         await asyncio.sleep(0.2)
@@ -245,8 +262,6 @@ async def pm_log(_, message: Message):
         )
     except FloodWait as e:
         await asyncio.sleep(e.x + 3)
-    except MessageIdInvalid:
-        pass
 
 
 def user(info):
