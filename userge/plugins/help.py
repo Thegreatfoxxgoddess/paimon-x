@@ -328,11 +328,11 @@ if userge.has_bot:
             pairs = pairs[current_page * rows : (current_page + 1) * rows] + [
                 [
                     InlineKeyboardButton(
-                        "⏪ Previous",
+                        "Previous",
                         callback_data=f"({cur_pos})prev({current_page})".encode(),
                     ),
                     InlineKeyboardButton(
-                        "⏩ Next",
+                        "Next",
                         callback_data=f"({cur_pos})next({current_page})".encode(),
                     ),
                 ],
@@ -360,11 +360,11 @@ if userge.has_bot:
                 tmp_btns.append(InlineKeyboardButton("🖥 Main Menu", callback_data="mm"))
                 tmp_btns.append(
                     InlineKeyboardButton(
-                        "🔄 Refresh", callback_data=f"refresh({cur_pos})".encode()
+                        "Refresh", callback_data=f"refresh({cur_pos})".encode()
                     )
                 )
         else:
-            cur_clnt = "👤 USER" if Config.USE_USER_FOR_CLIENT_CHECKS else "⚙️ BOT"
+            cur_clnt = "USER" if Config.USE_USER_FOR_CLIENT_CHECKS else "⚙️ BOT"
             tmp_btns.append(
                 InlineKeyboardButton(
                     f"🔩 Client for Checks and Sudos : {cur_clnt}",
@@ -386,7 +386,7 @@ if userge.has_bot:
     def plugin_data(cur_pos: str, p_num: int = 0):
         pos_list = cur_pos.split("|")
         plg = userge.manager.plugins[pos_list[2]]
-        text = f"""🔹 <u><b>Plugin Status<b></u> 🔹
+        text = f""" 🔹 <u><b>Plugin Status<b></u> 🔹
 
 🎭 **Category** : `{pos_list[1]}`
 🔖 **Name** : `{plg.name}`
@@ -798,12 +798,12 @@ if userge.has_bot:
                     notes = t.post(title="READ Notes", author="", text=notes_)
                     buttons = [
                         [
-                            InlineKeyboardButton("🗒️ NOTES", url=notes["url"]),
-                            InlineKeyboardButton("⬇️ DOWNLOAD", url=s["url"]),
+                            InlineKeyboardButton("NOTES", url=notes["url"]),
+                            InlineKeyboardButton("DOWNLOAD", url=s["url"]),
                         ]
                     ]
                 else:
-                    buttons = [[InlineKeyboardButton(text="⬇️ DOWNLOAD", url=s["url"])]]
+                    buttons = [[InlineKeyboardButton(text="DOWNLOAD", url=s["url"])]]
                 results.append(
                     InlineQueryResultPhoto(
                         photo_url=photo,
@@ -832,7 +832,7 @@ if userge.has_bot:
                                 [
                                     [
                                         InlineKeyboardButton(
-                                            text="⬇️  Download",
+                                            text="Download",
                                             callback_data=f'get_eps{i.get("key")}',
                                         )
                                     ]
@@ -1058,17 +1058,17 @@ if userge.has_bot:
                     ujson.dump(view_data, r, indent=4)
                 if str_x[0].lower() == "secret":
                     c_data = f"secret_{key_}"
-                    i_m_content = f"📩 <b>Secret Msg</b> for <b>{r_name}</b>. Only he/she can open it."
+                    i_m_content = f"<b>Secret Msg</b> for <b>{r_name}</b>. Only he/she can open it."
                     i_l_des = f"Send Secret Message to: {r_name}"
                     title = "Send A Secret Message"
                     thumb_img = "https://i.imgur.com/c5pZebC.png"
                 else:
                     c_data = f"troll_{key_}"
-                    i_m_content = f"😈 Only <b>{r_name}</b> can't view this message. UwU"
+                    i_m_content = f"Only <b>{r_name}</b> can't view this message. UwU"
                     i_l_des = f"Message Hidden from {r_name}"
-                    title = "😈 Troll"
+                    title = "Troll"
                     thumb_img = "https://i.imgur.com/0vg5B0A.png"
-                buttons = [[InlineKeyboardButton("🔐  SHOW", callback_data=c_data)]]
+                buttons = [[InlineKeyboardButton("SHOW", callback_data=c_data)]]
                 results.append(
                     InlineQueryResultArticle(
                         title=title,
@@ -1101,11 +1101,11 @@ if userge.has_bot:
                                 ],
                                 [
                                     InlineKeyboardButton(
-                                        text="📜  List all",
+                                        text="List all",
                                         callback_data=f"ytdl_listall_{key_}_1",
                                     ),
                                     InlineKeyboardButton(
-                                        text="⬇️  Download",
+                                        text="Download",
                                         callback_data=f'ytdl_download_{outdata[1]["video_id"]}_0',
                                     ),
                                 ],
@@ -1122,7 +1122,7 @@ if userge.has_bot:
                         InlineQueryResultPhoto(
                             photo_url=photo,
                             title=link,
-                            description="⬇️ Click to Download",
+                            description="Click to Download",
                             caption=caption,
                             reply_markup=buttons,
                         )
