@@ -48,7 +48,7 @@ if userge.has_bot:
             else:
                 await c_q.answer("This Message is Confidential", show_alert=True)
                 return
-            msg_body = f"<b>Secret Msg</b> for <b>{receiver_name}</b>. Only he/she can open it."
+            msg_body = f"<b>secret message</b> for <b>{receiver_name}</b>. only it can open it."
             msg_b_data = f"secret_{key_}"
         else:  # Troll
             if u_id != receiver_id:
@@ -59,7 +59,7 @@ if userge.has_bot:
                     show_alert=True,
                 )
                 return
-            msg_body = f"Only <b>{receiver_name}</b> can't view this message."
+            msg_body = f"only <b>{receiver_name}</b> can't view this message."
             msg_b_data = f"troll_{key_}"
         # Views
         if u_id not in Config.OWNER_ID:
@@ -77,7 +77,7 @@ if userge.has_bot:
             buttons = InlineKeyboardMarkup(
                 [[InlineKeyboardButton("SHOW", callback_data=msg_b_data)]]
             )
-            msg_body += f"\n\n**Views:** {v_count + 1}"
+            msg_body += f"\n\n**views:** {v_count + 1}"
             try:
                 await c_q.edit_message_text(
                     text=msg_body, disable_web_page_preview=True, reply_markup=buttons
