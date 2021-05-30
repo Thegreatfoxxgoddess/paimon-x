@@ -58,7 +58,7 @@ async def _init() -> None:
 )
 async def restart_(message: Message):
     """restart USERGE-X"""
-    await message.edit("`Restarting USERGE-X Services`", log=__name__)
+    await message.edit("`initiating paimon restart... `", log=__name__)
     LOG.info("USERGE-X Services - Restart initiated")
     if "t" in message.flags:
         shutil.rmtree(Config.TMP_PATH, ignore_errors=True)
@@ -67,7 +67,7 @@ async def restart_(message: Message):
     if "h" in message.flags:
         if Config.HEROKU_APP:
             await message.edit(
-                "`Heroku app found, trying to restart dyno...\nthis will take upto 30 sec`",
+                "`restarting paimon...`",
                 del_in=3,
             )
             Config.HEROKU_APP.restart()
