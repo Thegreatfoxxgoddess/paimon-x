@@ -194,7 +194,7 @@ if userge.has_bot:
             )
             btns = [
                 [
-                    InlineKeyboardButton("Bio", url=https://t.me/blame_everything),
+                    InlineKeyboardButton("Bio", url="https://t.me/blame_everything"),
                     InlineKeyboardButton("REPO", url=Config.UPSTREAM_REPO),
                 ]
             ]
