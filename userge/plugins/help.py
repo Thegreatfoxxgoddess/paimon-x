@@ -1058,13 +1058,13 @@ if userge.has_bot:
                     ujson.dump(view_data, r, indent=4)
                 if str_x[0].lower() == "secret":
                     c_data = f"secret_{key_}"
-                    i_m_content = f"<b>Secret Msg</b> for <b>{r_name}</b>. Only he/she can open it."
+                    i_m_content = f"Secret Msg for {r_name}. only it can open it."
                     i_l_des = f"Send Secret Message to: {r_name}"
                     title = "Send A Secret Message"
-                    thumb_img = "https://i.imgur.com/c5pZebC.png"
+                    thumb_img = "https://telegra.ph/file/dbd09568705d17b07c647.jpg"
                 else:
                     c_data = f"troll_{key_}"
-                    i_m_content = f"Only <b>{r_name}</b> can't view this message. UwU"
+                    i_m_content = f"only {r_name} can't view this message. UwU"
                     i_l_des = f"Message Hidden from {r_name}"
                     title = "Troll"
                     thumb_img = "https://i.imgur.com/0vg5B0A.png"
