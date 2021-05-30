@@ -416,7 +416,8 @@ async def bot_users_(message: Message):
     msg = ""
     async for c in BOT_START.find():
         msg += (
-            f"<b> » </b> name {c['firstname']},  <b>Date:</b> `{c['date']}`\n"
+            f"<b> » </b> name {c['firstname']}\n"
+            f"<b> • </b> Date {c['date']} \n"
         )
     await message.edit_or_send_as_file(
         f"<u><i><b>Bot PM Userlist</b></i></u>\n\n{msg}"
