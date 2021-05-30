@@ -188,7 +188,7 @@ if userge.has_bot:
          my owner is  {owner_.flname}✨🦋
 """
             if Config.BOT_FORWARDS:
-                start_msg += "<b>\n📌 NOTE:</b>\nYou can 📨 <b>Send Message</b> here to contact my <b>Master.</b>"
+                start_msg += "<b>\n📌 NOTE:</b>\nYou can Send Message here to contact my owner."
             contact_url = (
                 f"https://t.me/{owner_.uname}"
                 if owner_.uname
@@ -217,11 +217,11 @@ if userge.has_bot:
     @check_owner
     async def add_to_grp(c_q: CallbackQuery):
         await c_q.answer()
-        msg = "<b>🤖 Add Your Bot to Group</b> \n\n📌 **NOTE:**\n<i>Admin Privilege Required !</i>"
+        msg = "<b>Add Your Bot to Group</b> \n\n📌 **NOTE:**\n<i>Admin Privilege Required !</i>"
         add_bot = f"http://t.me/{(await get_bot_info())['bot'].uname}?startgroup=start"
         buttons = InlineKeyboardMarkup(
             [
-                [InlineKeyboardButton("➕ PRESS TO ADD", url=add_bot)],
+                [InlineKeyboardButton("PRESS TO ADD", url=add_bot)],
                 [InlineKeyboardButton("BACK", callback_data="back_bot_pm")],
             ]
         )
@@ -416,8 +416,7 @@ async def bot_users_(message: Message):
     msg = ""
     async for c in BOT_START.find():
         msg += (
-            f"• <i>ID:</i> <code>{c['user_id']}</code>\n   "
-            f"<b>Name:</b> {c['firstname']},  <b>Date:</b> `{c['date']}`\n"
+            f"<b> » </b> name {c['firstname']},  <b>Date:</b> `{c['date']}`\n"
         )
     await message.edit_or_send_as_file(
         f"<u><i><b>Bot PM Userlist</b></i></u>\n\n{msg}"
