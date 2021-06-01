@@ -168,7 +168,7 @@ if userge.has_bot:
             else:
                 user_dict = await userge.bot.get_user_dict(Config.OWNER_ID[0])
                 await c_q.answer(
-                    f"Only {user_dict['flname']} watcha doin, you can't access me. make your own",
+                    f"watcha doin, you can't access me. make your own",
                     show_alert=True,
                 )
 
