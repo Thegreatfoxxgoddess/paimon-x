@@ -57,22 +57,22 @@ _CATEGORY = {
 # Database
 SAVED_SETTINGS = get_collection("CONFIGS")
 REPO_X = InlineQueryResultArticle(
-    title="Repo",
-    input_message_content=InputTextMessageContent("**Here's how to setup USERGE-X** "),
-    url="https://github.com/code-rgb/USERGE-X",
-    description="Setup Your Own",
-    thumb_url="https://telegra.ph/file/07afe6576e96d1c15dbe2.jpg",
+    title="repo",
+    input_message_content=InputTextMessageContent("**Here's how to setup paimon** "),
+    url="https://github.com/thegreatfoxxgoddess/paimon-x",
+    description="you're not my sudo!\n ask my owner for help",
+    thumb_url="https://telegra.ph/file/0fff8af714fc52a9836d2.jpg",
     reply_markup=InlineKeyboardMarkup(
         [
             [
                 InlineKeyboardButton(
-                    "USERGE-X Repo", url="https://github.com/code-rgb/USERGE-X"
+                    "paimon", url="https://github.com/thegreatfoxxgoddess/paimon-x"
                 ),
                 InlineKeyboardButton(
-                    "Deploy USERGE-X",
+                    "deploy paimon",
                     url=(
                         "https://heroku.com/deploy?template="
-                        "https://github.com/code-pms/MyGpack"
+                        "https://github.com/thegreatfoxxgoddess/MyGpack"
                     ),
                 ),
             ]
