@@ -274,16 +274,8 @@ def resize_photo(photo: str) -> io.BytesIO:
 
 
 KANGING_STR = (
-    "Using Witchery to kang this sticker...",
-    "Plagiarising hehe...",
-    "Inviting this sticker over to my pack...",
-    "Kanging this sticker...",
-    "Hey that's a nice sticker!\nMind if I kang?!..",
-    "hehe me stel ur stikér\nhehe.",
-    "Ay look over there (☉｡☉)!→\nWhile I kang this...",
-    "Roses are red violets are blue, kanging this sticker so my pacc looks cool",
-    "Imprisoning this sticker...",
-    "Mr.Steal Your Sticker is stealing this sticker... ",
+    "using witchery to kang this sticker...",
+    "me stealing this sticker... ",
 )
 
 
@@ -310,7 +302,7 @@ async def sticker_search(message: Message):
             "reply to a user or provide text to search sticker packs", del_in=3
         )
 
-    await message.edit(f'🔎 Searching for sticker packs for "`{query_}`"...')
+    await message.edit(f'Searching for sticker packs for "`{query_}`"...')
     titlex = f'<b>Sticker Packs For:</b> "<u>{query_}</u>"\n'
     sticker_pack = ""
     try:
