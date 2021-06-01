@@ -60,7 +60,7 @@ REPO_X = InlineQueryResultArticle(
     title="repo",
     input_message_content=InputTextMessageContent("**Here's how to setup paimon** "),
     url="https://github.com/thegreatfoxxgoddess/paimon-x",
-    description="you're not my sudo!\n ask {user_dict['flname']} for help",
+    description="you're not my sudo!\nask Alícia for help",
     thumb_url="https://telegra.ph/file/0fff8af714fc52a9836d2.jpg",
     reply_markup=InlineKeyboardMarkup(
         [
