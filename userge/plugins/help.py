@@ -60,7 +60,7 @@ REPO_X = InlineQueryResultArticle(
     title="repo",
     input_message_content=InputTextMessageContent("**Here's how to setup paimon** "),
     url="https://github.com/thegreatfoxxgoddess/paimon-x",
-    description="you're not my sudo!\n ask my owner for help",
+    description="you're not my sudo!\n ask {user_dict['flname']} for help",
     thumb_url="https://telegra.ph/file/0fff8af714fc52a9836d2.jpg",
     reply_markup=InlineKeyboardMarkup(
         [
@@ -168,7 +168,7 @@ if userge.has_bot:
             else:
                 user_dict = await userge.bot.get_user_dict(Config.OWNER_ID[0])
                 await c_q.answer(
-                    f"Only {user_dict['flname']} Can Access this...! Build Your USERGE-X",
+                    f"Only {user_dict['flname']} watcha doin, you can't access me. make your own",
                     show_alert=True,
                 )
 
@@ -213,7 +213,7 @@ if userge.has_bot:
             await callback_query.answer("you are in main menu", show_alert=True)
             return
         if len(pos_list) == 2:
-            text = " 𝐔𝐒𝐄𝐑𝐆𝐄-𝐗  𝗠𝗔𝗜𝗡 𝗠𝗘𝗡𝗨"
+            text = "  𝗣𝗔𝗜𝗠𝗢𝗡-𝗫 𝗠𝗔𝗜𝗡 𝗠𝗘𝗡𝗨"
             buttons = main_menu_buttons()
         elif len(pos_list) == 3:
             text, buttons = category_data(cur_pos)
@@ -265,7 +265,7 @@ if userge.has_bot:
     @check_owner
     async def callback_mm(callback_query: CallbackQuery):
         await callback_query.edit_message_text(
-            " 𝐔𝐒𝐄𝐑𝐆𝐄-𝐗  𝗠𝗔𝗜𝗡 𝗠𝗘𝗡𝗨 ",
+            "  𝗣𝗔𝗜𝗠𝗢𝗡-𝗫 𝗠𝗔𝗜𝗡 𝗠𝗘𝗡𝗨 ",
             reply_markup=InlineKeyboardMarkup(main_menu_buttons()),
         )
 
@@ -639,7 +639,7 @@ if userge.has_bot:
                     if Config.ALIVE_MEDIA.lower().strip() == "false":
                         results.append(
                             InlineQueryResultArticle(
-                                title="USERGE-X",
+                                title="paimon",
                                 input_message_content=InputTextMessageContent(
                                     alive_info, disable_web_page_preview=True
                                 ),
@@ -689,7 +689,7 @@ if userge.has_bot:
                             else:
                                 results.append(
                                     InlineQueryResultCachedDocument(
-                                        title="USERGE-X",
+                                        title="paimon",
                                         file_id=c_file_id,
                                         caption=alive_info,
                                         description="ALIVE",
@@ -1141,9 +1141,9 @@ if userge.has_bot:
             MAIN_MENU = InlineQueryResultArticle(
                 title="Main Menu",
                 input_message_content=InputTextMessageContent(" 𝗣𝗔𝗜𝗠𝗢𝗡-𝗫 𝗠𝗔𝗜𝗡 𝗠𝗘𝗡𝗨 "),
-                url="https://github.com/code-rgb/USERGE-X",
+                url="https://github.com/thegreatfoxxgoddess/paimon-x",
                 description="paimon-x main menu",
-                thumb_url="https://telegra.ph/file/07afe6576e96d1c15dbe2.jpg",
+                thumb_url="https://telegra.ph/file/0fff8af714fc52a9836d2.jpg",
                 reply_markup=InlineKeyboardMarkup(main_menu_buttons()),
             )
             results.append(MAIN_MENU)
