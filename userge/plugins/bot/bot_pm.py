@@ -182,11 +182,10 @@ if userge.has_bot:
             start_msg = f"""
         hey there {from_user.fname},
         nice to meet ya, I'm {bot_.fname}.
-             <i>powered by userge-x</i>
         I'm {owner_.flname}'s personal assistant✨🦋
 """
             if Config.BOT_FORWARDS:
-                start_msg += "<b>\n📌 NOTE:</b>\nYou can 📨 <b>Send Message</b> here to contact my <b>Master.</b>"
+                start_msg += "<b>\nNOTE:</b>\nYou can <b>Send Message</b> here to contact my <b>Master.</b>"
             contact_url = (
                 f"https://t.me/{owner_.uname}"
                 if owner_.uname
@@ -212,11 +211,11 @@ if userge.has_bot:
     @check_owner
     async def add_to_grp(c_q: CallbackQuery):
         await c_q.answer()
-        msg = "<b>🤖 Add Your Bot to Group</b> \n\n📌 **NOTE:**\n<i>Admin Privilege Required !</i>"
+        msg = "<b>Add Your Bot to Group</b> \n\n**NOTE:**\n<i>Admin Privilege Required !</i>"
         add_bot = f"http://t.me/{(await get_bot_info())['bot'].uname}?startgroup=start"
         buttons = InlineKeyboardMarkup(
             [
-                [InlineKeyboardButton("➕ PRESS TO ADD", url=add_bot)],
+                [InlineKeyboardButton("PRESS TO ADD", url=add_bot)],
                 [InlineKeyboardButton("BACK", callback_data="back_bot_pm")],
             ]
         )
@@ -239,10 +238,10 @@ if userge.has_bot:
             [
                 [
                     InlineKeyboardButton(
-                        "🚫  BAN", callback_data=f"bot_pm_ban_{user_.id}"
+                        "BAN", callback_data=f"bot_pm_ban_{user_.id}"
                     ),
                     InlineKeyboardButton(
-                        "➖ Bot Antiflood [OFF]",
+                        "Bot Antiflood [OFF]",
                         callback_data="toggle_bot-antiflood_off",
                     ),
                 ]
@@ -317,7 +316,7 @@ if userge.has_bot:
         await asyncio.gather(
             c_q.answer(f"Banning UserID -> {user_id} ...", show_alert=False),
             ban_from_bot_pm(user_id, "Spamming Bot", log=__name__),
-            c_q.edit_message_text(f"✅ **Successfully Banned**  User ID: {user_id}"),
+            c_q.edit_message_text(f"**Successfully Banned**  User ID: {user_id}"),
         )
 
     def time_now() -> Union[float, int]:
