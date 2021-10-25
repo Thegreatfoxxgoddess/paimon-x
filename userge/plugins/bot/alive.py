@@ -238,7 +238,6 @@ class Bot_Alive:
   🦋  <b> User      :</b>    `{user}`
 
   <b>{Bot_Alive._get_mode()}   |   {userge.uptime}</b>
-=======
 """
         return alive_info
 
@@ -246,7 +245,6 @@ class Bot_Alive:
     def _get_mode() -> str:
         if RawClient.DUAL_MODE:
             return "DUAL"
-=======
 
         if Config.BOT_TOKEN:
             return "BOT"
@@ -259,7 +257,6 @@ class Bot_Alive:
                 InlineKeyboardButton(text="SETTINGS", callback_data="settings_btn"),
                 InlineKeyboardButton(text="REPO", url=Config.UPSTREAM_REPO),
             ]
-=======
         ]
         return InlineKeyboardMarkup(buttons)
 
