@@ -32,8 +32,8 @@ async def see_info(message: Message):
     if not cmd_str:
         return await message.err("Provide a Valid Command to Search", del_in=5)
     word = None
-    if ";" in cmd_str:
-        cmd_str, word = cmd_str.split(";", 1)
+    if "|" in cmd_str:
+        cmd_str, word = cmd_str.split("|", 1)
     cmd_str = cmd_str.strip()
     other_trigger = [".", Config.SUDO_TRIGGER]
     cmd_list = list(userge.manager.commands)
@@ -64,23 +64,16 @@ async def see_info(message: Message):
     plugin_loc = ("/" + userge.manager.plugins[plugin_name].parent).replace(
         "/plugins", ""
     )
-    if plugin_loc == "/unofficial":
-        unofficial_repo = (
-            "https://github.com/ashwinstr/Userge-Plugins/blob/master/plugins/"
+    if plugin_loc == "/xtra":
+        extra_plugins = (
+            "https://github.com/thegreatfoxxgoddess/Userge-Plugins/blob/master/plugins/"
         )
         plugin_link = f"{extra_plugins}/{plugin_name}.py"
     elif plugin_loc == "/custom":
-        custom_plugins = Config.CUSTOM_PLUGINS_REPO
+        custom_plugins = os.environ.get("CUSTOM_PLUGINS_REPO", "")
         plugin_link = f"{custom_plugins}/blob/master/plugins/{plugin_name}.py"
     elif plugin_loc == "/temp":
         plugin_link = False
-    elif plugin_loc == "/xtra":
-        me = await userge.get_me()
-        if me.id not in [1013414037, 1156425647, 1611280867]:
-            custom_plugins = "https://github.com/code-rgb/Userge-Plugins"
-        else:
-            custom_plugins = "https://github.com/ashwinstr/Userge-Plugins-Fork"
-        plugin_link = f"{custom_plugins}/blob/master/plugins/{plugin_name}.py"
     else:
         plugin_link = "{}/blob/{}/userge/plugins{}/{}.py".format(
             Config.UPSTREAM_REPO, branch, plugin_loc, plugin_name
@@ -98,7 +91,7 @@ async def see_info(message: Message):
     if plugin_link:
         result += f"\n💻  <b>[View Code on Github]({plugin_link})</b>"
     if word:
-        result += f"\n\n🔎  <b>Matches for:</b> {word}\n"
+        result += f"\n\n searching <b>Matches for:</b> {word}\n"
         s_result = ""
         if len(search_path[1]) == 0:
             s_result += " Not Found !"
@@ -138,7 +131,7 @@ if userge.has_bot:
         if match := plugin_regex.search(c_q.message.text):
             if os.path.exists(plugin_loc := match.group(1)):
                 p_name = plugin_loc.split("/")[-1]
-                await c_q.answer(f"📤  Uploading - {p_name}")
+                await c_q.answer(f"Uploading - {p_name}")
                 await userge.bot.send_chat_action(
                     c_q.message.chat.id, "upload_document"
                 )
