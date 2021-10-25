@@ -1,4 +1,4 @@
-﻿"""Fun plugin"""
+"""Fun plugin"""
 
 import asyncio
 from datetime import datetime
@@ -83,7 +83,6 @@ async def send_inline_alive(message: Message) -> None:
 
 async def send_alive_message(message: Message) -> None:
     global _USER_CACHED_MEDIA, _BOT_CACHED_MEDIA
-    me = await userge.get_me()
     chat_id = message.chat.id
     me = await userge.get_me()
     client = message.client
@@ -239,13 +238,12 @@ class Bot_Alive:
 
   <b>{Bot_Alive._get_mode()}   |   {userge.uptime}</b>
 """
-        return alive_info
+        return alive_info_
 
     @staticmethod
     def _get_mode() -> str:
         if RawClient.DUAL_MODE:
             return "DUAL"
-
         if Config.BOT_TOKEN:
             return "BOT"
         return "USER"
