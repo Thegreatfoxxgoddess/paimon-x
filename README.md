@@ -1,3 +1,4 @@
+
 <h2><b>Maintainer: <a href="https://telegram.dog/aliciadark">Alícia Dark</a></b></h2>
 <br>
 <p align="center">
@@ -7,8 +8,6 @@
 </p>
 <h1><a href="https://telegram.dog/aliciadarkbot">Paimon</a></h1>
 <b>Pluggable Telegram UserBot</b>
-<br> 
-
 <br>
 <a href="https://heroku.com/deploy?template=https://github.com/Thegreatfoxxgoddess/MyGpack"><img src="https://telegra.ph/file/191e1a21166fdfa43389d.jpg" width=150px></a>
 

@@ -91,6 +91,9 @@ async def allow(message: Message):
         "header": "Activates guarding on inbox",
         "description": "Ones someone is allowed, "
         "Userge will not interfere or handle such private chats",
+        "flags": {
+            "-all": "disallow all",
+        },
         "usage": "{tr}nopm [username | userID]\nreply {tr}nopm to a message, "
         "do {tr}nopm in the private chat",
     },
@@ -99,6 +102,27 @@ async def allow(message: Message):
 )
 async def denyToPm(message: Message):
     """disallows to pm"""
+    if "-all" in message.flags:
+        await message.edit("`Disallowing all PMs...`")
+        one = 0
+        while True:
+            try:
+                usr = list(Config.ALLOWED_CHATS)[one]
+                one += 1
+            except BaseException:
+                break
+            try:
+                Config.ALLOWED_CHATS.remove(usr)
+                await ALLOWED_COLLECTION.delete_one({"_id": usr})
+            except BaseException:
+                pass
+        if not Config.ALLOWED_CHATS:
+            await message.edit("`Disallowed all PMs.`", del_in=5)
+        else:
+            await message.edit(
+                "`Something went wrong, not all PMs disallowed...`", del_in=5
+            )
+        return
     userid = await get_id(message)
     if userid:
         if userid in Config.ALLOWED_CHATS:
@@ -240,7 +264,15 @@ async def set_custom_blockpm_message(message: Message):
 )
 async def view_current_noPM_msg(message: Message):
     """view current pm message"""
-    await message.edit(f"--current PM message--\n\n{noPmMessage}")
+    reply = message.reply_to_message
+    if reply:
+        reply_to = reply.message_id
+    else:
+        reply_to = message.message_id
+    await message.edit(f"--Current PM message is as below--👇")
+    await userge.send_message(
+        message.chat.id, noPmMessage, reply_to_message_id=reply_to
+    )
 
 
 @userge.on_cmd(
@@ -250,7 +282,15 @@ async def view_current_noPM_msg(message: Message):
 )
 async def view_current_blockPM_msg(message: Message):
     """view current block pm message"""
-    await message.edit(f"--current blockPM message--\n\n{blocked_message}")
+    reply = message.reply_to_message
+    if reply:
+        reply_to = reply.message_id
+    else:
+        reply_to = message.message_id
+    await message.edit(f"--Current blockPM message is as below--👇")
+    await userge.send_message(
+        message.chat.id, blocked_message, reply_to_message_id=reply_to
+    )
 
 
 @userge.on_filters(
@@ -266,8 +306,10 @@ async def view_current_blockPM_msg(message: Message):
 )
 async def uninvitedPmHandler(message: Message):
     """pm message handler"""
+    me = await userge.get_me()
+    owner = " ".join([me.first_name, me.last_name or ""])
     user_dict = await userge.get_user_dict(message.from_user.id)
-    user_dict.update({"chat": message.chat.title or "this group"})
+    user_dict.update({"chat": message.chat.title or owner or "this group"})
     if message.from_user.is_verified:
         return
     if message.from_user.id in pmCounter:

@@ -53,6 +53,7 @@ _CATEGORY = {
     "plugins": "💎",
     "bot": "💠",
     "custom": "🔧",
+    "jutsu": "👁‍🗨",
 }
 # Database
 SAVED_SETTINGS = get_collection("CONFIGS")
@@ -1144,6 +1145,7 @@ if userge.has_bot:
                 url="https://github.com/thegreatfoxxgoddess/paimon-x",
                 description="paimon-x main menu",
                 thumb_url="https://telegra.ph/file/0fff8af714fc52a9836d2.jpg",
+
                 reply_markup=InlineKeyboardMarkup(main_menu_buttons()),
             )
             results.append(MAIN_MENU)

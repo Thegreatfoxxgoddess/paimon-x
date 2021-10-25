@@ -36,7 +36,7 @@ from userge.utils import (
     sublists,
 )
 
-from ..misc.upload import upload
+from ..misc.uploads import upload
 
 LOGGER = userge.getLogger(__name__)
 BASE_YT_URL = "https://www.youtube.com/watch?v="

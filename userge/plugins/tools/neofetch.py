@@ -51,6 +51,10 @@ async def neo_image():
     font_url = (
         "https://raw.githubusercontent.com/code-rgb/AmongUs/master/FiraCode-Regular.ttf"
     )
+    me = await userge.get_me()
+    kakashi = [1156425647, 1013414037]
+    if me.id in kakashi:
+        base_pic = "https://telegra.ph/file/6cdadf4baddb83abfbed9.png"
     photo = Image.open(BytesIO(get(base_pic).content))
     drawing = ImageDraw.Draw(photo)
     font = ImageFont.truetype(BytesIO(get(font_url).content), 14)
@@ -75,6 +79,10 @@ async def neo_image():
         y += 13
     new_pic = BytesIO()
     photo = photo.resize(photo.size, Image.ANTIALIAS)
-    photo.save(new_pic, format="JPEG")
-    new_pic.name = "NeoFetch.jpg"
+    if me.id in kakashi:
+        photo.save(new_pic, format="PNG")
+        new_pic.name = "NeoFetch.png"
+    else:
+        photo.save(new_pic, format="JPG")
+        new_pic.name = "NeoFetch.jpg"
     return new_pic

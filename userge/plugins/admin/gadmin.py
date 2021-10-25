@@ -13,7 +13,7 @@ from pyrogram.errors import (
 )
 from pyrogram.types import ChatPermissions
 
-from userge import Message, userge
+from userge import Config, Message, userge
 from userge.utils.functions import get_emoji_regex
 
 CHANNEL = userge.getCLogger(__name__)
@@ -462,7 +462,6 @@ async def unmute_usr(message: Message):
             "{tr}zombies -c [remove deleted accounts from group]",
         ],
     },
-    allow_channels=False,
     allow_bots=False,
     allow_private=False,
 )
@@ -528,7 +527,8 @@ async def zombie_clean(message: Message):
         if del_users > 0:
             del_stats = f"`Found` **{del_users}** `zombie accounts in this chat.`"
             await message.edit(
-                f"🕵️‍♂️ {del_stats} `you can clean them using .zombies -c`", del_in=5
+                f"🕵️‍♂️ {del_stats} you can clean them using `{Config.CMD_TRIGGER}zombies -c`",
+                del_in=5,
             )
             await CHANNEL.log(
                 "#ZOMBIE_CHECK\n\n"
@@ -587,16 +587,16 @@ async def unpin_msgs(message: Message):
 @userge.on_cmd(
     "pin",
     about={
-        "header": "use this to pin messages",
-        "description": "pin messages in groups, with or without notify to members.",
+        "header": "use this to pin & unpin messages",
+        "description": "pin & unpin messages in groups with or without notify to members.",
         "flags": {
-            "-s": "silent",
-            "-me": "only for yourself (for private chats only), Defaults pin both sides)",
+            "-l": "loud",
+            "-both": "only for both sides (for private chats only), Defaults pin for yourself)",
         },
         "examples": [
             "{tr}pin [reply to chat message]",
-            "{tr}pin -s [reply to chat message]",
-            "{tr}pin -me [send to private chat]",
+            "{tr}pin -l [reply to chat message]",
+            "{tr}pin -both [send to private chat]",
         ],
     },
     check_pin_perm=True,
@@ -609,15 +609,20 @@ async def pin_msgs(message: Message):
         return
     try:
         await reply.pin(
-            disable_notification=bool("-s" in message.flags),
-            both_sides=(not bool("-me" in message.flags)),
+            disable_notification=(not bool("-l" in message.flags)),
+            both_sides=(bool("-both" in message.flags)),
         )
-        await message.delete()
-        await CHANNEL.log(
-            f"#PIN\n\nCHAT: **{chat_name_(message)}**  (`{message.chat.id}`)"
-        )
+        silent = False if ("-l" or "-both") in message.flags else True
+        await message.edit(f"`Pinned Successfully!`\nSilent: {silent}")
+        if message.chat.type in ["group", "supergroup"]:
+            chat_id = message.chat.id
+            await CHANNEL.log(f"#PIN\n\nCHAT: `{message.chat.title}` (`{chat_id}`)")
+        else:
+            await CHANNEL.log(
+                f"#PIN\n\nCHAT: `{message.from_user.first_name}` (`{message.from_user.id}`)"
+            )
     except Exception as e_f:
-        await message.err(e_f + "\ndo .help pin for more info ...", del_in=7)
+        await message.err(f"{e_f}\ndo .help pin for more info ...", del_in=7)
 
 
 @userge.on_cmd(
@@ -631,7 +636,6 @@ async def pin_msgs(message: Message):
             "{tr}gpic -d [send to chat]",
         ],
     },
-    allow_channels=False,
     check_change_info_perm=True,
 )
 async def chatpic_func(message: Message):

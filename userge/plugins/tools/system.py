@@ -7,18 +7,24 @@
 #
 # All rights reserved.
 
+# additions by @Kakashi_HTK(TG)/@ashwinstr(GH)
+
+
 import asyncio
+import os
 import shutil
 import time
 
+from dotenv import get_key, load_dotenv, set_key, unset_key
 from pyrogram.types import User
 
 from userge import Config, Message, get_collection, userge
 from userge.core.ext import RawClient
-from userge.utils import terminate
+from userge.utils import runcmd, terminate
 
 SAVED_SETTINGS = get_collection("CONFIGS")
 DISABLED_CHATS = get_collection("DISABLED_CHATS")
+FROZEN = get_collection("FROZEN")
 
 MAX_IDLE_TIME = 300
 LOG = userge.getLogger(__name__)
@@ -47,6 +53,7 @@ async def _init() -> None:
         "header": "Restarts the bot and reload all plugins",
         "flags": {
             "-h": "restart hard",
+            "-log": "reload userge-plugins repo (if 'restart -h' doesn't update custom plugins)",
             "-t": "clean temp loaded plugins",
             "-d": "clean working folder",
         },
@@ -62,6 +69,11 @@ async def restart_(message: Message):
     LOG.info("USERGE-X Services - Restart initiated")
     if "t" in message.flags:
         shutil.rmtree(Config.TMP_PATH, ignore_errors=True)
+    if "log" in message.flags:
+        await message.edit("Restarting <b>logs</b>...", del_in=5)
+        await runcmd("bash run")
+        asyncio.get_event_loop().create_task(userge.restart())
+        return
     if "d" in message.flags:
         shutil.rmtree(Config.DOWN_PATH, ignore_errors=True)
     if "h" in message.flags:
@@ -70,10 +82,12 @@ async def restart_(message: Message):
                 "`restarting paimon...`",
                 del_in=3,
             )
+            await FROZEN.drop()
             Config.HEROKU_APP.restart()
             time.sleep(30)
         else:
             await message.edit("`Restarting [HARD] ...`", del_in=1)
+            await FROZEN.drop()
             asyncio.get_event_loop().create_task(userge.restart(hard=True))
     else:
         await message.edit("`Restarting [SOFT] ...`", del_in=1)
@@ -99,138 +113,157 @@ async def shutdown_(message: Message) -> None:
 
 
 @userge.on_cmd(
-    "die",
-    about={
-        "header": "set auto heroku dyno off timeout",
-        "flags": {"-t": "input offline timeout in min : default to 5min"},
-        "usage": "{tr}die [flags]",
-        "examples": ["{tr}die", "{tr}die -t5"],
-    },
-    allow_channels=False,
-)
-async def die_(message: Message) -> None:
-    """set offline timeout to die USERGE-X"""
-    global MAX_IDLE_TIME  # pylint: disable=global-statement
-    if not Config.HEROKU_APP:
-        await message.err("`heroku app not detected !`")
-        return
-    await message.edit("`processing ...`")
-    if Config.RUN_DYNO_SAVER:
-        if isinstance(Config.RUN_DYNO_SAVER, asyncio.Task):
-            Config.RUN_DYNO_SAVER.cancel()
-        Config.RUN_DYNO_SAVER = False
-        SAVED_SETTINGS.update_one(
-            {"_id": "DYNO_SAVER"}, {"$set": {"on": False}}, upsert=True
-        )
-        await message.edit(
-            "auto heroku dyno off worker has been **stopped**", del_in=5, log=__name__
-        )
-        return
-    time_in_min = int(message.flags.get("-t", 5))
-    if time_in_min < 5:
-        await message.err(f"`please set higher value [{time_in_min}] !`")
-        return
-    MAX_IDLE_TIME = time_in_min * 60
-    SAVED_SETTINGS.update_one(
-        {"_id": "DYNO_SAVER"},
-        {"$set": {"on": True, "timeout": MAX_IDLE_TIME}},
-        upsert=True,
-    )
-    await message.edit(
-        "auto heroku dyno off worker has been **started** " f"[`{time_in_min}`min]",
-        del_in=3,
-        log=__name__,
-    )
-    Config.RUN_DYNO_SAVER = asyncio.get_event_loop().create_task(_dyno_saver_worker())
-
-
-@userge.on_cmd(
     "setvar",
     about={
-        "header": "set var in heroku",
+        "header": "set var",
         "usage": "{tr}setvar [var_name] [var_data]",
         "examples": "{tr}setvar WORKERS 4",
     },
 )
 async def setvar_(message: Message) -> None:
-    """set var (heroku)"""
+    """set var"""
+    heroku = True
     if not Config.HEROKU_APP:
-        await message.err("`heroku app not detected !`")
-        return
+        heroku = False
+        if os.path.exists("config.env"):
+            pass
+        else:
+            await message.err("`Heroku app and config.env both not detected...`")
+            return
     if not message.input_str:
-        await message.err("`input needed !`")
+        await message.err("`Input not found...`")
         return
-    var_name, var_data = message.input_str.split(maxsplit=1)
-    if not var_data:
-        await message.err("`var data needed !`")
+    var_key, var_value = message.input_str.split(maxsplit=1)
+    if not var_value:
+        await message.err("`Var value not found...`")
         return
-    var_name = var_name.strip()
-    var_data = var_data.strip()
-    heroku_vars = Config.HEROKU_APP.config()
-    if var_name in heroku_vars:
-        await CHANNEL.log(f"#HEROKU_VAR #SET #UPDATED\n\n`{var_name}` = `{var_data}`")
-        await message.edit(
-            f"`var {var_name} updated and forwarded to log channel !`", del_in=3
-        )
+    var_key = var_key.strip()
+    var_value = var_value.strip()
+    if heroku:
+        heroku_vars = Config.HEROKU_APP.config()
+        if var_key in heroku_vars:
+            await CHANNEL.log(
+                f"#HEROKU_VAR #SET #UPDATED\n\n`{var_key}` = `{var_value}`"
+            )
+            await message.edit(
+                f"`Var {var_key} updated and forwarded to log channel...`", del_in=3
+            )
+        else:
+            await CHANNEL.log(f"#HEROKU_VAR #SET #ADDED\n\n`{var_key}` = `{var_value}`")
+            await message.edit(
+                f"`Var {var_key} added and forwarded to log channel...`", del_in=3
+            )
+        heroku_vars[var_key] = var_value
     else:
-        await CHANNEL.log(f"#HEROKU_VAR #SET #ADDED\n\n`{var_name}` = `{var_data}`")
-        await message.edit(
-            f"`var {var_name} added and forwarded to log channel !`", del_in=3
-        )
-    heroku_vars[var_name] = var_data
+        file = "config.env"
+        get = get_key(file, var_key)
+        if get is not None:
+            await message.edit(
+                f"Var {var_key} updated and forwarded to log channel...", del_in=3
+            )
+            await CHANNEL.log(f"#CONFIG_VAR #UPDATED\n\n`{var_key} = {var_value}`")
+        else:
+            await message.edit(
+                f"Var {var_key} added and forwarded to log channel...", del_in=3
+            )
+            await CHANNEL.log(f"#CONFIG_VAR #ADDED\n\n`{var_key} = {var_value}`")
+        set_key(file, var_key, var_value)
+        load_dotenv(file, override=True)
 
 
 @userge.on_cmd(
     "delvar",
     about={
-        "header": "del var in heroku",
+        "header": "del var",
         "usage": "{tr}delvar [var_name]",
         "examples": "{tr}delvar WORKERS",
     },
 )
 async def delvar_(message: Message) -> None:
-    """del var (heroku)"""
+    """del var"""
+    heroku = True
     if not Config.HEROKU_APP:
-        await message.err("`heroku app not detected !`")
-        return
+        heroku = False
+        if os.path.exists("config.env"):
+            pass
+        else:
+            await message.err("`Heroku app and config.env both not detected...`")
+            return
     if not message.input_str:
-        await message.err("`var name needed !`")
+        await message.err("`Input not found...`")
         return
-    var_name = message.input_str.strip()
-    heroku_vars = Config.HEROKU_APP.config()
-    if var_name not in heroku_vars:
-        await message.err(f"`var {var_name} not found !`")
-        return
-    await CHANNEL.log(f"#HEROKU_VAR #DEL\n\n`{var_name}` = `{heroku_vars[var_name]}`")
-    await message.edit(
-        f"`var {var_name} deleted and forwarded to log channel !`", del_in=3
-    )
-    del heroku_vars[var_name]
+    var_key = message.input_str
+    var_key = var_key.strip()
+    if heroku:
+        heroku_vars = Config.HEROKU_APP.config()
+        if var_key in heroku_vars:
+            await CHANNEL.log(f"#HEROKU_VAR #DELETED\n\n`{var_key}`")
+            await message.edit(
+                f"`Var {var_key} deleted and forwarded to log channel...`", del_in=3
+            )
+        else:
+            await message.edit(f"`Var {var_key} doesn't exist...`", del_in=3)
+            return
+        del heroku_vars[var_key]
+    else:
+        file = "config.env"
+        get = get_key(file, var_key)
+        if get is not None:
+            await message.edit(
+                f"Var {var_key} deleted and forwarded to log channel...", del_in=3
+            )
+            await CHANNEL.log(f"#CONFIG_VAR #DELETED\n\n`{var_key}`")
+        else:
+            await message.edit(f"`Var {var_key} doesn't exist...`", del_in=3)
+            return
+        unset_key(file, var_key)
+        load_dotenv(file, override=True)
 
 
 @userge.on_cmd(
     "getvar",
     about={
-        "header": "get var in heroku",
+        "header": "get var",
         "usage": "{tr}getvar [var_name]",
         "examples": "{tr}getvar WORKERS",
     },
 )
 async def getvar_(message: Message) -> None:
-    """get var (heroku)"""
+    """get var"""
+    heroku = True
     if not Config.HEROKU_APP:
-        await message.err("`heroku app not detected !`")
-        return
+        heroku = False
+        if os.path.exists("config.env"):
+            pass
+        else:
+            await message.err("`Heroku app and config.env both not detected...`")
+            return
     if not message.input_str:
-        await message.err("`var name needed !`")
+        await message.err("`Input not found...`")
         return
-    var_name = message.input_str.strip()
-    heroku_vars = Config.HEROKU_APP.config()
-    if var_name not in heroku_vars:
-        await message.err(f"`var {var_name} not found !`")
-        return
-    await CHANNEL.log(f"#HEROKU_VAR #GET\n\n`{var_name}` = `{heroku_vars[var_name]}`")
-    await message.edit(f"`var {var_name} forwarded to log channel !`", del_in=3)
+    var_key = message.input_str
+    var_key = var_key.strip()
+    if heroku:
+        heroku_vars = Config.HEROKU_APP.config()
+        if var_key in heroku_vars:
+            await CHANNEL.log(
+                f"#HEROKU_VAR #GET\n\n`{var_key}` = `{heroku_vars[var_name]}`"
+            )
+            await message.edit(f"`Var {var_key} forwarded to log channel...`", del_in=3)
+        else:
+            await message.edit(f"`Var {var_key} doesn't exist...`", del_in=3)
+            return
+    else:
+        file = "config.env"
+        get = get_key(file, var_key)
+        if get is not None:
+            await message.edit(
+                f"Var {var_key} value forwarded to log channel...", del_in=3
+            )
+            await CHANNEL.log(f"#CONFIG_VAR #GET\n\n`{var_key} = {get}`")
+        else:
+            await message.edit(f"`Var {var_key} doesn't exist...`", del_in=3)
+            return
 
 
 @userge.on_cmd(
@@ -262,13 +295,17 @@ async def enable_userbot(message: Message):
             await message.err(str(err))
             return
         if chat.id not in Config.DISABLED_CHATS:
-            await message.edit("this chat is already enabled!")
+            await message.edit("This chat is already enabled!")
         else:
             Config.DISABLED_CHATS.remove(chat.id)
+            if chat.type == "private":
+                c_name = " ".join([chat.first_name, chat.last_name or ""])
+            else:
+                c_name = chat.title
             await asyncio.gather(
                 DISABLED_CHATS.delete_one({"_id": chat.id}),
                 message.edit(
-                    f"CHAT : `{chat.title}` removed from **DISABLED_CHATS**!",
+                    f"CHAT : `{c_name}` removed from **DISABLED_CHATS**!\n`Bot might restart, wait for some time...`",
                     del_in=5,
                     log=__name__,
                 ),
@@ -296,7 +333,7 @@ async def disable_userbot(message: Message):
                 message.edit("**Disabled** all chats!", del_in=5),
             )
         else:
-            await message.err("invalid flag!")
+            await message.err("Invalid flag!")
     else:
         chat = message.chat
         if message.input_str:
@@ -306,15 +343,19 @@ async def disable_userbot(message: Message):
                 await message.err(str(err))
                 return
         if chat.id in Config.DISABLED_CHATS:
-            await message.edit("this chat is already disabled!")
+            await message.edit("This chat is already disabled!")
         elif chat.id == Config.LOG_CHANNEL_ID:
-            await message.err("can't disabled log channel")
+            await message.err("Can't disabled log channel")
         else:
+            if chat.type == "private":
+                c_name = " ".join([chat.first_name, chat.last_name or ""])
+            else:
+                c_name = chat.title
             Config.DISABLED_CHATS.add(chat.id)
             await asyncio.gather(
                 DISABLED_CHATS.insert_one({"_id": chat.id, "title": chat.title}),
                 message.edit(
-                    f"CHAT : `{chat.title}` added to **DISABLED_CHATS**!",
+                    f"CHAT : `{c_name}` added to **DISABLED_CHATS**!\n`Bot might restart, wait for some time...`",
                     del_in=5,
                     log=__name__,
                 ),

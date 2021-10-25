@@ -30,10 +30,21 @@ async def _init() -> None:
 
 
 @userge.on_cmd(
-    "sudo", about={"header": "enable / disable sudo access"}, allow_channels=False
+    "sudo",
+    about={
+        "header": "enable / disable sudo access",
+        "flags": {
+            "-c": "check if sudo is enabled",
+        },
+    },
+    allow_channels=False,
 )
 async def sudo_(message: Message):
     """enable / disable sudo access"""
+    if "-c" in message.flags:
+        status = "<b>enabled</b>..." if Config.SUDO_ENABLED else "<b>disabled</b>..."
+        await message.edit(f"Sudo is {status}", del_in=5)
+        return
     if Config.SUDO_ENABLED:
         Config.SUDO_ENABLED = False
         await message.edit("`sudo disabled !`", del_in=3)
@@ -135,10 +146,12 @@ async def view_sudo(message: Message):
     if not Config.SUDO_USERS:
         await message.edit("**SUDO** users not found!", del_in=5)
         return
-    out_str = "🚷 **SUDO USERS** 🚷\n\n"
+    out_str = "🚷 **SUDO USERS**: [{}] 🚷\n\n"
+    total = 0
     async for user in SUDO_USERS_COLLECTION.find():
-        out_str += f" 🙋‍♂️ {user['men']} 🆔 `{user['_id']}`\n"
-    await message.edit(out_str, del_in=0)
+        total += 1
+        out_str += f" 👤 {user['men']} #⃣ `{user['_id']}`\n"
+    await message.edit(out_str.format(total), del_in=0)
 
 
 @userge.on_cmd(
@@ -176,6 +189,7 @@ async def add_sudo_cmd(message: Message):
                         "addsudo",
                         "delsudo",
                         "sudo",
+                        "vsudo",
                     ]
                 ):
                     tmp_.append({"_id": t_c})
@@ -252,7 +266,10 @@ async def view_sudo_cmd(message: Message):
     if not Config.ALLOWED_COMMANDS:
         await message.edit("**SUDO** cmds not found!", del_in=5)
         return
-    out_str = f"⛔ **SUDO CMDS** ⛔\n\n**trigger** : `{Config.SUDO_TRIGGER}`\n\n"
+    total = 0
+    out_str = "⛔ **SUDO CMDS**: [{}] ⛔\n\n"
+    out_str += f"**Trigger**: `{Config.SUDO_TRIGGER}`\n\n"
     async for cmd in SUDO_CMDS_COLLECTION.find().sort("_id"):
+        total += 1
         out_str += f"`{cmd['_id']}`  "
-    await message.edit_or_send_as_file(out_str, del_in=0)
+    await message.edit_or_send_as_file(out_str.format(total), del_in=0)

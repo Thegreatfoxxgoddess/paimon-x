@@ -27,7 +27,7 @@ async def dictionary(message: Message):
     LOG.info("starting dic command...")
     input_ = message.input_str
 
-    await message.edit("`processing...⚙️🛠`")
+    await message.edit("`processing...`")
 
     def combine(s_word, name):
         w_word = f"--**__{name.title()}__**--\n"
@@ -35,7 +35,11 @@ async def dictionary(message: Message):
             if "definition" in i:
                 if "example" in i:
                     w_word += (
+<<<<<<< HEAD
                         "\n**Definition**\n<pre>"
+=======
+                        "\n◾ **Definition** ◾\n<pre>"
+>>>>>>> a50803592d3ac0851b1853c7620b6d57bb47bc7b
                         + i["definition"]
                         + "</pre>\n\t\t<b>Example</b>\n<pre>"
                         + i["example"]
@@ -43,10 +47,14 @@ async def dictionary(message: Message):
                     )
                 else:
                     w_word += (
+<<<<<<< HEAD
                         "\n**Definition**\n"
                         + "<pre>"
                         + i["definition"]
                         + "</pre>"
+=======
+                        "\n◾ **Definition** ◾\n" + "<pre>" + i["definition"] + "</pre>"
+>>>>>>> a50803592d3ac0851b1853c7620b6d57bb47bc7b
                     )
         w_word += "\n\n"
         return w_word
@@ -123,9 +131,15 @@ async def dictionary(message: Message):
         last_output = out_print(r_dec)
         if last_output:
             await message.edit(
+<<<<<<< HEAD
                 "`Search reasult for   `" + f" {v_word}\n\n" + last_output
             )
             await CHANNEL.log(f"Get dictionary results for  {v_word}")
+=======
+                "`Search reasult for   `" + f"- {v_word}\n\n" + last_output
+            )
+            await CHANNEL.log(f"Get dictionary results for ◾ {v_word}")
+>>>>>>> a50803592d3ac0851b1853c7620b6d57bb47bc7b
         else:
             await message.edit("`No result found from the database.`", del_in=5)
             await CHANNEL.log("Get dictionary results empty")

@@ -32,8 +32,8 @@ async def see_info(message: Message):
     if not cmd_str:
         return await message.err("Provide a Valid Command to Search", del_in=5)
     word = None
-    if "|" in cmd_str:
-        cmd_str, word = cmd_str.split("|", 1)
+    if ";" in cmd_str:
+        cmd_str, word = cmd_str.split(";", 1)
     cmd_str = cmd_str.strip()
     other_trigger = [".", Config.SUDO_TRIGGER]
     cmd_list = list(userge.manager.commands)
@@ -64,16 +64,23 @@ async def see_info(message: Message):
     plugin_loc = ("/" + userge.manager.plugins[plugin_name].parent).replace(
         "/plugins", ""
     )
-    if plugin_loc == "/xtra":
-        extra_plugins = (
-            "https://github.com/thegreatfoxxgoddess/Userge-Plugins/blob/master/plugins/"
+    if plugin_loc == "/unofficial":
+        unofficial_repo = (
+            "https://github.com/ashwinstr/Userge-Plugins/blob/master/plugins/"
         )
         plugin_link = f"{extra_plugins}/{plugin_name}.py"
     elif plugin_loc == "/custom":
-        custom_plugins = os.environ.get("CUSTOM_PLUGINS_REPO", "")
+        custom_plugins = Config.CUSTOM_PLUGINS_REPO
         plugin_link = f"{custom_plugins}/blob/master/plugins/{plugin_name}.py"
     elif plugin_loc == "/temp":
         plugin_link = False
+    elif plugin_loc == "/xtra":
+        me = await userge.get_me()
+        if me.id not in [1013414037, 1156425647, 1611280867]:
+            custom_plugins = "https://github.com/code-rgb/Userge-Plugins"
+        else:
+            custom_plugins = "https://github.com/ashwinstr/Userge-Plugins-Fork"
+        plugin_link = f"{custom_plugins}/blob/master/plugins/{plugin_name}.py"
     else:
         plugin_link = "{}/blob/{}/userge/plugins{}/{}.py".format(
             Config.UPSTREAM_REPO, branch, plugin_loc, plugin_name
@@ -94,7 +101,7 @@ async def see_info(message: Message):
         result += f"\n\n🔎  <b>Matches for:</b> {word}\n"
         s_result = ""
         if len(search_path[1]) == 0:
-            s_result += "  ❌  Not Found !"
+            s_result += " Not Found !"
         else:
             for line_c, line in enumerate(search_path[1], start=1):
                 s_result += f"[#L{line}]({plugin_link}#L{line})  "
@@ -103,7 +110,7 @@ async def see_info(message: Message):
         result += "  <b>{}</b>".format(s_result)
     buttons = (
         InlineKeyboardMarkup(
-            [[InlineKeyboardButton("📤  Upload", callback_data="plugin_upload")]]
+            [[InlineKeyboardButton("Upload", callback_data="plugin_upload")]]
         )
         if message.client.is_bot
         else None
@@ -144,6 +151,6 @@ if userge.has_bot:
                     reply_to_message_id=c_q.message.message_id,
                 )
             else:
-                await c_q.answer("❌ ERROR: Plugin Not Found !")
+                await c_q.answer("ERROR: Plugin Not Found !")
         else:
             await c_q.answer()

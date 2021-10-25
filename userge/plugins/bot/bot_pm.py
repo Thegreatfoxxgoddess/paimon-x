@@ -408,13 +408,16 @@ if userge.has_bot:
 async def bot_users_(message: Message):
     """Users Who Stated Your Bot by - /start"""
     msg = ""
+    total = 0
     async for c in BOT_START.find():
+        total += 1
         msg += (
             f"<b> » </b> name {c['firstname']}\n"
             f"<b> •  </b> date {c['date']} \n"
         )
     await message.edit_or_send_as_file(
-        f"<b>Bot PM Userlist</b>\n\n{msg}"
+=======
+        f"<u><i><b>Bot PM Userlist</b></i></u>: **[{total}]**\n\n{msg}"
         if msg
         else "`sed you're not popular >.<`"
     )

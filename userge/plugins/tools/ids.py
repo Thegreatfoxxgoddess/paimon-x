@@ -21,8 +21,10 @@ async def getids(message: Message):
     out_str = f"👥 **Chat ID** : `{(msg.forward_from_chat or msg.chat).id}`\n"
     out_str += f"💬 **Message ID** : `{msg.forward_from_message_id or msg.message_id}`\n"
     if msg.from_user:
-        out_str += f"🙋‍♂️ **From User ID** : `{msg.from_user.id}`\n"
+        out_str += f"👤 **From User ID** : `{msg.from_user.id}`\n"
     file_id = None
+    if msg.forward_from:
+        out_str += f"👤 <b>Forward User ID</b> : <code>{msg.forward_from.id}</code>\n"
     if msg.audio:
         type_ = "audio"
         file_id = msg.audio.file_id
