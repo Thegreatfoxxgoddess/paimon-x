@@ -103,13 +103,20 @@ async def add_sudo(message: Message):
             if user["id"] in Config.TG_IDS:
                 await message.err("Not Permitted due to security reasons", del_in=7)
                 return
+            if user["id"] in Config.SUDO_USERS:
+                Config.SUDO_USERS.remove(user["id"])
+                await SUDO_USERS_COLLECTION.delete_one({"_id": user["id"]})
+            else:
+                pass
             Config.TRUSTED_SUDO_USERS.add(user["id"])
             await asyncio.gather(
-                SUDO_USERS_COLLECTION.insert_one(
+                TRUSTED_SUDO_USERS.insert_one(
                     {"_id": user["id"], "men": user["mention"]}
                 ),
                 message.edit(
-                    f"user : `{user['id']}` added to **SUDO**!", del_in=5, log=__name__
+                    f"user : `{user['id']}` added to **TRUSTED SUDO**!",
+                    del_in=5,
+                    log=__name__,
                 ),
             )
         return
@@ -125,6 +132,11 @@ async def add_sudo(message: Message):
         if user["id"] in Config.TG_IDS:
             await message.err("Not Permitted due to security reasons", del_in=7)
             return
+        if user["id"] in Config.TRUSTED_SUDO_USERS:
+            Config.TRUSTED_SUDO_USERS.remove(user["id"])
+            await TRUSTED_SUDO_USERS.delete_one({"_id": user["id"]})
+        else:
+            pass
         Config.SUDO_USERS.add(user["id"])
         await asyncio.gather(
             SUDO_USERS_COLLECTION.insert_one(
@@ -140,7 +152,9 @@ async def add_sudo(message: Message):
     "delsudo",
     about={
         "header": "delete sudo user",
-        "flags": {"-all": "remove all sudo users"},
+        "flags": {
+            "-all": "remove all sudo users",
+        },
         "usage": "{tr}delsudo [user_id | reply to msg]\n{tr}delsudo -all",
     },
     allow_channels=False,
@@ -149,8 +163,10 @@ async def del_sudo(message: Message):
     """delete sudo user"""
     if "-all" in message.flags:
         Config.SUDO_USERS.clear()
+        Config.TRUSTED_SUDO_USERS.clear()
         await asyncio.gather(
             SUDO_USERS_COLLECTION.drop(),
+            TRUSTED_SUDO_USERS.drop(),
             message.edit("**SUDO** users cleared!", del_in=5),
         )
         return
@@ -165,24 +181,18 @@ async def del_sudo(message: Message):
     if not isinstance(user_id, int):
         await message.err("invalid type!")
         return
-    if "-t" in message.flags:
-        if not (user["id"] in Config.TRUSTED_SUDO_USERS):
-            await message.edit(
-                f"user : `{user['id']}` already not in **TRUSTED SUDO**!", del_in=5
-            )
-        else:
-            Config.TRUSTED_SUDO_USERS.remove(user["id"])
-            await asyncio.gather(
-                SUDO_USERS_COLLECTION.delete_one({"_id": user["id"]}),
-                message.edit(
-                    f"user : `{user['id']}` removed to **SUDO**!",
-                    del_in=5,
-                    log=__name__,
-                ),
-            )
-        return
-    if user_id not in Config.SUDO_USERS:
-        await message.edit(f"user : `{user_id}` not in **SUDO** !", del_in=5)
+    if user_id not in Config.TRUSTED_SUDO_USERS and user_id not in Config.SUDO_USERS:
+        await message.edit(f"user : `{user_id}` already not in any **SUDO**!", del_in=5)
+    elif user_id in Config.TRUSTED_SUDO_USERS:
+        Config.TRUSTED_SUDO_USERS.remove(user_id)
+        await asyncio.gather(
+            TRUSTED_SUDO_USERS.delete_one({"_id": user_id}),
+            message.edit(
+                f"user : `{user_id}` removed to **TRUSTED SUDO**!",
+                del_in=5,
+                log=__name__,
+            ),
+        )
     else:
         Config.SUDO_USERS.remove(user_id)
         await asyncio.gather(
@@ -199,7 +209,7 @@ async def view_sudo(message: Message):
     if not Config.SUDO_USERS and not Config.TRUSTED_SUDO_USERS:
         await message.edit("**SUDO** users not found!", del_in=5)
         return
-    out_str = "🚷 **TRSUTED SUDO USERS**: [{}] 🚷\n\n"
+    out_str = "🚷 **TRUSTED SUDO USERS**: [{}] 🚷\n\n"
     tr_total = 0
     async for user in TRUSTED_SUDO_USERS.find():
         tr_total += 1
