@@ -293,6 +293,15 @@ class Bot_Alive:
             "https://telegra.ph/file/a480d0a9f97a4e8891688.jpg",
             "https://telegra.ph/file/75990831f9befadf43862.jpg",
             "https://telegra.ph/file/f4e9726bc287f3a746c90.jpg",
+            "https://cdn.discordapp.com/attachments/871469925364039721/904353913707327558/IMG_20211031_182917_143.jpg",
+            "https://media.discordapp.net/attachments/871469925364039721/904353914101579777/IMG_20211031_182911_035.jpg",
+            "https://media.discordapp.net/attachments/871469925364039721/904353914567163954/IMG_20211031_182855_657.jpg",
+            "https://media.discordapp.net/attachments/871469925364039721/904353914869149756/IMG_20211031_182816_108.jpg",
+            "https://media.discordapp.net/attachments/871469925364039721/904353915133378630/IMG_20211031_182803_562.jpg",
+            "https://media.discordapp.net/attachments/871469925364039721/904353915481493554/IMG_20211031_182757_699.jpg",
+            "https://media.discordapp.net/attachments/871469925364039721/904353916265853028/IMG_20211031_182648_078.jpg",
+            "https://media.discordapp.net/attachments/871469925364039721/904353916538470400/IMG_20211031_182651_842.jpg",
+            "https://media.discordapp.net/attachments/871469925364039721/904353916806889543/IMG_20211031_182642_344.jpg",
         ]
         return rand_array(alive_imgs)
 
