@@ -80,7 +80,7 @@ async def translateme(message: Message):
     if "s" not in flags:
         source_lan = LANGUAGES[f"{reply_text.src.lower()}"]
         transl_lan = LANGUAGES[f"{reply_text.dest.lower()}"]
-        output = f"Translated ({source_lan.title()}) to ({transl_lan.title()})\n`{reply_text.text}`"
+        output = f"Translated {source_lan.title()} to {transl_lan.title()}\n`{reply_text.text}`"
         caption = "translated"
     else:
         output = reply_text.text
