@@ -188,7 +188,7 @@ async def del_sudo(message: Message):
         await asyncio.gather(
             TRUSTED_SUDO_USERS.delete_one({"_id": user_id}),
             message.edit(
-                f"user : `{user_id}` removed to **TRUSTED SUDO**!",
+                f"user : `{user_id}` removed from **TRUSTED SUDO**!",
                 del_in=5,
                 log=__name__,
             ),
@@ -209,12 +209,12 @@ async def view_sudo(message: Message):
     if not Config.SUDO_USERS and not Config.TRUSTED_SUDO_USERS:
         await message.edit("**SUDO** users not found!", del_in=5)
         return
-    out_str = "🚷 **TRUSTED SUDO USERS**: [{}] 🚷\n\n"
+    out_str = "**TRUSTED SUDO USERS**: [{}]\n\n"
     tr_total = 0
     async for user in TRUSTED_SUDO_USERS.find():
         tr_total += 1
         out_str += f" 👤 {user['men']} #⃣ `{user['_id']}`\n"
-    out_str += "\n🚷 **NORMAL SUDO USERS**: [{}] 🚷\n\n"
+    out_str += "\n**NORMAL SUDO USERS**: [{}]\n\n"
     total = 0
     async for user in SUDO_USERS_COLLECTION.find():
         total += 1
@@ -235,6 +235,21 @@ async def view_sudo(message: Message):
 )
 async def add_sudo_cmd(message: Message):
     """add sudo cmd"""
+    blocked_cmd = [
+        "exec",
+        "term",
+        "eval",
+        "addscmd",
+        "delscmd",
+        "load",
+        "unload",
+        "addsudo",
+        "delsudo",
+        "sudo",
+        "vsudo",
+        "freeze",
+        "defreeze",
+    ]
     if "-all" in message.flags:
         await SUDO_CMDS_COLLECTION.drop()
         Config.ALLOWED_COMMANDS.clear()
@@ -243,22 +258,7 @@ async def add_sudo_cmd(message: Message):
             t_c = c_d.lstrip(Config.CMD_TRIGGER)
             if "-all" in message.flags:
                 mode_ = "all"
-                if not (
-                    t_c
-                    in [
-                        "exec",
-                        "term",
-                        "eval",
-                        "addscmd",
-                        "delscmd",
-                        "load",
-                        "unload",
-                        "addsudo",
-                        "delsudo",
-                        "sudo",
-                        "vsudo",
-                    ]
-                ):
+                if not (t_c in blocked_cmd):
                     tmp_.append({"_id": t_c})
                     Config.ALLOWED_COMMANDS.add(t_c)
         await asyncio.gather(
@@ -275,6 +275,11 @@ async def add_sudo_cmd(message: Message):
         await message.err("input not found!")
         return
     cmd = cmd.lstrip(Config.CMD_TRIGGER)
+    if cmd in blocked_cmd:
+        return await message.err(
+            f"Command {cmd} is dangerous, so can't be added for normal sudo users!",
+            del_in=5,
+        )
     if cmd in Config.ALLOWED_COMMANDS:
         await message.edit(f"cmd : `{cmd}` already in **SUDO**!", del_in=5)
     elif cmd not in (
@@ -330,7 +335,7 @@ async def view_sudo_cmd(message: Message):
         await message.edit("**SUDO** cmds not found!", del_in=5)
         return
     total = 0
-    out_str = "⛔ **SUDO CMDS**: [{}] ⛔\n\n"
+    out_str = "**SUDO CMDS**: [{}]\n\n"
     out_str += f"**Trigger**: `{Config.SUDO_TRIGGER}`\n\n"
     async for cmd in SUDO_CMDS_COLLECTION.find().sort("_id"):
         total += 1
