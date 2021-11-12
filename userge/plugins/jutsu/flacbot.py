@@ -50,8 +50,6 @@ async def flac_bot(message: Message):
      if not results.results:
         await message.delete()
     except BaseException as e:
-        await message.edit
-            f"Song <code>{song_}</code> not found...", del_in=5
         await message.edit(
             f"`Something unexpected happened.`\n<b>Error:</b> `{e}`", del_in=5
         )
