@@ -34,7 +34,7 @@ logbot.reply_last_msg("Setting Configs ...")
 
 
 class Config:
-    """Configs to setup USERGE-X"""
+    """Configs to setup paimon"""
 
     API_ID = int(os.environ.get("API_ID"))
     API_HASH = os.environ.get("API_HASH")
@@ -112,7 +112,7 @@ class Config:
     SPOTIFY_MODE = False
     IMGFLIP_ID = os.environ.get("IMGFLIP_ID")
     IMGFLIP_PASS = os.environ.get("IMGFLIP_PASS")
-    ALLOW_NSFW = os.environ.get("ALLOW_NSFW", "False")
+    ALLOW_NSFW = os.environ.get("ALLOW_NSFW", "True")
     PM_LOG_GROUP_ID = int(os.environ.get("PM_LOG_GROUP_ID", 0))
     PM_LOGGING = False
     TAG_LOGGING = False
