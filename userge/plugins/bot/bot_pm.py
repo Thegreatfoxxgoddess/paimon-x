@@ -237,9 +237,7 @@ if userge.has_bot:
         buttons = InlineKeyboardMarkup(
             [
                 [
-                    InlineKeyboardButton(
-                        "BAN", callback_data=f"bot_pm_ban_{user_.id}"
-                    ),
+                    InlineKeyboardButton("BAN", callback_data=f"bot_pm_ban_{user_.id}"),
                     InlineKeyboardButton(
                         "Bot Antiflood [OFF]",
                         callback_data="toggle_bot-antiflood_off",
@@ -411,10 +409,7 @@ async def bot_users_(message: Message):
     total = 0
     async for c in BOT_START.find():
         total += 1
-        msg += (
-            f"<b> » </b> name {c['firstname']}\n"
-            f"<b> •  </b> date {c['date']} \n"
-        )
+        msg += f"<b> » </b> name {c['firstname']}\n" f"<b> •  </b> date {c['date']} \n"
     await message.edit_or_send_as_file(
         f"<u><i><b>Bot PM Userlist</b></i></u>: **[{total}]**\n\n{msg}"
         if msg

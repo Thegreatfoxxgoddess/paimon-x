@@ -35,7 +35,7 @@ async def dictionary(message: Message):
             if "definition" in i:
                 if "example" in i:
                     w_word += (
-                        + i["definition"]
+                        +i["definition"]
                         + "</pre>\n\t\t<b>Example</b>\n<pre>"
                         + i["example"]
                         + "</pre>"

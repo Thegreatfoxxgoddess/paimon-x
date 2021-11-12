@@ -140,9 +140,7 @@ Warns: {wcount}/{max_warns}
 
     if message.client.is_bot:
         btn_row = [
-            InlineKeyboardButton(
-                "Remove Warn", callback_data=f"remove_warn_{warn_id}"
-            )
+            InlineKeyboardButton("Remove Warn", callback_data=f"remove_warn_{warn_id}")
         ]
         if rules:
             botname = (await userge.bot.get_me()).username

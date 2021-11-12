@@ -167,7 +167,7 @@ if userge.has_bot:
                         show_alert=True,
                     )
             else:
-                user_dict = await userge.bot.get_user_dict(Config.OWNER_ID[0])
+                await userge.bot.get_user_dict(Config.OWNER_ID[0])
                 await c_q.answer(
                     f"watcha doin, you can't access me. make your own",
                     show_alert=True,
@@ -464,9 +464,7 @@ if userge.has_bot:
             )
         else:
             tmp_btns.append(
-                InlineKeyboardButton(
-                    "Load", callback_data=f"load({cur_pos})".encode()
-                )
+                InlineKeyboardButton("Load", callback_data=f"load({cur_pos})".encode())
             )
         if flt.is_enabled:
             tmp_btns.append(
@@ -1148,7 +1146,6 @@ if userge.has_bot:
                 url="https://github.com/thegreatfoxxgoddess/paimon-x",
                 description="paimon-x main menu",
                 thumb_url="https://telegra.ph/file/0fff8af714fc52a9836d2.jpg",
-
                 reply_markup=InlineKeyboardMarkup(main_menu_buttons()),
             )
             results.append(MAIN_MENU)

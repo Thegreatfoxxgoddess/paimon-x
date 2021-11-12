@@ -124,6 +124,7 @@ class Config:
     BOT_ANTIFLOOD = False
     TAG_LOGGING = False
 
+
 def get_version() -> str:
     """get USERGE-X version"""
     ver = f"{versions.__major__}.{versions.__minor__}.{versions.__micro__}"
