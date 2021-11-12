@@ -47,7 +47,6 @@ async def flac_bot(message: Message):
         await userge.copy_message(
             message.chat.id, bot_, music_.message_id, reply_to_message_id=reply_to
         )
-     if not results.results:
         await message.delete()
     except BaseException as e:
         await message.edit(
