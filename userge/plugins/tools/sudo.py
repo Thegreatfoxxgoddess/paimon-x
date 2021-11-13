@@ -213,12 +213,12 @@ async def view_sudo(message: Message):
     tr_total = 0
     async for user in TRUSTED_SUDO_USERS.find():
         tr_total += 1
-        out_str += f"» {user['men']} #⃣ `{user['_id']}`\n"
+        out_str += f"» {user['men']} | `{user['_id']}`\n"
     out_str += "\n**NORMAL SUDO USERS**: [{}]\n\n"
     total = 0
     async for user in SUDO_USERS_COLLECTION.find():
         total += 1
-        out_str += f"» {user['men']} #⃣ `{user['_id']}`\n"
+        out_str += f"» {user['men']} | `{user['_id']}`\n"
     await message.edit(out_str.format(tr_total, total), del_in=0)
 
 
