@@ -46,12 +46,12 @@ async def mediainfo(message: Message):
     if len(output_) != 0:
         out = output_[0]
     body_text = f"""
-<h2>JSON</h2>
-<pre>{x_media}</pre>
+JSON
+{x_media}
 <br>
 
-<h2>DETAILS</h2>
-<pre>{out or 'Not Supported'}</pre>
+DETAILS
+{out or 'Not Supported'}
 """
     text_ = media_type.split(".")[-1].upper()
     link = post_to_telegraph(media_type, body_text)
