@@ -40,7 +40,9 @@ async def mediainfo(message: Message):
         await message.err("Reply To a Vaild Media Format", del_in=3)
         return
     media_type = str(type(x_media)).split("'")[1]
+
     file_path = safe_filename(await reply.download())
+
     output_ = await runcmd(f'mediainfo "{file_path}"')
     out = None
     if len(output_) != 0:
@@ -50,14 +52,18 @@ JSON
 {x_media}
 <br>
 
+
+
 DETAILS
 {out or 'Not Supported'}
 """
     text_ = media_type.split(".")[-1].upper()
+
     link = post_to_telegraph(media_type, body_text)
+
     if message.client.is_bot:
         markup = InlineKeyboardMarkup([[InlineKeyboardButton(text=text_, url=link)]])
-        await process.edit_text("ℹ️  <b>MEDIA INFO</b>", reply_markup=markup)
+        await process.edit_text("<b>MEDIA INFO</b>", reply_markup=markup)
     else:
-        await message.edit(f"ℹ️  <b>MEDIA INFO:  [{text_}]({link})</b>")
+        await message.edit(f"<b>MEDIA INFO:  [{text_}]({link})</b>")
     os.remove(file_path)
