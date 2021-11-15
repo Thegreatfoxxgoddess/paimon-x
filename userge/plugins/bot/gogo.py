@@ -16,7 +16,7 @@ from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMa
 from userge import Config, Message, userge
 from userge.utils import check_owner, get_response, rand_key
 
-GOGO = "https://gogoanime.so"
+GOGO = "https://gogoanime.cm"
 GOGO_DB = {}
 
 
