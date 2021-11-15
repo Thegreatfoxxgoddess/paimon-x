@@ -1,33 +1,34 @@
 """ downloader """
 
 
-
-
-
-import os
-import math
 import asyncio
-from typing import Tuple, Union
+import math
+import os
 from datetime import datetime
 from json import dumps
+from typing import Tuple, Union
 from urllib.parse import unquote_plus
 
 from pySmartDL import SmartDL
 
-from userge import userge, Message, Config
-from userge.utils import progress, humanbytes
+from userge import Config, Message, userge
+from userge.utils import humanbytes, progress
 from userge.utils.exceptions import ProcessCanceled
 
 LOGGER = userge.getLogger(__name__)
 
 
-@userge.on_cmd("download", about={
-    'header': "Download files to server",
-    'usage': "{tr}download [url | reply to telegram media]",
-    'examples': "{tr}download https://speed.hetzner.de/100MB.bin | testing upload.bin"},
-    check_downpath=True)
+@userge.on_cmd(
+    "download",
+    about={
+        "header": "Download files to server",
+        "usage": "{tr}download [url | reply to telegram media]",
+        "examples": "{tr}download https://speed.hetzner.de/100MB.bin | testing upload.bin",
+    },
+    check_downpath=True,
+)
 async def down_load_media(message: Message):
-    """ download from tg and url """
+    """download from tg and url"""
     if message.reply_to_message and message.reply_to_message.media:
         resource = message.reply_to_message
     elif message.input_str:
@@ -45,21 +46,19 @@ async def down_load_media(message: Message):
         await message.edit(f"Downloaded to `{dl_loc}` in {d_in} seconds")
 
 
-async def handle_download(message: Message, resource: Union[Message, str]) -> Tuple[str, int]:
-    """ download from resource """
+async def handle_download(
+    message: Message, resource: Union[Message, str]
+) -> Tuple[str, int]:
+    """download from resource"""
     if not isinstance(resource, Message):
         return await url_download(message, resource)
     if resource.media_group_id:
         resources = await message.client.get_media_group(
-            message.chat.id,
-            resource.message_id
+            message.chat.id, resource.message_id
         )
         dlloc, din = [], 0
         for res in resources:
-            dl_loc, d_in = await tg_download(
-                message,
-                res
-            )
+            dl_loc, d_in = await tg_download(message, res)
             din += d_in
             dlloc.append(dl_loc)
         return dumps(dlloc), din
@@ -67,7 +66,7 @@ async def handle_download(message: Message, resource: Union[Message, str]) -> Tu
 
 
 async def url_download(message: Message, url: str) -> Tuple[str, int]:
-    """ download from link """
+    """download from link"""
     await message.edit("`Downloading From URL...`")
     start_t = datetime.now()
     custom_file_name = unquote_plus(os.path.basename(url))
@@ -86,29 +85,39 @@ async def url_download(message: Message, url: str) -> Tuple[str, int]:
             percentage = downloader.get_progress() * 100
             speed = downloader.get_speed(human=True)
             estimated_total_time = downloader.get_eta(human=True)
-            progress_str = \
-                "__{}__\n" + \
-                "```[{}{}]```\n" + \
-                "**Progress** : `{}%`\n" + \
-                "**URL** : `{}`\n" + \
-                "**FILENAME** : `{}`\n" + \
-                "**Completed** : `{}`\n" + \
-                "**Total** : `{}`\n" + \
-                "**Speed** : `{}`\n" + \
-                "**ETA** : `{}`"
+            progress_str = (
+                "__{}__\n"
+                + "```[{}{}]```\n"
+                + "**Progress** : `{}%`\n"
+                + "**URL** : `{}`\n"
+                + "**FILENAME** : `{}`\n"
+                + "**Completed** : `{}`\n"
+                + "**Total** : `{}`\n"
+                + "**Speed** : `{}`\n"
+                + "**ETA** : `{}`"
+            )
             progress_str = progress_str.format(
                 "trying to download",
-                ''.join((Config.FINISHED_PROGRESS_STR
-                         for _ in range(math.floor(percentage / 5)))),
-                ''.join((Config.UNFINISHED_PROGRESS_STR
-                         for _ in range(20 - math.floor(percentage / 5)))),
+                "".join(
+                    (
+                        Config.FINISHED_PROGRESS_STR
+                        for _ in range(math.floor(percentage / 5))
+                    )
+                ),
+                "".join(
+                    (
+                        Config.UNFINISHED_PROGRESS_STR
+                        for _ in range(20 - math.floor(percentage / 5))
+                    )
+                ),
                 round(percentage, 2),
                 url,
                 custom_file_name,
                 humanbytes(downloaded),
                 humanbytes(total_length),
                 speed,
-                estimated_total_time)
+                estimated_total_time,
+            )
             await message.edit(progress_str, disable_web_page_preview=True)
             await asyncio.sleep(Config.EDIT_SLEEP_TIMEOUT)
     if message.process_is_canceled:
@@ -117,18 +126,20 @@ async def url_download(message: Message, url: str) -> Tuple[str, int]:
 
 
 async def tg_download(message: Message, to_download: Message) -> Tuple[str, int]:
-    """ download from tg file """
+    """download from tg file"""
     await message.edit("`Downloading From TG...`")
     start_t = datetime.now()
     custom_file_name = Config.DOWN_PATH
     if message.filtered_input_str:
-        custom_file_name = os.path.join(Config.DOWN_PATH, message.filtered_input_str.strip())
+        custom_file_name = os.path.join(
+            Config.DOWN_PATH, message.filtered_input_str.strip()
+        )
     with message.cancel_callback():
         dl_loc = await message.client.download_media(
             message=to_download,
             file_name=custom_file_name,
             progress=progress,
-            progress_args=(message, "trying to download")
+            progress_args=(message, "trying to download"),
         )
     if message.process_is_canceled:
         raise ProcessCanceled
