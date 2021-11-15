@@ -46,7 +46,7 @@ async def mediainfo(message: Message):
     if len(output_) != 0:
         out = output_[0]
     body_text = f"""
-    
+
 ***JSON***
 
 <pre>{x_media}</pre>
