@@ -46,14 +46,8 @@ wget>=3.2
 wikipedia>=1.4.0
 youtube_dl
 git+https://github.com/Nekos-life/Async-nekos.life-wrapper
-<<<<<<< HEAD
-ruamel.yaml==0.17.17
-ujson>=4.0.1
-youtube-search-python==1.5.1
-=======
 ruamel.yaml==0.17.10
 ujson>=4.0.1
 youtube-search-python==1.4.6
 git+https://github.com/code-rgb/google-images-download.git
->>>>>>> 62baf16602a663a4e66afbae643247e327252603
 feedparser>=6.0.2
