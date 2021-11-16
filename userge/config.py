@@ -119,6 +119,8 @@ class Config:
     DEEP_AI = os.environ.get("DEEP_AI")
     LASTFM_USERNAME = os.environ.get("LASTFM_USERNAME")
     LASTFM_API_KEY = os.environ.get("LASTFM_API_KEY")
+    LASTFM_SECRET = os.environ.get("LASTFM_SECRET")
+    LASTFM_PASSWORD = os.environ.get("LASTFM_PASSWORD")
     TG_IDS = [777000, 1087968824, 454000]
     INLINE_NOTES = False
     BOT_ANTIFLOOD = False
@@ -151,7 +153,7 @@ def get_version() -> str:
 
 def hbot_version(tag: str) -> str:
     tag_name, commits, branch = None, None, None
-    pref_branch = os.environ.get("PREF_BRANCH")
+    os.environ.get("PREF_BRANCH")
     if match := GRepo_regex.match(Config.UPSTREAM_REPO):
         g_api = (
             f"https://api.github.com/repos/{match.group('owner')}/{match.group('repo')}"
@@ -163,12 +165,11 @@ def hbot_version(tag: str) -> str:
                 ).status_code == 200:
                     rcom = r_com.json()
                     if commits := rcom.get("total_commits"):
-                        commits = f".{commits}"
-                    branch = rcom.get("target_commitish")
+                        str_ = str(("0" * (4 - (len(str(commits)))))) + str(commits)
                 if (
                     r_name := req.get(g_api + f"/releases/tags/v{tag}")
                 ).status_code == 200:
                     tag_name = (r_name.json().get("name") or "").replace(" ", "-")
             except JSONDecodeError:
                 pass
-    return f"{tag}|{tag_name or ''}{commits or ''}@{pref_branch or branch or 'alpha'}"
+    return f"{tag} Build {str_ or ''}"

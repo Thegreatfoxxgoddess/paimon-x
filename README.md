@@ -14,8 +14,3 @@ p
 Deploy to heroku
 
 </details> 
-
-### Project Credit
-
-* [syntax error](https://github.com/code-rgb)
-* kanged from [userge-x](https://github.com/code-rgb/userge-x)

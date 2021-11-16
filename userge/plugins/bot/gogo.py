@@ -13,7 +13,7 @@ from bs4 import BeautifulSoup as soup
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
-from userge import Config, Message, userge
+from userge import Message, userge
 from userge.utils import check_owner, get_response, rand_key
 
 GOGO = "https://gogoanime.cm"
@@ -87,7 +87,7 @@ class Anime:
         return name_
 
     @staticmethod
-    async def get_quality(url: str, episode: int, key_: str):
+    async def get_quality(url: str, episode: int, key_: str, total: int):
         endpoint = f"{Anime._get_name(url)}-episode-{episode}"
         page_ = await Anime._get_html(endpoint)
         link_ = page_.find("li", {"class": "dowloads"}).a.get("href")
@@ -96,17 +96,30 @@ class Anime:
         btn_, row_ = [], []
         for i in page.findAll("div", {"class": "dowload"}):
             qual = i.a
-            if qual.get("target") != "_blank":
-                name = qual.text.replace("Download", "").strip()
-                btn_.append(InlineKeyboardButton(name, url=qual.get("href")))
-                if len(btn_) == 2:
-                    row_.append(btn_)
-                    btn_ = []
+            name = qual.text.replace("Download", "").strip()
+            btn_.append(InlineKeyboardButton(name, url=qual.get("href")))
+            if len(btn_) == 2:
+                row_.append(btn_)
+                btn_ = []
         if len(btn_) != 0:
             row_.append(btn_)
-        row_.append(
-            [InlineKeyboardButton("Back", callback_data=f"get_currentpg{key_}")]
-        )
+        nn = []
+        if episode > 1:
+            nn.append(
+                InlineKeyboardButton(
+                    f"EP {episode-1}",
+                    callback_data=f"gogogetqual_{key_}_{episode-1}_{total}",
+                )
+            )
+        nn.append(InlineKeyboardButton("Back", callback_data=f"get_currentpg{key_}"))
+        if episode < total:
+            nn.append(
+                InlineKeyboardButton(
+                    f"EP {episode+1}",
+                    callback_data=f"gogogetqual_{key_}_{episode+1}_{total}",
+                )
+            )
+        row_.append(nn)
         return InlineKeyboardMarkup(row_)
 
 
@@ -126,7 +139,7 @@ if userge.has_bot:
         for i in range(1, int(res) + 1):
             btn_.append(
                 InlineKeyboardButton(
-                    "EP " + str(i), callback_data=f"gogo_get_qual{key_}_{i}"
+                    "EP " + str(i), callback_data=f"gogogetqual_{key_}_{i}_{res}"
                 )
             )
             if len(btn_) == 4:
@@ -155,22 +168,21 @@ if userge.has_bot:
             reply_markup=InlineKeyboardMarkup(paginate[0])
         )
 
-    @userge.bot.on_callback_query(
-        filters.regex(pattern=r"gogo_get_qual([a-z0-9]+)_([\d]+)")
-    )
+    @userge.bot.on_callback_query(filters.regex(pattern=r"gogogetqual_(.*)"))
     @check_owner
     async def get_qual_from_eps(c_q: CallbackQuery):
-        key_ = c_q.matches[0].group(1)
-        episode = int(c_q.matches[0].group(2))
+        key_ = c_q.data.split("_")[1]
+        episode = int(c_q.data.split("_")[2])
+        ttl = int(c_q.data.split("_")[3])
         key_data = GOGO_DB.get(key_)
         if not key_data:
             return await c_q.answer("Not Found")
         url_ = key_data.get("url")
         await c_q.answer()
         await c_q.edit_message_text(
-            text=f"{key_data.get('body')}\n**[  Episode: {episode}  ]**\n\n📹 __Choose the desired video quality from below.__\n**Note:** for uploading to TG:\n`{Config.CMD_TRIGGER}upload [link] | [filename].mp4`",
+            text=f"{key_data.get('body')}\n**[  Episode: {episode}  ]**\n\n📹 __Choose the desired video quality from below.__",
             reply_markup=(
-                await Anime.get_quality(url=url_, episode=episode, key_=key_)
+                await Anime.get_quality(url=url_, episode=episode, key_=key_, total=ttl)
             ),
         )
 

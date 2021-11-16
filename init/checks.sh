@@ -57,8 +57,8 @@ _checkDefaultVars() {
         [G_DRIVE_IS_TD]=true
         [CMD_TRIGGER]="."
         [SUDO_TRIGGER]="!"
-        [FINISHED_PROGRESS_STR]="█"
-        [UNFINISHED_PROGRESS_STR]="░"
+        [FINISHED_PROGRESS_STR]="☗"
+        [UNFINISHED_PROGRESS_STR]="☖"
     )
     for key in ${!def_vals[@]}; do
         set -a

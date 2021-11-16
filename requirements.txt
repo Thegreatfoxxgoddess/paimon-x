@@ -1,4 +1,4 @@
-aiofiles>=0.6.0
+aiofiles> bvtrp89 vft8o6f=0.6.0
 aiohttp[speedups]>=3.7.3
 asyncurban>=0.3.3
 beautifulsoup4>=4.9.1
@@ -20,13 +20,11 @@ lyricsgenius>=3.0.0
 motor>=2.3.0
 numpy
 oauth2client>=4.1.3
-opencv-python
-Pillow==8.4.0
+Pillow==8.3.0
 psutil>=5.7.3
 pybase64>=1.1.1
-PyDictionary>=2.0.1
-PyPDF2
-git+https://github.com/ashwinstr/pyrogram.git@x21
+pylast
+git+https://github.com/code-rgb/pyrogram.git@x21
 pySmartDL>=1.3.4
 python-dotenv>=0.15.0
 pytz>=2020.4
@@ -48,7 +46,14 @@ wget>=3.2
 wikipedia>=1.4.0
 youtube_dl
 git+https://github.com/Nekos-life/Async-nekos.life-wrapper
+<<<<<<< HEAD
 ruamel.yaml==0.17.17
 ujson>=4.0.1
 youtube-search-python==1.5.1
+=======
+ruamel.yaml==0.17.10
+ujson>=4.0.1
+youtube-search-python==1.4.6
+git+https://github.com/code-rgb/google-images-download.git
+>>>>>>> 62baf16602a663a4e66afbae643247e327252603
 feedparser>=6.0.2

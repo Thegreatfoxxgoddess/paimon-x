@@ -123,7 +123,6 @@ async def helpme(message: Message) -> None:
         ):
             commands = plugins[key].enabled_commands
             out_str = f"""<b><u>(<code>{len(commands)}</code>) Command(s) Available</u></b>
-
 🔧 <b>Plugin:</b>  <code>{key}</code>
 📘 <b>Doc:</b>  <code>{plugins[key].doc}</code>\n\n"""
             for i, cmd in enumerate(commands, start=1):
