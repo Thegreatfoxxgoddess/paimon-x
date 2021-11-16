@@ -1,8 +1,6 @@
 """ Download Youtube Video / Audio in a User friendly interface """
 
 
-
-
 import glob
 import os
 from collections import defaultdict
