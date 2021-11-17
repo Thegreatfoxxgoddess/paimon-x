@@ -4,9 +4,10 @@
 
 
 import requests
+from validators.url import url
+
 from userge import Message, userge
 from userge.utils import deEmojify, rand_array
-from validators.url import url
 
 
 @userge.on_cmd(

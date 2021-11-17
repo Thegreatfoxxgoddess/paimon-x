@@ -7,8 +7,9 @@ import asyncio
 import os
 
 from PIL import Image, ImageDraw, ImageFont
-from userge import Message, userge
 from wget import download
+
+from userge import Message, userge
 
 
 @userge.on_cmd(
@@ -20,7 +21,7 @@ from wget import download
     },
 )
 async def FakeGoogleSearch(message: Message):
-    """ Get a user-customised google search meme! """
+    """Get a user-customised google search meme!"""
     text = message.input_str
     if not text:
         return await message.err("No input found!", del_in=5)

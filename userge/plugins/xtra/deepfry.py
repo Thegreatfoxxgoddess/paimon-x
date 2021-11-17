@@ -5,6 +5,7 @@ import random
 
 from PIL import Image, ImageEnhance, ImageOps
 from pyrogram.errors.exceptions.bad_request_400 import YouBlockedUser
+
 from userge import Config, Message, userge
 from userge.utils import progress, runcmd, take_screen_shot
 
@@ -19,7 +20,7 @@ from userge.utils import progress, runcmd, take_screen_shot
     },
 )
 async def deepfryer(message: Message):
-    """ deepfryer """
+    """deepfryer"""
     replied = message.reply_to_message
     if not (replied and message.input_str):
         await message.edit(
@@ -140,7 +141,7 @@ async def deepfry(img):
     },
 )
 async def fry_(message: Message):
-    """ fryer for any media """
+    """fryer for any media"""
     frying_file = None
     replied = message.reply_to_message
     if not (replied and message.input_str):

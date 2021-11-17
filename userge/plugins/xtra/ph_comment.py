@@ -7,9 +7,10 @@ import os
 
 import requests
 from html_telegraph_poster.upload_images import upload_image
+from validators.url import url
+
 from userge import Config, Message, userge
 from userge.utils import deEmojify
-from validators.url import url
 
 
 @userge.on_cmd(
@@ -27,7 +28,7 @@ from validators.url import url
     check_downpath=True,
 )
 async def ph_comment(message: Message):
-    """ Create P*rnhub Comment for Replied User """
+    """Create P*rnhub Comment for Replied User"""
     replied = message.reply_to_message
     if replied:
         user = replied.forward_from or replied.from_user

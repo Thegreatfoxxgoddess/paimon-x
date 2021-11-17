@@ -8,9 +8,10 @@ import os
 
 import requests
 from PIL import Image
+from validators.url import url
+
 from userge import Config, Message, userge
 from userge.utils import deEmojify
-from validators.url import url
 
 CONVERTED_IMG = Config.DOWN_PATH + "img.png"
 CONVERTED_STIKR = Config.DOWN_PATH + "sticker.webp"
@@ -25,7 +26,7 @@ CONVERTED_STIKR = Config.DOWN_PATH + "sticker.webp"
     },
 )
 async def trump_tweet(msg: Message):
-    """ Fun sticker of Trump Tweet """
+    """Fun sticker of Trump Tweet"""
     replied = msg.reply_to_message
     text = msg.filtered_input_str
     if replied and not text:
@@ -46,7 +47,7 @@ async def trump_tweet(msg: Message):
     },
 )
 async def modi_tweet(msg: Message):
-    """ Fun Sticker of Modi Tweet """
+    """Fun Sticker of Modi Tweet"""
     replied = msg.reply_to_message
     text = msg.filtered_input_str
     if replied and not text:
@@ -67,7 +68,7 @@ async def modi_tweet(msg: Message):
     },
 )
 async def Change_My_Mind(msg: Message):
-    """ Custom Sticker or Banner of Change My Mind """
+    """Custom Sticker or Banner of Change My Mind"""
     replied = msg.reply_to_message
     text = msg.filtered_input_str
     if replied and not text:
@@ -88,7 +89,7 @@ async def Change_My_Mind(msg: Message):
     },
 )
 async def kanna(msg: Message):
-    """ Fun sticker of Kanna """
+    """Fun sticker of Kanna"""
     replied = msg.reply_to_message
     text = msg.filtered_input_str
     if replied and not text:
@@ -109,7 +110,7 @@ async def kanna(msg: Message):
     },
 )
 async def carry_minati(msg: Message):
-    """ Fun Sticker of Carryminati Tweet """
+    """Fun Sticker of Carryminati Tweet"""
     replied = msg.reply_to_message
     text = msg.filtered_input_str
     if replied and not text:
@@ -132,7 +133,7 @@ async def carry_minati(msg: Message):
     },
 )
 async def tweet(msg: Message):
-    """ Tweet with your own Username """
+    """Tweet with your own Username"""
     replied = msg.reply_to_message
     text = msg.filtered_input_str
     if replied and not text:
@@ -196,7 +197,7 @@ async def _tweets(
     },
 )
 async def celeb_(msg: Message):
-    """ Fun Famous Twitter Tweets """
+    """Fun Famous Twitter Tweets"""
 
     CELEBS = {
         "salman": "BeingSalmanKhan",

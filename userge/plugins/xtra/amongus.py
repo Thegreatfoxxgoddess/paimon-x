@@ -13,6 +13,7 @@ from textwrap import wrap
 
 from PIL import Image, ImageDraw, ImageFont
 from requests import get
+
 from userge import Config, Message, userge
 
 CLRS = {

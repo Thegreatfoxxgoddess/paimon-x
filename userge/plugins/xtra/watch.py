@@ -5,6 +5,7 @@
 import os
 
 from justwatch import JustWatch, justwatchapi
+
 from userge import Message, userge
 
 # https://github.com/dawoudt/JustWatchAPI/issues/47#issuecomment-691357371

@@ -9,6 +9,7 @@ import random
 import numpy as np
 from colour import Color
 from PIL import Image, ImageDraw, ImageFont, ImageOps
+
 from userge import Config, Message, userge
 from userge.utils import media_to_image
 

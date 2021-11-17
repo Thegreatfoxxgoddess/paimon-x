@@ -1,8 +1,9 @@
-## Creator @midnightmadwalk to be found on tg
-## on github as https://github.com/midnightmadwalk
-## i just improvised it a lil'...phew..
+# Creator @midnightmadwalk to be found on tg
+# on github as https://github.com/midnightmadwalk
+# i just improvised it a lil'...phew..
 
 from google_trans_new import google_translator
+
 from userge import Message, userge
 
 translator = google_translator()

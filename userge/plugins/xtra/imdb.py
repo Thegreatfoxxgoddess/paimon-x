@@ -4,6 +4,7 @@ import re
 import bs4
 import requests
 import wget
+
 from userge import Config, Message, userge
 
 THUMB_PATH = Config.DOWN_PATH + "imdb_thumb.jpg"

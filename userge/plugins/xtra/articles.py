@@ -2,6 +2,7 @@ import re
 from asyncio import sleep
 
 from newspaper import Article, ArticleException
+
 from userge import Message, userge
 
 regex: str = (

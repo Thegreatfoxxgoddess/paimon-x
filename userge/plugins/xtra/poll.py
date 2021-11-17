@@ -17,7 +17,7 @@ from userge import Message, userge
     allow_private=False,
 )
 async def create_poll(msg: Message):
-    """" Create poll """
+    """ " Create poll"""
     options = ["👌 Yes, Perfect", "🙅‍♂️ no no please god no", "🤷🏻‍♂️ Maybe IDK"]
     anonymous = True
     if "-n" in msg.flags:
@@ -52,7 +52,7 @@ async def create_poll(msg: Message):
     allow_private=False,
 )
 async def vote_poll(msg: Message):
-    """ vote poll """
+    """vote poll"""
 
     replied = msg.reply_to_message
     if replied and replied.poll:
@@ -80,7 +80,7 @@ async def vote_poll(msg: Message):
     allow_private=False,
 )
 async def stop_poll(msg: Message):
-    """ Stop poll """
+    """Stop poll"""
 
     replied = msg.reply_to_message
 
@@ -104,7 +104,7 @@ async def stop_poll(msg: Message):
     allow_private=False,
 )
 async def retract_vote(msg: Message):
-    """ Retract vote """
+    """Retract vote"""
 
     replied = msg.reply_to_message
 

@@ -5,6 +5,7 @@ from pathlib import Path
 
 import deezloader
 from deezloader.exceptions import NoDataApi
+
 from userge import Message, pool, userge
 from userge.plugins.misc.upload import audio_upload, doc_upload
 
@@ -77,9 +78,7 @@ async def deezload(message: Message):
                 await message.edit("Invalid Syntax Detected. 🙂")
                 return
         if not REX.search(input_link):
-            await message.edit(
-                ">.< this link is not supported."
-            )
+            await message.edit(">.< this link is not supported.")
             return
     else:
         try:

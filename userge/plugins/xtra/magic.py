@@ -4,13 +4,14 @@
 #  All rights reserved.
 #
 #  Authors: 1. https://github.com/code-rgb [TG: @DeletedUser420]
-#           2. https://github.com/midnightmadwalk [TG: @MidnightMadwalk] for 🌀 Spin
+# 2. https://github.com/midnightmadwalk [TG: @MidnightMadwalk] for 🌀 Spin
 
 
 import os
 from shutil import rmtree
 
 from PIL import Image, ImageOps
+
 from userge import Config, Message, userge
 from userge.plugins.utils.circle import crop_vid
 from userge.utils import media_to_image, runcmd, safe_filename

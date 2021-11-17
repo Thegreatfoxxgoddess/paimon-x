@@ -8,15 +8,23 @@
 # (C) Author: Phyco-Ninja (https://github.com/Phyco-Ninja) (@PhycoNinja13b)
 # Tweaked by @LostB053 (on telegram)
 
-import os, humanize, tracemoepy
-import flag as cflag
+import os
 from datetime import datetime
+
+import flag as cflag
+import humanize
+import tracemoepy
 from aiohttp import ClientSession
 from pyrogram import filters
-from pyrogram.errors import MediaEmpty
-from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
+from pyrogram.types import (
+    CallbackQuery,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    InputMediaPhoto,
+)
+
 from userge import Message, userge
-from userge.utils import media_to_image, check_owner, get_response
+from userge.utils import check_owner, get_response, media_to_image
 from userge.utils import post_to_telegraph as post_to_tp
 
 # Logging Errors
@@ -232,8 +240,9 @@ query ($search: String) {
 }
 """
 
+
 async def return_json_senpai(query, vars_):
-    """ Makes a Post to https://graphql.anilist.co. """
+    """Makes a Post to https://graphql.anilist.co."""
     url_ = "https://graphql.anilist.co"
     async with ClientSession() as session:
         async with session.post(
@@ -244,7 +253,7 @@ async def return_json_senpai(query, vars_):
 
 
 def make_it_rw(time_stamp, as_countdown=False):
-    """ Converting Time Stamp to Readable Format """
+    """Converting Time Stamp to Readable Format"""
     if as_countdown:
         now = datetime.now()
         air_time = datetime.fromtimestamp(time_stamp)
@@ -267,7 +276,7 @@ def make_it_rw(time_stamp, as_countdown=False):
     },
 )
 async def anim_arch(message: Message):
-    """ Search Anime Info """
+    """Search Anime Info"""
     query = message.filtered_input_str
     if not query:
         await message.err("NameError: 'query' not defined")
@@ -278,14 +287,16 @@ async def anim_arch(message: Message):
         if "-mid" in message.flags:
             vars_ = {"idMal": int(query), "asHtml": True}
     result = await get_ani(vars_)
-    if len(result)!=1:
+    if len(result) != 1:
         title_img, finals_ = result[0], result[1]
     else:
         return await message.err(result[0])
     buttons = get_btns(result, "")
     try:
-        await message.reply_photo(title_img, caption=finals_, reply_markup=InlineKeyboardMarkup(buttons))
-    except:
+        await message.reply_photo(
+            title_img, caption=finals_, reply_markup=InlineKeyboardMarkup(buttons)
+        )
+    except BaseException:
         await message.edit("Wait for a moment....")
         url = title_img
         with open("image.png", "wb") as f:
@@ -304,7 +315,7 @@ async def anim_arch(message: Message):
     },
 )
 async def manga_arch(message: Message):
-    """ Search Manga Info """
+    """Search Manga Info"""
     query = message.input_str
     if not query:
         await message.err("NameError: 'query' not defined")
@@ -330,7 +341,7 @@ async def manga_arch(message: Message):
     synopsis = data.get("description")
     description = synopsis[:500]
     if len(synopsis) > 500:
-      description += "..."
+        description += "..."
     volumes = data.get("volumes")
     chapters = data.get("chapters")
     score = data.get("averageScore")
@@ -371,7 +382,7 @@ async def manga_arch(message: Message):
     },
 )
 async def airing_anim(message: Message):
-    """ Get Airing Detail of Anime """
+    """Get Airing Detail of Anime"""
     query = message.input_str
     if not query:
         await message.err("NameError: 'query' not defined")
@@ -434,7 +445,7 @@ async def airing_anim(message: Message):
     },
 )
 async def get_schuled(message: Message):
-    """ Get List of Scheduled Anime """
+    """Get List of Scheduled Anime"""
     var = {"notYetAired": True}
     await message.edit("`Fetching Scheduled Animes`")
     result = await return_json_senpai(AIRING_QUERY, var)
@@ -479,14 +490,14 @@ async def get_schuled(message: Message):
     },
 )
 async def character_search(message: Message):
-    """ Get Info about a Character """
+    """Get Info about a Character"""
     query = message.input_str
     if not query:
         await message.err("NameError: 'query' not defined")
         return
     var = {"search": query, "asHtml": True}
     result = await get_char(var)
-    if len(result)==1:
+    if len(result) == 1:
         return await message.err(result)
     img = result[0]
     cap_text = result[1]
@@ -507,7 +518,7 @@ async def character_search(message: Message):
     },
 )
 async def trace_bek(message: Message):
-    """ Reverse Search Anime Clips/Photos """
+    """Reverse Search Anime Clips/Photos"""
     dls_loc = await media_to_image(message)
     if dls_loc:
         async with ClientSession() as session:
@@ -536,35 +547,48 @@ async def trace_bek(message: Message):
         "header": "Advanced Anime Search",
         "description": "Search for Anime using AniList API",
         "usage": "{tr}ianime [anime name]",
-        "examples": ["{tr}ianime Asterisk war",]
+        "examples": [
+            "{tr}ianime Asterisk war",
+        ],
     },
-    allow_private=False
+    allow_private=False,
 )
 async def ianime(message: Message):
     query = message.input_str
     get_list = {"search": query}
     result = await return_json_senpai(PAGE_QUERY, get_list)
-    data = result["data"]["Page"]["media"]    
+    data = result["data"]["Page"]["media"]
     button = []
     out = "Possible searches related to `query`"
     for i in data:
-        rom = i['title']['romaji']
+        rom = i["title"]["romaji"]
         out += f"\n\n**{rom}**\n**➤ ID:** `{i['id']}`"
-        button.append([InlineKeyboardButton(text=f"{rom}", callback_data=f"btn_{i['id']}_{query}")])
+        button.append(
+            [
+                InlineKeyboardButton(
+                    text=f"{rom}", callback_data=f"btn_{i['id']}_{query}"
+                )
+            ]
+        )
     if not message.client.is_bot:
         await message.edit(out)
         return
-    await message.reply_photo(f"https://img.anili.st/media/{data[0]['id']}", f'Showing top results for "{query}":', reply_markup=InlineKeyboardMarkup(button))
+    await message.reply_photo(
+        f"https://img.anili.st/media/{data[0]['id']}",
+        f'Showing top results for "{query}":',
+        reply_markup=InlineKeyboardMarkup(button),
+    )
+
 
 async def get_info(idm, req):
     vars_ = {"id": int(idm), "asHtml": True}
     result = await return_json_senpai(INFO_QUERY, vars_)
     data = result["data"]["Media"]
-    if req=="desc":
+    if req == "desc":
         synopsis = data.get("description")
         return synopsis
     else:
-        prqlsql = data.get("relations").get('edges')
+        prqlsql = data.get("relations").get("edges")
         ps = ""
         for i in prqlsql:
             ps += f'• {i["node"]["title"]["romaji"]} `{i["relationType"]}`\n'
@@ -596,28 +620,36 @@ async def get_ani(vars_):
     country = data.get("countryOfOrigin")
     c_flag = cflag.flag(country)
     source = data.get("source")
-    prqlsql = data.get("relations").get('edges')
+    prqlsql = data.get("relations").get("edges")
     bannerImg = data.get("bannerImage")
     s_date = data.get("startDate")
     adult = data.get("isAdult")
     trailer_link = "N/A"
     if data["title"]["english"] is not None:
-        name = f'''[{c_flag}]**{romaji}**
+        name = f"""[{c_flag}]**{romaji}**
         __{english}__
-        {native}'''
+        {native}"""
     else:
-        name = f'''[{c_flag}]**{romaji}**
-        {native}'''
+        name = f"""[{c_flag}]**{romaji}**
+        {native}"""
     prql, prql_id, sql, sql_id = "", "None", "", "None"
     for i in prqlsql:
-        if i['relationType']=="PREQUEL":
-            pname = i["node"]["title"]["english"] if i["node"]["title"]["english"] is not None else i["node"]["title"]["romaji"]
+        if i["relationType"] == "PREQUEL":
+            pname = (
+                i["node"]["title"]["english"]
+                if i["node"]["title"]["english"] is not None
+                else i["node"]["title"]["romaji"]
+            )
             prql += f"**PREQUEL:** `{pname}`\n"
             prql_id = f"{i['node']['id']}"
             break
     for i in prqlsql:
-        if i['relationType']=="SEQUEL":
-            sname = i["node"]["title"]["english"] if i["node"]["title"]["english"] is not None else i["node"]["title"]["romaji"]
+        if i["relationType"] == "SEQUEL":
+            sname = (
+                i["node"]["title"]["english"]
+                if i["node"]["title"]["english"] is not None
+                else i["node"]["title"]["romaji"]
+            )
             sql += f"**SEQUEL:** `{sname}`\n"
             sql_id = f"{i['node']['id']}"
             break
@@ -628,23 +660,23 @@ async def get_ani(vars_):
         charlist.append(f"    •{char['name']['full']}")
     chrctrs = "\n"
     chrctrs += ("\n").join(charlist[:10])
-    chrctrsls = f"\n➤ **CHARACTERS:** `{chrctrs}`" if len(charlist)!=0 else ""
+    chrctrsls = f"\n➤ **CHARACTERS:** `{chrctrs}`" if len(charlist) != 0 else ""
     air_on = None
     if data["nextAiringEpisode"]:
         nextAir = data["nextAiringEpisode"]["airingAt"]
         air_on = make_it_rw(nextAir)
-        eps = data['nextAiringEpisode']['episode']
+        eps = data["nextAiringEpisode"]["episode"]
         ep_ = list(str(eps))
         x = ep_.pop()
         th = "th"
-        if len(ep_)>=1:
-            if ep_.pop()!="1":
+        if len(ep_) >= 1:
+            if ep_.pop() != "1":
                 th = pos_no(x)
         else:
             th = pos_no(x)
         air_on += f" | {eps}{th} eps"
     if air_on is None:
-        eps_ =  f" | {episodes} eps" if episodes is not None else ""
+        eps_ = f" | {episodes} eps" if episodes is not None else ""
         status_air = f"➤ STATUS: `{status}{eps_}`"
     else:
         status_air = f"➤ STATUS: `{status}`\n➤ NEXT AIRING: `{air_on}`"
@@ -660,11 +692,12 @@ async def get_ani(vars_):
         html_ += f"{character['name']['full']}"
         html_ += f"{c_flag} {character['name']['native']}"
         html_ += f"Character ID: {character['id']}"
-        html_ += (
-            f"About Character and Role:{character.get('description', 'N/A')}"
-        )
+        html_ += f"About Character and Role:{character.get('description', 'N/A')}"
         html_char += f"{html_}"
-    studios = "".join(" href='{}'>• {} ".format(studio["siteUrl"], studio["name"]) for studio in data["studios"]["nodes"])
+    studios = "".join(
+        " href='{}'>• {} ".format(studio["siteUrl"], studio["name"])
+        for studio in data["studios"]["nodes"]
+    )
     url = data.get("siteUrl")
     title_img = f"https://img.anili.st/media/{idm}"
     # Telegraph Post mejik
@@ -716,16 +749,16 @@ async def get_char(var):
     for ani in featured:
         k = ani["title"]["english"] or ani["title"]["romaji"]
         kk = ani["type"]
-        if kk=="MANGA":
+        if kk == "MANGA":
             sninml += f"    • {k}\n"
     for ani in featured:
         kkk = ani["title"]["english"] or ani["title"]["romaji"]
         kkkk = ani["type"]
-        if kkkk=="ANIME":
+        if kkkk == "ANIME":
             sninal += f"    • {kkk}\n"
     sninal += "\n"
-    sninm = "  `MANGAS`\n" if len(sninml)!=0 else ""
-    snina = "  `ANIMES`\n" if len(sninal)!=0 else ""
+    sninm = "  `MANGAS`\n" if len(sninml) != 0 else ""
+    snina = "  `ANIMES`\n" if len(sninal) != 0 else ""
     snin = f"\n{snina}{sninal}{sninm}{sninml}"
     sp = 0
     cntnt = ""
@@ -767,32 +800,57 @@ async def get_char(var):
 
 
 def pos_no(x):
-    th = "st" if x=="1" else "nd" if x=="2" else "rd" if x=="3" else "th"
+    th = "st" if x == "1" else "nd" if x == "2" else "rd" if x == "3" else "th"
     return th
 
-    data = result["data"]["Media"]
+    result["data"]["Media"]
+
 
 def get_btns(result: list, lsqry):
     buttons = []
-    qry = lsqry if lsqry!="" else ""
-    if result[2]=="None":
-        if result[3]!="None":
-            buttons.append([InlineKeyboardButton(text="Sequel", callback_data=f"btn_{result[3]}{qry}")])
-    else:
-        if result[3]!="None":
+    qry = lsqry if lsqry != "" else ""
+    if result[2] == "None":
+        if result[3] != "None":
             buttons.append(
                 [
-                    InlineKeyboardButton(text="Prequel", callback_data=f"btn_{result[2]}{qry}"),
-                    InlineKeyboardButton(text="Sequel", callback_data=f"btn_{result[3]}{qry}")
+                    InlineKeyboardButton(
+                        text="Sequel", callback_data=f"btn_{result[3]}{qry}"
+                    )
+                ]
+            )
+    else:
+        if result[3] != "None":
+            buttons.append(
+                [
+                    InlineKeyboardButton(
+                        text="Prequel", callback_data=f"btn_{result[2]}{qry}"
+                    ),
+                    InlineKeyboardButton(
+                        text="Sequel", callback_data=f"btn_{result[3]}{qry}"
+                    ),
                 ]
             )
         else:
-            buttons.append([InlineKeyboardButton(text="Prequel", callback_data=f"btn_{result[2]}{qry}")])
+            buttons.append(
+                [
+                    InlineKeyboardButton(
+                        text="Prequel", callback_data=f"btn_{result[2]}{qry}"
+                    )
+                ]
+            )
     btn = []
-    btn.append(InlineKeyboardButton(text="Description", callback_data=f"desc_{result[6]}{qry}"))
+    btn.append(
+        InlineKeyboardButton(text="Description", callback_data=f"desc_{result[6]}{qry}")
+    )
     if result[4] is False:
-        btn.append(InlineKeyboardButton(text="Download", switch_inline_query_current_chat=f"anime {result[5]}"))
-    btn.append(InlineKeyboardButton(text="List Series", callback_data=f"ls_{result[6]}{qry}"))
+        btn.append(
+            InlineKeyboardButton(
+                text="Download", switch_inline_query_current_chat=f"anime {result[5]}"
+            )
+        )
+    btn.append(
+        InlineKeyboardButton(text="List Series", callback_data=f"ls_{result[6]}{qry}")
+    )
     buttons.append(btn)
     return buttons
 
@@ -805,11 +863,16 @@ async def present_res(cq: CallbackQuery):
     vars_ = {"id": int(idm), "asHtml": True}
     result = await get_ani(vars_)
     pic, msg = result[0], result[1]
-    qry = f"_{query[2]}" if len(query)==3 else ""
+    qry = f"_{query[2]}" if len(query) == 3 else ""
     btns = get_btns(result, qry)
-    if len(query)==3:
-        btns.append([InlineKeyboardButton(text="Back", callback_data=f"back_{query[2]}")])
-    await cq.edit_message_media(InputMediaPhoto(pic, caption=msg), reply_markup=InlineKeyboardMarkup(btns))
+    if len(query) == 3:
+        btns.append(
+            [InlineKeyboardButton(text="Back", callback_data=f"back_{query[2]}")]
+        )
+    await cq.edit_message_media(
+        InputMediaPhoto(pic, caption=msg), reply_markup=InlineKeyboardMarkup(btns)
+    )
+
 
 @userge.bot.on_callback_query(filters.regex(pattern=r"back_(.*)"))
 @check_owner
@@ -817,23 +880,39 @@ async def present_ls(cq: CallbackQuery):
     kek, query = cq.data.split("_")
     get_list = {"search": query}
     result = await return_json_senpai(PAGE_QUERY, get_list)
-    data = result["data"]["Page"]["media"]    
+    data = result["data"]["Page"]["media"]
     button = []
     for i in data:
-        rom = i['title']['romaji']
-        button.append([InlineKeyboardButton(text=f"{rom}", callback_data=f"btn_{i['id']}_{query}")])
-    await cq.edit_message_media(InputMediaPhoto(f"https://img.anili.st/media/{data[0]['id']}", f'Showing top results for "{query}":'), reply_markup=InlineKeyboardMarkup(button))
+        rom = i["title"]["romaji"]
+        button.append(
+            [
+                InlineKeyboardButton(
+                    text=f"{rom}", callback_data=f"btn_{i['id']}_{query}"
+                )
+            ]
+        )
+    await cq.edit_message_media(
+        InputMediaPhoto(
+            f"https://img.anili.st/media/{data[0]['id']}",
+            f'Showing top results for "{query}":',
+        ),
+        reply_markup=InlineKeyboardMarkup(button),
+    )
+
 
 @userge.bot.on_callback_query(filters.regex(pattern=r"(desc|ls)_(.*)"))
 @check_owner
 async def desc_(cq: CallbackQuery):
     q = cq.data.split("_")
     kek, query = q[0], q[1]
-    info = "Description" if kek=="desc" else "Series List"
-    lsqry = f"_{q[2]}" if len(q)>2 else ""
+    info = "Description" if kek == "desc" else "Series List"
+    lsqry = f"_{q[2]}" if len(q) > 2 else ""
     result = await get_info(query, kek)
-    if len(result)>1000:
-        result = result[:950]+"..."
+    if len(result) > 1000:
+        result = result[:950] + "..."
         result += "For more info click back button and open synopsis link"
     button = [[InlineKeyboardButton(text="Back", callback_data=f"btn_{query}{lsqry}")]]
-    await cq.edit_message_media(InputMediaPhoto(f"https://img.anili.st/media/{query}", f'{info}:\n\n{result}'), reply_markup=InlineKeyboardMarkup(button))
+    await cq.edit_message_media(
+        InputMediaPhoto(f"https://img.anili.st/media/{query}", f"{info}:\n\n{result}"),
+        reply_markup=InlineKeyboardMarkup(button),
+    )

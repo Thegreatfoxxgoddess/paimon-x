@@ -8,6 +8,7 @@
 # For improvements Pull Request or lostb053.github.io
 
 import asyncio
+
 from userge import Config, Message, get_collection, userge
 from userge.lastfm import auth_, info, recs, ri, tglst, user
 
@@ -55,8 +56,11 @@ async def last_fm_(message: Message):
         song_ = recent_song[0]
         sn, an = song_["name"], song_["artist"]["#text"]
         gt = (await info("track", query, an, sn))[1]["track"]
-        y = [i.replace(" ", "_").replace("-", "_") for i in [tg["name"] for tg in gt["toptags"]["tag"]]]
-        z = [k for k in y if y!=[] and k.lower() in tglst()]
+        y = [
+            i.replace(" ", "_").replace("-", "_")
+            for i in [tg["name"] for tg in gt["toptags"]["tag"]]
+        ]
+        z = [k for k in y if y != [] and k.lower() in tglst()]
         neutags = " #".join(z[i] for i in range(min(len(z), 4)))
         img = ri(recent_song[0].get("image")[3].get("#text"))
         rep = f"[\u200c]({img})**{qd}** is currently listening to: \n🎧  `{an} - {sn}`"
@@ -67,7 +71,11 @@ async def last_fm_(message: Message):
         for song_ in recent_song:
             sn, an = song_["name"], song_["artist"]["#text"]
             rep += f"\n🎧  {an} - {sn}"
-            rep += ", ♥️" if (await info("track", query, an, sn))[1]["track"]["userloved"] != "0" else ""
+            rep += (
+                ", ♥️"
+                if (await info("track", query, an, sn))[1]["track"]["userloved"] != "0"
+                else ""
+            )
         playcount = view_data.get("recenttracks").get("@attr").get("total")
         rep += f"`\n\nTotal Scrobbles = {playcount}`"
     await message.edit(rep)
@@ -107,9 +115,12 @@ async def last_fm_user_info_(message: Message):
 async def last_pc_(message: Message):
     """Shows Playcount"""
     query = message.input_str or Config.LASTFM_USERNAME
-    lastuser = (await info("user", query, '', ''))[1]["user"]["playcount"]
+    lastuser = (await info("user", query, "", ""))[1]["user"]["playcount"]
     qd = f"[{query}]({du}{query})" if message.input_str else await user()
-    await message.edit(f"{qd}'s playcount:\n{lastuser}", disable_web_page_preview=True,)
+    await message.edit(
+        f"{qd}'s playcount:\n{lastuser}",
+        disable_web_page_preview=True,
+    )
 
 
 @userge.on_cmd(
@@ -151,7 +162,11 @@ async def last_fm_played_(message: Message):
     for song_ in recent_song:
         sn, an = song_["name"], song_["artist"]["#text"]
         rep += f"\n🎧  {an} - {sn}"
-        rep += ", ♥️" if (await info("track", query, an, sn))[1]["track"]["userloved"] != "0" else ""
+        rep += (
+            ", ♥️"
+            if (await info("track", query, an, sn))[1]["track"]["userloved"] != "0"
+            else ""
+        )
     await message.edit(rep, disable_web_page_preview=True)
 
 
@@ -165,14 +180,18 @@ async def last_fm_played_(message: Message):
 async def last_fm_love_(message: Message):
     """Loves Currently Playing Song"""
     await message.edit("Loving Currently Playing...")
-    recent_song = (await recs(Config.LASTFM_USERNAME, "recenttracks", 2))[1]["recenttracks"]["track"]
+    recent_song = (await recs(Config.LASTFM_USERNAME, "recenttracks", 2))[1][
+        "recenttracks"
+    ]["track"]
     if len(recent_song) == 0 or not recent_song[0].get("@attr"):
         return await message.err("No Currently Playing Track found", del_in=10)
     song_ = recent_song[0]
     anm, snm = song_["artist"]["#text"], song_["name"]
     auth_().get_track(anm, snm).love()
     img = ri(song_.get("image")[3].get("#text"))
-    await message.edit(f"Loved currently playing track...\n`{anm} - {snm}` [\u200c]({img})")
+    await message.edit(
+        f"Loved currently playing track...\n`{anm} - {snm}` [\u200c]({img})"
+    )
 
 
 @userge.on_cmd(
@@ -185,14 +204,18 @@ async def last_fm_love_(message: Message):
 async def last_fm_unlove_(message: Message):
     """UnLoves Currently Playing Song"""
     await message.edit("UnLoving Currently Playing...")
-    recent_song = (await recs(Config.LASTFM_USERNAME, "recenttracks", 2))[1]["recenttracks"]["track"]
+    recent_song = (await recs(Config.LASTFM_USERNAME, "recenttracks", 2))[1][
+        "recenttracks"
+    ]["track"]
     if len(recent_song) == 0 or not recent_song[0].get("@attr"):
         return await message.err("No Currently Playing Track found", del_in=10)
     song_ = recent_song[0]
     anm, snm = song_["artist"]["#text"], song_["name"]
     auth_().get_track(anm, snm).unlove()
     img = ri(song_.get("image")[3].get("#text"))
-    await message.edit(f"UnLoved currently playing track...\n`{anm} - {snm}` [\u200c]({img})")
+    await message.edit(
+        f"UnLoved currently playing track...\n`{anm} - {snm}` [\u200c]({img})"
+    )
 
 
 # inspired from @lastfmrobot's compat
@@ -212,7 +235,9 @@ async def lastfm_compat_(message: Message):
     diff = "|" in msg
     us1, us2 = msg.split("|") if diff else Config.LASTFM_USERNAME, msg
     ta = "topartists"
-    ta1, ta2 = (await recs(us1, ta, 500))[1][ta]["artist"], (await recs(us2, ta, 500))[1][ta]["artist"]
+    ta1, ta2 = (await recs(us1, ta, 500))[1][ta]["artist"], (await recs(us2, ta, 500))[
+        1
+    ][ta]["artist"]
     ad1, ad2 = [n["name"] for n in ta1], [n["name"] for n in ta2]
     display = f"**{us1 if diff else await user()}** and **[{us2}]({du}{us2})**"
     comart = [value for value in ad2 if value in ad1]

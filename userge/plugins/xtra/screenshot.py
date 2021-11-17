@@ -4,6 +4,7 @@ import random
 
 from hachoir.metadata import extractMetadata as XMan
 from hachoir.parser import createParser as CPR
+
 from userge import Config, Message, userge
 from userge.utils import progress, take_screen_shot
 

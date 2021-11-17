@@ -1,4 +1,5 @@
-# Ported From [PaperPlane Userbot](https://github.com/RaphielGang/Telegram-Paperplane)
+# Ported From [PaperPlane
+# Userbot](https://github.com/RaphielGang/Telegram-Paperplane)
 
 """ Userbot module for getting the date
     and time of any country or the userbot server.  """
@@ -9,6 +10,7 @@ from datetime import datetime as dt
 from pytz import country_names as c_n
 from pytz import country_timezones as c_tz
 from pytz import timezone as tz
+
 from userge import Message, get_collection, userge
 
 COUNTRY_CITY = os.environ.get("COUNTRY_CITY", None)
@@ -16,7 +18,7 @@ LOC_NAME = get_collection("LOC_NAME")
 
 
 async def get_tz(con):
-    """ Get time zone of the given country. """
+    """Get time zone of the given country."""
     if "(Uk)" in con:
         con = con.replace("Uk", "UK")
     if "(Us)" in con:

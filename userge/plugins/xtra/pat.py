@@ -3,6 +3,7 @@ from random import choice
 from urllib import parse
 
 import requests
+
 from userge import Message, userge
 
 BASE_URL = "https://headp.at/pats/{}"

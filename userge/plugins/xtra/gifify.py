@@ -5,6 +5,7 @@
 import os
 
 import lottie
+
 from userge import Config, Message, pool, userge
 
 
@@ -18,7 +19,7 @@ from userge import Config, Message, pool, userge
     },
 )
 async def gifify(msg: Message):
-    """ Convert Animated Sticker to GiF """
+    """Convert Animated Sticker to GiF"""
     replied = msg.reply_to_message
     if not (replied and replied.sticker and replied.sticker.file_name.endswith(".tgs")):
         await msg.err("Reply to Animated Sticker Only to Convert GiF", del_in=5)

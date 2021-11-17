@@ -18,7 +18,7 @@ from userge.utils import deEmojify
     allow_via_bot=False,
 )
 async def honka_says_bot(message: Message):
-    """ Creates PEPE sticker! """
+    """Creates PEPE sticker!"""
     replied = message.reply_to_message
     args = message.filtered_input_str
     if args:

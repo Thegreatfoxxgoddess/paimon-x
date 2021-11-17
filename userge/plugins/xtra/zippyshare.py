@@ -5,6 +5,7 @@
 import re
 
 import requests
+
 from userge import Message, pool, userge
 
 
@@ -18,7 +19,7 @@ from userge import Message, pool, userge
     del_pre=True,
 )
 async def zippyshare(message: Message):
-    """ zippy to direct """
+    """zippy to direct"""
     url = message.input_str
     await message.edit("`Generating url ....`")
     try:

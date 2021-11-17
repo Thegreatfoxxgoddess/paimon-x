@@ -7,6 +7,7 @@ import os
 
 import qrcode
 from bs4 import BeautifulSoup
+
 from userge import Config, Message, userge
 
 
@@ -18,7 +19,7 @@ from userge import Config, Message, userge
     },
 )
 async def make_qr(message: Message):
-    """ Make Qr code """
+    """Make Qr code"""
     replied = message.reply_to_message
     input_ = message.input_str
     if input_:
@@ -56,7 +57,7 @@ async def make_qr(message: Message):
     },
 )
 async def get_qr(message: Message):
-    """ Get Qr code data """
+    """Get Qr code data"""
     replied = message.reply_to_message
     if not (replied and replied.media and (replied.photo or replied.sticker)):
         await message.err("```reply to qr code to get data...```", del_in=5)

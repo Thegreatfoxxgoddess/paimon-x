@@ -7,6 +7,7 @@ import json
 import os
 
 import requests
+
 from userge import Config, Message, userge
 from userge.utils import humanbytes, progress
 
@@ -22,7 +23,7 @@ API_KEY = os.environ.get("VT_API_KEY", None)
     },
 )
 async def _scan_file(msg: Message):
-    """ scan files and get scan id """
+    """scan files and get scan id"""
     if API_KEY is None:
         await msg.edit(
             "You have to sign up on `virustotal.com` and get `API_KEY` "
@@ -107,7 +108,7 @@ async def _scan_file(msg: Message):
 
 
 def scan_file(path: str) -> str:
-    """ scan file """
+    """scan file"""
     url = "https://www.virustotal.com/vtapi/v2/file/scan"
     path_name = path.split("/")[-1]
 
@@ -118,7 +119,7 @@ def scan_file(path: str) -> str:
 
 
 def get_report(sha1: str) -> str:
-    """ get report of files """
+    """get report of files"""
     url = "https://www.virustotal.com/vtapi/v2/file/report"
     params = {"apikey": API_KEY, "resource": sha1, "allinfo": "False"}
     response = requests.get(url, params=params)

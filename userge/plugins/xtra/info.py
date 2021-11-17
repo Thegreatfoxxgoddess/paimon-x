@@ -4,6 +4,7 @@
 from datetime import datetime
 
 import spamwatch
+
 from userge import Config, Message, get_collection, userge
 from userge.utils import get_response
 
@@ -22,7 +23,7 @@ GMUTE_USER_BASE = get_collection("GMUTE_USER")
     allow_via_bot=False,
 )
 async def info(msg: Message):
-    """ To check User's info """
+    """To check User's info"""
     await msg.edit("`Checking...`")
     user_id = msg.input_str
     replied = msg.reply_to_message

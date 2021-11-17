@@ -3,6 +3,7 @@ import os
 
 from glitch_this import ImageGlitcher
 from PIL import Image
+
 from userge import Config, Message, userge
 from userge.utils import runcmd, take_screen_shot
 
@@ -19,7 +20,7 @@ Glitched = Config.DOWN_PATH + "glitch.gif"
     },
 )
 async def glitch_(message: Message):
-    """ Create Glitch effect in any media """
+    """Create Glitch effect in any media"""
     replied = message.reply_to_message
     if not (
         replied
