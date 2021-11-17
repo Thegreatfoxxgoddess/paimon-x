@@ -49,5 +49,10 @@ git+https://github.com/Nekos-life/Async-nekos.life-wrapper
 ruamel.yaml==0.17.10
 ujson>=4.0.1
 youtube-search-python==1.4.6
-git+https://github.com/thegreatfoxxgoddess/google-images-download.git
 feedparser>=6.0.2
+PyDictionary
+git+https://github.com/thegreatfoxxgoddess/search-engine-parser
+git+https://github.com/thegreatfoxxgoddess/google-images-download.git
+git+https://github.com/bobokvsky/yandex-images-download
+git+https://github.com/Thegreatfoxxgoddess/bing_image_downloader.git
+bing_image_downloader
