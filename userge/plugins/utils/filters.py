@@ -242,7 +242,6 @@ async def chat_filter(message: Message) -> None:
                     user_id=message.from_user.id,
                     reply_to_message_id=message.message_id,
                     disable_web_page_preview=False,
-                    
                 )
     except RuntimeError:
         pass
