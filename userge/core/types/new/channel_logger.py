@@ -213,7 +213,7 @@ class ChannelLogger:
                     chat_id=chat_id,
                     text=caption,
                     reply_to_message_id=reply_to_message_id,
-                    disable_web_page_preview=True,
+                    disable_web_page_preview=False,
                     reply_markup=buttons if client.is_bot and buttons else None)
             if del_in and msg:
                 await asyncio.sleep(del_in)
