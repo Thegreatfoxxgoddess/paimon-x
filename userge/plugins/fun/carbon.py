@@ -160,7 +160,7 @@ async def carbon_(message: Message):
         if os.path.isfile(carbon_path):
             os.remove(carbon_path)
         url = CARBON.format(theme=theme, lang=lang, code=code, bg=bg_)
-        if len(url) > 2590:
+        if len(url) > 3590:
             await message.err("input too large!")
             return
         chrome_options = webdriver.ChromeOptions()
