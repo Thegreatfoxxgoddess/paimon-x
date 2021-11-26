@@ -59,7 +59,6 @@ async def alive_inline(message: Message):
 
 
 async def send_inline_alive(message: Message) -> None:
-    " ".join([me.first_name, me.last_name or ""])
     _bot = await userge.bot.get_me()
     try:
         i_res = await userge.get_inline_bot_results(_bot.username, "alive")
@@ -208,7 +207,7 @@ if userge.has_bot:
 
 
 def _parse_arg(arg: bool) -> str:
-    return " ✅ ᴀᴛɪᴠᴀᴅᴏ" if arg else " ❎ ᴅᴇsᴀᴛɪᴠᴀᴅᴏ"
+    return " ᴀᴛɪᴠᴀᴅᴏ" if arg else " ᴅᴇsᴀᴛɪᴠᴀᴅᴏ"
 
 
 class Bot_Alive:
@@ -240,7 +239,7 @@ class Bot_Alive:
 
 ㅤㅤㅤㅤㅤㅤㅤ
   💕   <b> [paimon](https://t.me/my_thingsuwu) </b>
-  🦋   <b> User      :</b>    `{user}`
+  🦋   <b> User      :</b>    `Alicia`
                        <b>{userge.uptime}</b>
 
 """
