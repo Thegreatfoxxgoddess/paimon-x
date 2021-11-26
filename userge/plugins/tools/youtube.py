@@ -99,8 +99,8 @@ async def song(message: Message):
     else:
         if os.path.exists(f"./userge/xcache/{thumb}"):
             caption = f"""
-**Título:** __[{result[0]['title']}]({link})__
-**Duração:** __{duration}__
+**Title:** __[{result[0]['title']}]({link})__
+**Duration:** __{duration}__
 **Views:** __{result[0]['viewCount']["text"]}__
 """
             try:
@@ -154,7 +154,7 @@ async def video(message: Message):
         await message.delete()
         print(str(e))
     else:
-        caption = f"**Título ➠** __[{result[0]['title']}]({link})__\n**Canal ➠** __{result[0]['channel']}__"
+        caption = f"**Title ➠** __[{result[0]['title']}]({link})__\n**Channel ➠** __{result[0]['channel']}__"
         try:
             await message.reply_video(
                 video=f"./userge/xcache/{filename}",
