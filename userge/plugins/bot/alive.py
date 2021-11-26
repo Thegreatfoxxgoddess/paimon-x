@@ -22,7 +22,6 @@ LOGGER = userge.getLogger(__name__)
 
 
 async def _init() -> None:
-    " ".join([me.first_name, me.last_name or ""])
     global _USER_CACHED_MEDIA, _BOT_CACHED_MEDIA
     if Config.ALIVE_MEDIA and Config.ALIVE_MEDIA.lower() != "false":
         am_type, am_link = await Bot_Alive.check_media_link(Config.ALIVE_MEDIA.strip())
@@ -60,6 +59,7 @@ async def alive_inline(message: Message):
 
 
 async def send_inline_alive(message: Message) -> None:
+    user = " ".join([me.first_name, me.last_name or ""])
     _bot = await userge.bot.get_me()
     try:
         i_res = await userge.get_inline_bot_results(_bot.username, "alive")
