@@ -1,6 +1,6 @@
 """MEDIA INFO"""
 
-# Suggested by - @d0n0t (https://github.com/code-rgb/USERGE-X/issues/9)
+# Suggested by - @d0n0t (https://github.com/code-rgb/userge/issues/9)
 # Copyright (C) 2020 BY - GitHub.com/code-rgb [TG - @deleteduser420]
 # All rights reserved.
 
@@ -46,14 +46,11 @@ async def mediainfo(message: Message):
     if len(output_) != 0:
         out = output_[0]
     body_text = f"""
-
-***JSON***
-
+<h2>JSON</h2>
 <pre>{x_media}</pre>
 <br>
 
-***DETAILS***
-
+<h2>DETAILS</h2>
 <pre>{out or 'Not Supported'}</pre>
 """
     text_ = media_type.split(".")[-1].upper()
