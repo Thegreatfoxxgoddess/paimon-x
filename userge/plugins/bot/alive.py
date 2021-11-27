@@ -234,13 +234,13 @@ class Bot_Alive:
         return link_type, link
 
     @staticmethod
-    u_name = " ".join([me.first_name, me.last_name or ""])
     def alive_info() -> str:
+        u_name = " ".join([me.first_name, me.last_name or ""])
         alive_info_ = f"""
 
 ㅤㅤㅤㅤㅤㅤㅤ
   💕   <b> [paimon](https://t.me/my_thingsuwu) </b>
-  🦋   <b> User      :</b>    `Alicia`
+  🦋   <b> User      :</b>    <code>{u_name}</code>   `Alicia`
                        <b>{userge.uptime}</b>
 
 """
