@@ -234,6 +234,7 @@ class Bot_Alive:
         return link_type, link
 
     @staticmethod
+    u_name = " ".join([me.first_name, me.last_name or ""])
     def alive_info() -> str:
         alive_info_ = f"""
 
@@ -284,13 +285,11 @@ class Bot_Alive:
             "https://giffiles.alphacoders.com/214/214203.gif",
             "https://upload-os-bbs.mihoyo.com/upload/2020/01/17/1016483/973eae6861b9eda831a25b7f0b12930c_4235691643004612761.gif?x-oss-process=image/resize,s_740/quality,q_80/auto-orient,0/interlace,1/format,gif",
             "https://upload-os-bbs.mihoyo.com/upload/2020/06/17/6682430/9ba34e53b939b8c76a88ee5e3e88d51f_6064201769440250870.gif?x-oss-process=image/resize,s_740/quality,q_80/auto-orient,0/interlace,1/format,gif",
-            "https://lh5.googleusercontent.com/t_aWO7FNrfpS4QGIK4RrEk0iuPMh-CSzjLgFEIUdXsX_CwvKsF2mMr9diJ6XbpNX7K6LAkjfbCXyKePFdKd90H_A1LbxUDZRl5Lwtf0yox2ChRCkaF2QQltSqAMlYiXCSZnccDim",
             "https://upload-os-bbs.mihoyo.com/upload/2020/11/10/23488793/bda96b8a8b6854f1b6b39ac9c9d70aa9_4783927684494221244.gif",
             "https://upload-os-bbs.mihoyo.com/upload/2020/03/21/2072149/b9e314d799c726f742e43cbd1acccb2d_3787993478380514609.gif?x-oss-process=image/resize,s_740/quality,q_80/auto-orient,0/interlace,1/format,gif",
             "https://i.pinimg.com/originals/25/ac/be/25acbecce5df023f08998ec95ac93f4c.gif",
             "https://upload-os-bbs.mihoyo.com/upload/2020/06/29/1010453/5f776c137d552c472c6bb827f6c1131e_2410678658087317335.gif?x-oss-process=image/resize,s_740/quality,q_80/auto-orient,0/interlace,1/format,gif",
             "https://upload-os-bbs.mihoyo.com/upload/2020/01/17/1016483/475f9c61629439c6ba19fb8709dc4f10_4698642964844992833.gif?x-oss-process=image/resize,s_740/quality,q_80/auto-orient,0/interlace,1/format,gif",
-            "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/0bdf5aaf-0179-432a-bf9a-1b079c5fe990/dednkyx-dce1bf0a-7483-4e3f-90d3-aaa04c976c60.gif?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzBiZGY1YWFmLTAxNzktNDMyYS1iZjlhLTFiMDc5YzVmZTk5MFwvZGVkbmt5eC1kY2UxYmYwYS03NDgzLTRlM2YtOTBkMy1hYWEwNGM5NzZjNjAuZ2lmIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.RJE_UNo1M92mLNolnXziHCLhRQg6038LqjphSgSArNw",
             "https://upload-os-bbs.mihoyo.com/upload/2020/01/17/1016483/769e08790ec1b0a5fe5df46dfb94fec6_5307657477810149185.gif?x-oss-process=image/resize,s_740/quality,q_80/auto-orient,0/interlace,1/format,gif",
             "https://64.media.tumblr.com/e2534e0bdeed36978ecec8251ac925b2/62cbf967ceccbb8d-a1/s1280x1920/3ebc9a37d0c982d88bfe8679d6260a74e2af5634.gifv",
             "https://upload-os-bbs.mihoyo.com/upload/2020/11/16/43854381/b5e15fc9756860e4c52dc6b48b0ac86f_4286870611331683423.gif?x-oss-process=image/resize,s_500/quality,q_80/auto-orient,0/interlace,1/format,gif",
