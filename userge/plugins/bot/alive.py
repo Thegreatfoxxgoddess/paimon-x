@@ -9,12 +9,12 @@ from pyrogram.errors import BadRequest, FloodWait, Forbidden, MediaEmpty
 from pyrogram.file_id import PHOTO_TYPES, FileId
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
-from userge import Config, Message, get_version, userge
+from userge import Config, Message, get_version, userge, versions
 from userge.core.ext import RawClient
 from userge.utils import get_file_id, rand_array
 
 _ALIVE_REGEX = comp_regex(
-    r"http[s]?://(i\.imgur\.com|telegra\.ph/file|t\.me)/(\w+)(?:\.|/)(gif|mp4|jpg|png|jpeg|[0-9]+)(?:/([0-9]+))?"
+    r"http[s]?://(i\.imgur\.com|telegra\.ph/file|t\.me)/(\w+)(?:\.|/)(gif|jpg|png|jpeg|[0-9]+)(?:/([0-9]+))?"
 )
 _USER_CACHED_MEDIA, _BOT_CACHED_MEDIA = None, None
 
@@ -83,9 +83,10 @@ async def send_inline_alive(message: Message) -> None:
 
 async def send_alive_message(message: Message) -> None:
     global _USER_CACHED_MEDIA, _BOT_CACHED_MEDIA
+    me = await userge.get_me()
     chat_id = message.chat.id
     client = message.client
-    caption = Bot_Alive.alive_info()
+    caption = Bot_Alive.alive_info(me)
     if client.is_bot:
         reply_markup = Bot_Alive.alive_buttons()
         file_id = _BOT_CACHED_MEDIA
@@ -93,14 +94,14 @@ async def send_alive_message(message: Message) -> None:
         reply_markup = None
         file_id = _USER_CACHED_MEDIA
         caption += (
-            f"\n⚡️  <a href={Config.UPSTREAM_REPO}><b>ʀᴇᴘᴏꜱɪᴛᴏʀɪᴏ</b></a>"
+            f"\n⚡️  <a href={Config.UPSTREAM_REPO}><b>REPO</b></a>"
             "    <code>|</code>    "
-            "👥  <a href='https://t.me/fnixdev'><b>ꜱᴜᴘᴏʀᴛᴇ</b></a>"
+            "👥  <a href='https://t.me/useless_x'><b>SUPPORT</b></a>"
         )
     if not Config.ALIVE_MEDIA:
         await client.send_animation(
             chat_id,
-            animation=Bot_Alive.alive_default_imgs(),
+            animation=Bot_Alive.alive_default_animation(),
             caption=caption,
             reply_markup=reply_markup,
         )
@@ -156,17 +157,9 @@ async def send_alive_message(message: Message) -> None:
 
 if userge.has_bot:
 
-    @userge.bot.on_callback_query(filters.regex(pattern=r"^status_alive$"))
-    async def status_alive_(_, c_q: CallbackQuery):
-        c_q.from_user.id
-        await c_q.answer(
-            f"▫️ ᴍᴏᴅᴏ :  {Bot_Alive._get_mode()}\n▫️ ᴠᴇʀsɪᴏɴ  :  v{get_version()}\n▫️ ᴜᴘᴛɪᴍᴇ  :  {userge.uptime}\n\n{rand_array(FRASES)}",
-            show_alert=True,
-        )
-        return status_alive_
-
     @userge.bot.on_callback_query(filters.regex(pattern=r"^settings_btn$"))
     async def alive_cb(_, c_q: CallbackQuery):
+        me = await userge.get_me()
         allow = bool(
             c_q.from_user
             and (
@@ -178,7 +171,7 @@ if userge.has_bot:
             start = datetime.now()
             try:
                 await c_q.edit_message_text(
-                    Bot_Alive.alive_info(),
+                    Bot_Alive.alive_info(me),
                     reply_markup=Bot_Alive.alive_buttons(),
                     disable_web_page_preview=True,
                 )
@@ -186,17 +179,17 @@ if userge.has_bot:
                 await asyncio.sleep(e.x)
             except BadRequest:
                 pass
-            ping = "🏓 ᴘɪɴɢ : {} ᴍs\n"
-        alive_s = "➕ ᴘʟᴜɢɪɴs + : {}\n".format(
+            ping = "𝗣𝗶𝗻𝗴:  {} sec\n"
+        alive_s = "𝗘𝘅𝘁𝗿𝗮 𝗣𝗹𝘂𝗴𝗶𝗻𝘀 : {}\n".format(
             _parse_arg(Config.LOAD_UNOFFICIAL_PLUGINS)
         )
-        alive_s += f"👥 ᴀɴᴛɪsᴘᴀᴍ : {_parse_arg(Config.SUDO_ENABLED)}\n"
-        alive_s += f"🚨 ᴀɴᴛɪsᴘᴀᴍ : {_parse_arg(Config.ANTISPAM_SENTRY)}\n"
+        alive_s += f"𝗦𝘂𝗱𝗼 : {_parse_arg(Config.SUDO_ENABLED)}\n"
+        alive_s += f"𝗔𝗻𝘁𝗶𝘀𝗽𝗮𝗺 : {_parse_arg(Config.ANTISPAM_SENTRY)}\n"
         if Config.HEROKU_APP and Config.RUN_DYNO_SAVER:
-            alive_s += "⛽️ ᴅʏɴᴏ :  ✅ ᴀᴛɪᴠᴀᴅᴏ\n"
-        alive_s += f"💬 ʙᴏᴛ ꜰᴡᴅ : {_parse_arg(Config.BOT_FORWARDS)}\n"
-        alive_s += f"🛡 ᴘᴍ ʙʟᴏᴄᴋ : {_parse_arg(not Config.ALLOW_ALL_PMS)}\n"
-        alive_s += f"📝 ʟᴏɢ ᴘᴍ : {_parse_arg(Config.PM_LOGGING)}"
+            alive_s += "𝗗𝘆𝗻𝗼 𝗦𝗮𝘃𝗲𝗿 :  𝙴𝚗𝚊𝚋𝚕𝚎𝚍\n"
+        alive_s += f"𝗕𝗼𝘁 𝗙𝗼𝗿𝘄𝗮𝗿𝗱𝘀 : {_parse_arg(Config.BOT_FORWARDS)}\n"
+        alive_s += f"𝗣𝗠 𝗚𝘂𝗮𝗿𝗱 : {_parse_arg(not Config.ALLOW_ALL_PMS)}\n"
+        alive_s += f"𝗣𝗠 𝗟𝗼𝗴𝗴𝗲𝗿 : {_parse_arg(Config.PM_LOGGING)}"
         if allow:
             end = datetime.now()
             m_s = (end - start).microseconds / 1000
@@ -207,7 +200,7 @@ if userge.has_bot:
 
 
 def _parse_arg(arg: bool) -> str:
-    return " ᴀᴛɪᴠᴀᴅᴏ" if arg else " ᴅᴇsᴀᴛɪᴠᴀᴅᴏ"
+    return " 𝙴𝚗𝚊𝚋𝚕𝚎𝚍" if arg else " 𝙳𝚒𝚜𝚊𝚋𝚕𝚎𝚍"
 
 
 class Bot_Alive:
@@ -221,7 +214,7 @@ class Bot_Alive:
             link_type = "url_gif" if match.group(3) == "gif" else "url_image"
         elif match.group(1) == "telegra.ph/file":
             link = match.group(0)
-            link_type = "url_gif" if match.group(3) == "gif" else "url_image"
+            link_type = "url_image"
         else:
             link_type = "tg_media"
             if match.group(2) == "c":
@@ -234,9 +227,9 @@ class Bot_Alive:
         return link_type, link
 
     @staticmethod
-    def alive_info() -> str:
+    def alive_info(me):
         u_name = " ".join([me.first_name, me.last_name or ""])
-        alive_info_ = f"""
+        alive_info = f"""
 
 ㅤㅤㅤㅤㅤㅤㅤ
   💕   <b> [paimon](https://t.me/my_thingsuwu) </b>
@@ -244,7 +237,7 @@ class Bot_Alive:
                        <b>{userge.uptime}</b>
 
 """
-        return alive_info_
+        return alive_info
 
     @staticmethod
     def _get_mode() -> str:
@@ -258,15 +251,20 @@ class Bot_Alive:
     def alive_buttons() -> InlineKeyboardMarkup:
         buttons = [
             [
-                InlineKeyboardButton(text="⚙️  ᴄᴏɴꜰɪɢ", callback_data="settings_btn"),
-                InlineKeyboardButton(text="💭  sᴛᴀᴛᴜs", callback_data="status_alive"),
+                InlineKeyboardButton(text="🔧  SETTINGS", callback_data="settings_btn"),
+            ],
+            [
+                InlineKeyboardButton(
+                    text="✖️  XPLUGINS", url="t.me/ux_xplugin_support"
+                ),
+                InlineKeyboardButton(text="⚡  REPO", url=Config.UPSTREAM_REPO),
             ],
         ]
         return InlineKeyboardMarkup(buttons)
 
     @staticmethod
-    def alive_default_imgs() -> str:
-        alive_imgs = [
+    def alive_default_animation() -> str:
+        alive_animation = [
             "https://upload-os-bbs.mihoyo.com/upload/2021/03/04/19193793/34294e69072a60066952110c86c6b6b2_463911016668843253.gif",
             "https://upload-os-bbs.mihoyo.com/upload/2020/04/07/1491959/6063780e44469bf84f264293fa0486d6_8207551150153056185.gif",
             "https://upload-os-bbs.mihoyo.com/upload/2021/03/28/42423345/7b9ca45750cdbe2606ba71fc92f7d4c7_2902273258542606860.gif",
@@ -294,7 +292,7 @@ class Bot_Alive:
             "https://64.media.tumblr.com/e2534e0bdeed36978ecec8251ac925b2/62cbf967ceccbb8d-a1/s1280x1920/3ebc9a37d0c982d88bfe8679d6260a74e2af5634.gifv",
             "https://upload-os-bbs.mihoyo.com/upload/2020/11/16/43854381/b5e15fc9756860e4c52dc6b48b0ac86f_4286870611331683423.gif?x-oss-process=image/resize,s_500/quality,q_80/auto-orient,0/interlace,1/format,gif",
         ]
-        return rand_array(alive_imgs)
+        return rand_array(alive_animation)
 
     @staticmethod
     def get_bot_cached_fid() -> str:
@@ -303,9 +301,3 @@ class Bot_Alive:
     @staticmethod
     def is_photo(file_id: str) -> bool:
         return bool(FileId.decode(file_id).file_type in PHOTO_TYPES)
-
-
-FRASES = (
-    "Hey how are you doing today",
-    "you're looking beautiful",
-)
