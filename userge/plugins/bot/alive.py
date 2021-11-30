@@ -228,12 +228,12 @@ class Bot_Alive:
 
     @staticmethod
     def alive_info(me):
-        u_name = " ".join([me.first_name, me.last_name or ""])
+        u_name = " Alicia"
         alive_info = f"""
 
 ㅤㅤㅤㅤㅤㅤㅤ
   💕   <b> [paimon](https://t.me/my_thingsuwu) </b>
-  🦋   <b> User      :</b>    <code>{u_name}</code>   `Alicia`
+  🦋   <b> User      :</b>    <code>{u_name}</code> 
                        <b>{userge.uptime}</b>
 
 """
