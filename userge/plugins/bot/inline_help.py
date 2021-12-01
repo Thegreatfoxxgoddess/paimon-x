@@ -21,7 +21,7 @@ _COMMANDS = {
     },
     "troll": {
         "help_txt": "**Troll to a user**\n (everyone can view the message except the entered user)\n\n>>>  `troll @username [text]`",
-        "i_q": "troll @Lostb053 Lostboy can view this message",
+        "i_q": "troll @eightbituwu Lostboy can view this message",
     },
     "alive": {
         "help_txt": "**Alive Command for USERGE-X**\nHere You can view Uptime, Setting and Versions of your bot and when you change settings they are updated in Real-time UwU\n\n>>>  `alive`",
@@ -91,7 +91,7 @@ if userge.has_bot:
 
     inline_help_txt = (
         " <u><b>INLINE COMMANDS</b></u>\n\nHere is a list of all available inline commands."
-        "\nChoose a command and for usage see:\n**📕  EXAMPLE**"
+        "\nChoose a command and for usage see:\n**EXAMPLE**"
     )
 
     @userge.bot.on_message(
@@ -125,9 +125,9 @@ if userge.has_bot:
         buttons = InlineKeyboardMarkup(
             [
                 [
-                    InlineKeyboardButton("◀️  Back", callback_data="backbtn_ihelp"),
+                    InlineKeyboardButton("Back", callback_data="backbtn_ihelp"),
                     InlineKeyboardButton(
-                        "📕  EXAMPLE",
+                        "EXAMPLE",
                         switch_inline_query_current_chat=_COMMANDS[command_name]["i_q"],
                     ),
                 ]
