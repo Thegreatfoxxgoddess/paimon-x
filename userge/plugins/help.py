@@ -213,7 +213,7 @@ if userge.has_bot:
             await callback_query.answer("you are in main menu", show_alert=True)
             return
         if len(pos_list) == 2:
-            text = " 𝐒𝐇𝐀𝐑𝐈𝐍𝐆𝐀𝐍 MAIN MENU "
+            text = " PAIMON MENU "
             buttons = main_menu_buttons()
         elif len(pos_list) == 3:
             text, buttons = category_data(cur_pos)
@@ -265,7 +265,7 @@ if userge.has_bot:
     @check_owner
     async def callback_mm(callback_query: CallbackQuery):
         await callback_query.edit_message_text(
-            " 𝐒𝐇𝐀𝐑𝐈𝐍𝐆𝐀𝐍 MAIN MENU ",
+            " PAIMON MENU ",
             reply_markup=InlineKeyboardMarkup(main_menu_buttons()),
         )
 
@@ -1143,9 +1143,9 @@ if userge.has_bot:
 
             MAIN_MENU = InlineQueryResultArticle(
                 title="Main Menu",
-                input_message_content=InputTextMessageContent(" 𝐒𝐇𝐀𝐑𝐈𝐍𝐆𝐀𝐍 MAIN MENU "),
+                input_message_content=InputTextMessageContent(" PAIMON MENU "),
                 url="https://github.com/code-rgb/USERGE-X",
-                description="Sharingan Main Menu",
+                description="PAIMON MAIN MENU",
                 thumb_url="https://telegra.ph/file/8fa91f9c7f6f4f6b8fa6c.jpg",
                 reply_markup=InlineKeyboardMarkup(main_menu_buttons()),
             )
