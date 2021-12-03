@@ -39,50 +39,35 @@ async def neofetch_(message: Message):
 
 async def neo_image():
     neofetch = (await runcmd("neofetch --stdout"))[0]
-    font_color = (255, 42, 38)  # Red
-    white = (255, 255, 255)
-    if "Debian" in neofetch:
-        base_pic = "https://telegra.ph/file/1f62cbef3fe8e24afc6f7.jpg"
-    elif "Kali" in neofetch:
-        base_pic = "https://i.imgur.com/iBJxExq.jpg"
-        font_color = (87, 157, 255)  # Blue
-    else:
-        base_pic = "https://telegra.ph/file/f3191b7ecdf13867788c2.jpg"
+    to_print = neofetch.splitlines()
+    in_memory = BytesIO(
+        get("https://telegra.ph/file/f3191b7ecdf13867788c2.jpg").content
+    )
     font_url = (
         "https://raw.githubusercontent.com/code-rgb/AmongUs/master/FiraCode-Regular.ttf"
     )
-    me = await userge.get_me()
-    kakashi = [1156425647, 1013414037]
-    if me.id in kakashi:
-        base_pic = "https://telegra.ph/file/6cdadf4baddb83abfbed9.png"
-    photo = Image.open(BytesIO(get(base_pic).content))
+    photo = Image.open(in_memory)
     drawing = ImageDraw.Draw(photo)
+    white = (255, 255, 255)
     font = ImageFont.truetype(BytesIO(get(font_url).content), 14)
     x = 0
     y = 0
-    for u_text in neofetch.splitlines():
+    for u_text in to_print:
         if ":" in u_text:
             ms = u_text.split(":", 1)
             drawing.text(
-                xy=(315, 45 + x),
-                text=ms[0] + ":",
-                font=font,
-                fill=font_color,
+                xy=(315, 45 + x), text=ms[0] + ":", font=font, fill=(247, 65, 62)
             )
             drawing.text(
                 xy=((8.5 * len(ms[0])) + 315, 45 + x), text=ms[1], font=font, fill=white
             )
         else:
-            color = font_color if y == 0 else white
+            color = (247, 65, 62) if y == 0 else white
             drawing.text(xy=(315, 53 + y), text=u_text, font=font, fill=color)
         x += 20
         y += 13
     new_pic = BytesIO()
     photo = photo.resize(photo.size, Image.ANTIALIAS)
-    if me.id in kakashi:
-        photo.save(new_pic, format="PNG")
-        new_pic.name = "NeoFetch.png"
-    else:
-        photo.save(new_pic, format="JPG")
-        new_pic.name = "NeoFetch.jpg"
+    photo.save(new_pic, format="JPEG")
+    new_pic.name = "NeoFetch.jpg"
     return new_pic
