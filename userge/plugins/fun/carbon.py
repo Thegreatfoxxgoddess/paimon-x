@@ -200,7 +200,7 @@ async def carbon_(message: Message):
         await message.edit("`Uploading Carbon...`")
         await asyncio.gather(
             message.delete(),
-            message.client.send_photo(
+            message.client.send_document(
                 chat_id=message.chat.id,
                 photo=carbon_path,
                 reply_to_message_id=message_id,
