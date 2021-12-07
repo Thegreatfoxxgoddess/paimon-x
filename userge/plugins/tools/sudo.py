@@ -249,6 +249,13 @@ async def add_sudo_cmd(message: Message):
         "vsudo",
         "freeze",
         "defreeze",
+        "tb",
+        "addf",
+        "delf",
+        "fban",
+        "fbanp",
+        "fbanm",
+        "unfban",
     ]
     if "-all" in message.flags:
         await SUDO_CMDS_COLLECTION.drop()

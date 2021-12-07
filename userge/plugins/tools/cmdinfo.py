@@ -74,6 +74,9 @@ async def see_info(message: Message):
         plugin_link = f"{custom_plugins}/blob/master/plugins/{plugin_name}.py"
     elif plugin_loc == "/temp":
         plugin_link = False
+    elif plugin_loc == "/xtra":
+        custom_plugins = "https://github.com/thegreatfoxxgoddess/Userge-Plugins-Fork"
+        plugin_link = f"{custom_plugins}/blob/master/plugins/{plugin_name}.py"
     else:
         plugin_link = "{}/blob/{}/userge/plugins{}/{}.py".format(
             Config.UPSTREAM_REPO, branch, plugin_loc, plugin_name
