@@ -288,7 +288,7 @@ class Bot_Alive:
 ㅤㅤㅤㅤㅤㅤㅤ
   💕   <b> [paimon](https://t.me/my_thingsuwu) </b>
   🦋   <b> User      :</b>    <code>{u_name}</code>
-                       <b>{userge.uptime}</b>
+                                       <b>`{userge.uptime}`</b>
 
 """
         return alive_info
@@ -300,21 +300,6 @@ class Bot_Alive:
         if Config.BOT_TOKEN:
             return "BOT"
         return "USER"
-
-    @staticmethod
-    def alive_buttons() -> InlineKeyboardMarkup:
-        buttons = [
-            [
-                InlineKeyboardButton(text="🔧  SETTINGS", callback_data="settings_btn"),
-            ],
-            [
-                InlineKeyboardButton(
-                    text="✖️  XPLUGINS", url="t.me/ux_xplugin_support"
-                ),
-                InlineKeyboardButton(text="⚡  REPO", url=Config.UPSTREAM_REPO),
-            ],
-        ]
-        return InlineKeyboardMarkup(buttons)
 
     @staticmethod
     def alive_default_animation() -> str:
