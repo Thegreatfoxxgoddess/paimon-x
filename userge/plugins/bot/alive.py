@@ -288,7 +288,7 @@ class Bot_Alive:
 ㅤㅤㅤㅤㅤㅤㅤ
   💕   <b> [paimon](https://t.me/my_thingsuwu) </b>
   🦋   <b> User      :</b>    <code>{u_name}</code>
-                       <b>{userge.uptime}</b>
+                                      <b>`{userge.uptime}`</b>
 
 """
         return alive_info
