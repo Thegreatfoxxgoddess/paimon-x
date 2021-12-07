@@ -67,7 +67,8 @@ REPO_X = InlineQueryResultArticle(
         [
             [
                 InlineKeyboardButton(
-                    "Paimon-X Repo", url="https://github.com/thegreatfoxxgoddess/Paimon-X"
+                    "Paimon-X Repo",
+                    url="https://github.com/thegreatfoxxgoddess/Paimon-X",
                 ),
                 InlineKeyboardButton(
                     "Deploy USERGE-X",

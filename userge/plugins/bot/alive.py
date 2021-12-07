@@ -9,7 +9,7 @@ from pyrogram.errors import BadRequest, FloodWait, Forbidden, MediaEmpty
 from pyrogram.file_id import PHOTO_TYPES, FileId
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
-from userge import Config, Message, get_collection, get_version, userge, versions
+from userge import Config, Message, get_collection, userge
 from userge.core.ext import RawClient
 from userge.helpers import msg_type
 from userge.plugins.utils.telegraph import upload_media_
