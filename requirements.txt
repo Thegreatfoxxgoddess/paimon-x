@@ -21,7 +21,7 @@ Pillow==8.4.0
 psutil>=5.7.3
 pybase64>=1.1.1
 PyDictionary>=2.0.1
-git+https://github.com/ashwinstr/pyrogram.git@x21
+pyrogram==1.2.11
 pySmartDL>=1.3.4
 python-dotenv>=0.15.0
 pytz>=2020.4
@@ -42,13 +42,7 @@ wget>=3.2
 wikipedia>=1.4.0
 youtube_dl
 git+https://github.com/Nekos-life/Async-nekos.life-wrapper
-ruamel.yaml==0.17.10
+ruamel.yaml==0.17.17
 ujson>=4.0.1
-youtube-search-python==1.4.6
+youtube-search-python==1.5.1
 feedparser>=6.0.2
-PyDictionary
-git+https://github.com/thegreatfoxxgoddess/search-engine-parser
-git+https://github.com/thegreatfoxxgoddess/google-images-download.git
-git+https://github.com/bobokvsky/yandex-images-download
-git+https://github.com/Thegreatfoxxgoddess/bing_image_downloader.git
-bing_image_downloader
