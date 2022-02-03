@@ -111,7 +111,9 @@ async def kang_on_send(_, message: Message):
             exist = False
             try:
                 exist = await userge.send(
-                    GetStickerSet(stickerset=InputStickerSetShortName(short_name=packname), hash=0)
+                    GetStickerSet(
+                        stickerset=InputStickerSetShortName(short_name=packname), hash=0
+                    )
                 )
             except StickersetInvalid:
                 pass
@@ -236,6 +238,4 @@ def resize_photo(photo: str) -> io.BytesIO:
     return resized_photo
 
 
-KANGING_STR = (
-    "Using Witchery to kang this sticker...",
-  )
+KANGING_STR = ("Using Witchery to kang this sticker...",)
