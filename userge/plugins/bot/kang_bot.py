@@ -112,7 +112,6 @@ async def kang_on_send(_, message: Message):
             try:
                 exist = await userge.send(
                     GetStickerSet(stickerset=InputStickerSetShortName(short_name=packname), hash=0)
-                    )
                 )
             except StickersetInvalid:
                 pass
