@@ -1,16 +1,19 @@
-# Copyright (C) 2020 by UsergeTeam@Github, < https://github.com/UsergeTeam >.
+# Copyright (C) 2020 by usergeTeam@Github, < https://github.com/usergeTeam >.
 #
-# This file is part of < https://github.com/UsergeTeam/Userge > project,
+# This file is part of < https://github.com/usergeTeam/userge > project,
 # and is released under the "GNU v3.0 License Agreement".
-# Please see < https://github.com/uaudith/Userge/blob/master/LICENSE >
+# Please see < https://github.com/uaudith/userge/blob/master/LICENSE >
 #
 # All rights reserved.
 
+import traceback
+
 import aiohttp
 
-from userge import Config, Message, logging, pool, userge
+from userge import Config, Message, logging, userge, pool
+from userge.plugins.help import CHANNEL
 
-PASTY_URL = "https://pasty.lus.pm/"
+_URL = "https://spaceb.in/" if Config.HEROKU_APP else "https://nekobin.com/"
 
 _LEVELS = {
     "debug": logging.DEBUG,
@@ -24,7 +27,7 @@ _LEVELS = {
 @userge.on_cmd(
     "logs",
     about={
-        "header": "check USERGE-X logs",
+        "header": "check userge-X logs",
         "flags": {
             "-d": "get logs in document",
             "-h": "get heroku logs",
@@ -46,46 +49,59 @@ async def check_logs(message: Message):
             caption=f"userge-heroku.log [ {limit} lines ]",
         )
     elif "-d" not in message.flags:
-        with open("logs/userge.log", "r") as d_f:
-            text = d_f.read()
-        async with aiohttp.ClientSession() as ses:
-            async with ses.post(
-                PASTY_URL + "api/v2/pastes/", json={"content": text}
-            ) as resp:
-                if resp.status == 201:
-                    try:
-                        response = await resp.json()
-                        key = response["result"]["key"]
-                        file_ext = ".txt"
-                        final_url = PASTY_URL + key + file_ext
-                        final_url_raw = f"{PASTY_URL}raw/{key}{file_ext}"
-                        reply_text = "**Here Are Your Logs** :\n"
-                        reply_text += (
-                            f"• [NEKO]({final_url})            • [RAW]({final_url_raw})"
+        try:
+            with open("logs/userge.log", "r") as d_f:
+                text = d_f.read()
+            async with aiohttp.ClientSession() as ses:
+                async with ses.post(
+                    _URL + "api/documents", json={"content": text}
+                ) as resp:
+                    if resp.status == 201:
+                        try:
+                            response = await resp.json()
+                            key = response["result"]["key"]
+                            file_ext = ".txt"
+                            final_url = _URL + key + file_ext
+                            final_url_raw = f"{_URL}raw/{key}{file_ext}"
+                            reply_text = "**Here Are Your Logs** :\n"
+                            reply_text += f"• [NEKO/SPACE]({final_url})            • [RAW]({final_url_raw})"
+                            await message.edit(
+                                reply_text, disable_web_page_preview=True
+                            )
+                            paste_ = True
+                        except BaseException:
+                            await userge.send_message(
+                                Config.LOG_CHANNEL_ID,
+                                f"Failed to load <b>logs</b> in Neko/Spacebin,\n<b>ERROR</b>:`{traceback.format_exc()}`",
+                            )
+                            paste_ = False
+                    if resp.status != 201 or not paste_:
+                        await message.edit(
+                            "`Failed to reach Neko/Spacebin! Sending as document...`",
+                            del_in=5,
                         )
-                        await message.edit(reply_text, disable_web_page_preview=True)
-                        pasty_ = True
-                    except BaseException as e:
-                        await userge.send_message(
-                            Config.LOG_CHANNEL_ID,
-                            f"Failed to load <b>logs</b> in PastyLus,\n<b>ERROR</b>:`{e}`",
+                        await CHANNEL.log(str(resp.status))
+                        await message.client.send_document(
+                            chat_id=message.chat.id,
+                            document="logs/userge.log",
+                            caption="**userge-X Logs**",
                         )
-                        pasty_ = False
-                if resp.status != 201 or not pasty_:
-                    await message.edit(
-                        "`Failed to reach PastyLus! Sending as document...`", del_in=5
-                    )
-                    await message.client.send_document(
-                        chat_id=message.chat.id,
-                        document="logs/userge.log",
-                        caption="**USERGE-X Logs**",
-                    )
+        except BaseException as e:
+            await message.edit(
+                "`Failed to reach Neko/Spacebin! Sending as document...`", del_in=5
+            )
+            await CHANNEL.log(f"<b>ERROR:</b> {e}")
+            await message.client.send_document(
+                chat_id=message.chat.id,
+                document="logs/userge.log",
+                caption="**userge-X Logs**",
+            )
     else:
         await message.delete()
         await message.client.send_document(
             chat_id=message.chat.id,
             document="logs/userge.log",
-            caption="**USERGE-X Logs**",
+            caption="**userge-X Logs**",
         )
 
 
