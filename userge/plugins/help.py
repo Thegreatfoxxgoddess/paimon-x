@@ -25,7 +25,7 @@ from userge.utils import get_file_id, get_response
 from userge.utils import parse_buttons as pb
 from userge.utils import rand_key
 
-from .bot.alive import Bot_Alive
+from .bot.alive import Bot_Alive, alive_animation
 from .bot.gogo import Anime
 from .bot.utube_inline import (
     download_button,
@@ -95,7 +95,7 @@ async def _init() -> None:
         Config.NEW_ALIVE_MEDIA = media_["url"]
         Config.ALIVE_MEDIA_TYPE = media_["type"]
     else:
-        Config.NEW_ALIVE_MEDIA = "{alive_animation}"
+        Config.NEW_ALIVE_MEDIA = "alive_animation"
         Config.ALIVE_MEDIA_TYPE = "photo"
 
 
