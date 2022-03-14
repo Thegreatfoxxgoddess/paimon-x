@@ -60,15 +60,15 @@ SAVED_SETTINGS = get_collection("CONFIGS")
 REPO_X = InlineQueryResultArticle(
     title="Repo",
     input_message_content=InputTextMessageContent("**Here's how to setup USERGE-X** "),
-    url="https://github.com/thegreatfoxxgoddess/Paimon-X",
+    url="https://ask@eightbituwu",
     description="Setup Your Own",
     thumb_url="https://telegra.ph/file/8fa91f9c7f6f4f6b8fa6c.jpg",
     reply_markup=InlineKeyboardMarkup(
         [
             [
                 InlineKeyboardButton(
-                    "Paimon-X Repo",
-                    url="https://github.com/thegreatfoxxgoddess/Paimon-X",
+                    "Paimon Repo",
+                    url="https://ask@eightbituwu",
                 ),
                 InlineKeyboardButton(
                     "Deploy USERGE-X",
@@ -1125,7 +1125,7 @@ if userge.has_bot:
             MAIN_MENU = InlineQueryResultArticle(
                 title="Main Menu",
                 input_message_content=InputTextMessageContent(" Paimon Menu "),
-                url="https://github.com/thegreatfoxxgoddess/Paimon-X",
+                url="https://ask@eightbituwu",
                 description="paimon menu",
                 thumb_url="https://telegra.ph/file/8fa91f9c7f6f4f6b8fa6c.jpg",
                 reply_markup=InlineKeyboardMarkup(main_menu_buttons()),
